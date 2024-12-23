@@ -27,29 +27,35 @@ class _NotifiableLisViewBuilderState
     extends ConsumerState<NotifiableLisViewBuilder> {
   @override
   Widget build(BuildContext context) {
-    return NotificationListener<ScrollNotification>(
-      onNotification: (notification) {
-        ref.read(dashBoardScrollMetricsProvider.notifier).state =
-            notification.metrics;
-        return true;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        late final screenSize = constraints.biggest;
+        return NotificationListener<ScrollNotification>(
+          onNotification: (notification) {
+            ref.read(dashBoardScrollMetricsProvider.notifier).state =
+                notification.metrics;
+            return true;
+          },
+          child: ListView.builder(
+            itemCount: (widget.children.isEmpty)
+                ? widget.delegates.length
+                : widget.children.length,
+            itemBuilder: (context, index) {
+              return (widget.children.isEmpty).then(
+                () => SizedBox(
+                  height: widget.delegates[index].freezeViewPortHeight,
+                  child: FreezedChild(
+                    delegates: widget.delegates,
+                    screenSize: screenSize,
+                    index: index,
+                  ),
+                ),
+                orElse: () => widget.children[index],
+              );
+            },
+          ),
+        );
       },
-      child: ListView.builder(
-        itemCount: (widget.children.isEmpty)
-            ? widget.delegates.length
-            : widget.children.length,
-        itemBuilder: (context, index) {
-          return (widget.children.isEmpty).then(
-            () => SizedBox(
-              height: widget.delegates[index].freezeViewPortHeight,
-              child: FreezedChild(
-                delegates: widget.delegates,
-                index: index,
-              ),
-            ),
-            orElse: () => widget.children[index],
-          );
-        },
-      ),
     );
   }
 }
@@ -58,8 +64,21 @@ class FreezedWidgetDelegate {
   FreezedWidgetDelegate({
     required this.freezeViewPortHeight,
     required this.childBuilder,
+    this.shouldFreeze = true,
   });
 
   final double freezeViewPortHeight;
-  final Widget Function(double offset) childBuilder;
+  final Widget Function(FreezedMetrics metrics) childBuilder;
+  final bool shouldFreeze;
+}
+
+class FreezedMetrics {
+  const FreezedMetrics({
+    required this.scrollOffset,
+    required this.widgetOffset,
+  });
+  const FreezedMetrics.zero(this.scrollOffset) : widgetOffset = 0;
+
+  final double scrollOffset;
+  final double widgetOffset;
 }
