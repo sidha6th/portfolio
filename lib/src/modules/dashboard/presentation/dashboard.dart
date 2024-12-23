@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sidharth/gen/assets.gen.dart';
 import 'package:sidharth/src/common/widgets/box/colored_sided_box.dart';
 import 'package:sidharth/src/common/widgets/scrollable/notifiable_list_view_builder.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
@@ -77,44 +76,6 @@ class Dashboard extends ConsumerWidget {
   }
 }
 
-class FirstTile extends StatelessWidget {
-  const FirstTile({
-    required this.scrollOffset,
-    super.key,
-  });
-
-  final double scrollOffset;
-
-  @override
-  Widget build(BuildContext context) {
-    final size = context.screenSize;
-    return MouseRegion(
-      onHover: (event) {},
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Stack(
-            alignment: Alignment.topCenter,
-            children: [
-              Image.asset(
-                Assets.jpeg.image.path,
-                height: size.height / 2,
-              ),
-              TextWidget(
-                'data' * 2,
-                style: const TextStyle(color: Colors.green, fontSize: 30),
-              ),
-              Image.asset(
-                Assets.png.image.path,
-                height: size.height / 2,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 
 
