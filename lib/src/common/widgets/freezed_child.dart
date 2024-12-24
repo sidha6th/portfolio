@@ -1,44 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sidharth/src/common/widgets/scrollable/notifiable_list_view_builder.dart';
-import 'package:sidharth/src/core/extensions/bool.dart';
-import 'package:sidharth/src/core/extensions/iterable.dart';
-import 'package:sidharth/src/modules/dashboard/presentation/provider/scroll_offset_state_provider.dart';
+import 'package:sidharth/src/common/extensions/bool.dart';
+import 'package:sidharth/src/common/extensions/iterable.dart';
 
-class FreezedChild extends ConsumerStatefulWidget {
+class FreezedChild extends StatefulWidget {
   const FreezedChild({
+    required this.screenSize,
     required this.delegates,
     required this.index,
-    required this.screenSize,
+    this.scrollMetrics,
     super.key,
   });
 
   final List<FreezedWidgetDelegate> delegates;
-  final int index;
+  final ScrollMetrics? scrollMetrics;
   final Size screenSize;
+  final int index;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _FreezedChildState();
+  State<StatefulWidget> createState() => _FreezedChildState();
 }
 
-class _FreezedChildState extends ConsumerState<FreezedChild> {
+class _FreezedChildState extends State<FreezedChild> {
   late final currentDelegate = widget.delegates[widget.index];
+  FreezedMetrics metrics = const FreezedMetrics.zero(0);
   double? _pastViewPortTotalHeight;
 
   @override
-  Widget build(BuildContext context) {
-    final scrollMetrics = ref.watch(dashBoardScrollMetricsProvider);
-    final offset = scrollMetrics?.pixels ?? 0;
+  void didUpdateWidget(covariant FreezedChild oldWidget) {
+    final offset = widget.scrollMetrics?.pixels ?? 0;
+    currentDelegate.shouldFreeze.then(
+      () => metrics = _metrics(offset),
+      orElse: () => metrics = FreezedMetrics.zero(offset),
+    );
+    super.didUpdateWidget(oldWidget);
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return currentDelegate.shouldFreeze.then(
       () {
-        final freezedMetrics = _metrics(offset);
         return Transform.translate(
-          offset: Offset(0, freezedMetrics.widgetOffset),
-          child: currentDelegate.childBuilder(freezedMetrics),
+          offset: Offset(0, metrics.freezedOffset),
+          child: currentDelegate.childBuilder(metrics),
         );
       },
-      orElse: () => currentDelegate.childBuilder(FreezedMetrics.zero(offset)),
+      orElse: () => currentDelegate.childBuilder(metrics),
     )!;
   }
 
@@ -61,7 +68,7 @@ class _FreezedChildState extends ConsumerState<FreezedChild> {
             currentDelegate.freezeViewPortHeight - widget.screenSize.height;
         return FreezedMetrics(
           scrollOffset: offset,
-          widgetOffset: offset.clamp(0.0, max),
+          freezedOffset: offset.clamp(0.0, max),
         );
       },
       orElse: () {
@@ -71,7 +78,7 @@ class _FreezedChildState extends ConsumerState<FreezedChild> {
             offset.clamp(0, totalPastHeight - widget.screenSize.height);
         return FreezedMetrics(
           scrollOffset: offset,
-          widgetOffset: (clampedOffset - max).clamp(0.0, double.infinity),
+          freezedOffset: (clampedOffset - max).clamp(0.0, double.infinity),
         );
       },
     )!;

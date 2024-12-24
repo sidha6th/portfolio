@@ -9,23 +9,24 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_riverpod: ^2.6.1
+  stacked: ^3.4.4
+  animate_do: ^3.3.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
-  riverpod_lint: ^2.6.3
 
 flutter:
   uses-material-design: true
   assets:
-    - assets/jpeg/
-    - assets/png/
+    - assets/images/jpeg/
+    - assets/images/png/
 
-  # fonts:
-  #   - family: font_file_name
-  #     fonts:
-  #       - asset: fonts/Regular.ttf
-  #       - asset: fonts/Italic.ttf
-  #         style: italic
+  fonts:
+    - family: Elgoc-Thin
+      fonts:
+        - asset: assets/font/Elgoc-Thin.otf
+    - family: CindieMono-D
+      fonts:
+        - asset: assets/font/CindieMono-D.otf

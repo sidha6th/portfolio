@@ -1,36 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sidharth/src/common/constants/colors.dart';
 import 'package:sidharth/src/common/widgets/box/colored_sided_box.dart';
 import 'package:sidharth/src/common/widgets/scrollable/notifiable_list_view_builder.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
-import 'package:sidharth/src/core/extensions/build_context.dart';
+import 'package:sidharth/src/common/extensions/build_context.dart';
+import 'package:sidharth/src/modules/sections/first_section/first_section.dart';
 
-class Dashboard extends ConsumerWidget {
+class Dashboard extends StatelessWidget {
   const Dashboard({super.key});
 
   @override
-  Widget build(BuildContext context, ref) {
+  Widget build(BuildContext context) {
     final size = context.screenSize;
     return Scaffold(
+      backgroundColor: AppColors.black,
       body: NotifiableLisViewBuilder(
         delegates: [
           FreezedWidgetDelegate(
-            freezeViewPortHeight: size.height * 2,
-            childBuilder: (offset) {
-              return ColoredSizedBox(
-                color: Colors.green,
-                height: size.height,
-                width: size.width,
-                child: TextWidget(
-                  'data' * 2,
-                  style: const TextStyle(color: Colors.white, fontSize: 40),
-                ),
-              );
-            },
+            freezeViewPortHeight: size.height,
+            shouldFreeze: false,
+            childBuilder: (metrics) => FirstTile(metrics: metrics),
           ),
           FreezedWidgetDelegate(
             freezeViewPortHeight: size.height * 3,
-            childBuilder: (offset) {
+            childBuilder: (metrics) {
               return ColoredSizedBox(
                 color: Colors.orange,
                 height: size.height,

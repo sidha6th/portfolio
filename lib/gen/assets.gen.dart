@@ -9,21 +9,32 @@
 
 import 'package:flutter/widgets.dart';
 
-class $AssetsJpegGen {
-  const $AssetsJpegGen();
+class $AssetsImagesGen {
+  const $AssetsImagesGen();
 
-  /// File path: assets/jpeg/image.jpeg
-  AssetGenImage get image => const AssetGenImage('assets/jpeg/image.jpeg');
+  /// Directory path: assets/images/jpeg
+  $AssetsImagesJpegGen get jpeg => const $AssetsImagesJpegGen();
+
+  /// Directory path: assets/images/png
+  $AssetsImagesPngGen get png => const $AssetsImagesPngGen();
+}
+
+class $AssetsImagesJpegGen {
+  const $AssetsImagesJpegGen();
+
+  /// File path: assets/images/jpeg/image.jpeg
+  AssetGenImage get image =>
+      const AssetGenImage('assets/images/jpeg/image.jpeg');
 
   /// List of all assets
   List<AssetGenImage> get values => [image];
 }
 
-class $AssetsPngGen {
-  const $AssetsPngGen();
+class $AssetsImagesPngGen {
+  const $AssetsImagesPngGen();
 
-  /// File path: assets/png/image.png
-  AssetGenImage get image => const AssetGenImage('assets/png/image.png');
+  /// File path: assets/images/png/image.png
+  AssetGenImage get image => const AssetGenImage('assets/images/png/image.png');
 
   /// List of all assets
   List<AssetGenImage> get values => [image];
@@ -32,8 +43,7 @@ class $AssetsPngGen {
 class Assets {
   Assets._();
 
-  static const $AssetsJpegGen jpeg = $AssetsJpegGen();
-  static const $AssetsPngGen png = $AssetsPngGen();
+  static const $AssetsImagesGen images = $AssetsImagesGen();
 }
 
 class AssetGenImage {

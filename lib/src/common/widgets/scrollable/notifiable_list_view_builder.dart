@@ -1,59 +1,57 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sidharth/src/common/widgets/freezed_child.dart';
-import 'package:sidharth/src/core/extensions/bool.dart';
-import 'package:sidharth/src/modules/dashboard/presentation/provider/scroll_offset_state_provider.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/view_model/scroll_offset_state_provider.dart';
+import 'package:stacked/stacked.dart';
 
-class NotifiableLisViewBuilder extends ConsumerStatefulWidget {
+class NotifiableLisViewBuilder extends StatelessWidget {
   const NotifiableLisViewBuilder({
-    super.key,
-    this.itemBuilder,
     this.delegates = const [],
-    this.children = const [],
-    this.itemCount,
+    super.key,
   });
 
-  final Widget? Function(BuildContext, int)? itemBuilder;
   final List<FreezedWidgetDelegate> delegates;
-  final List<Widget> children;
-  final int? itemCount;
 
   @override
-  ConsumerState<NotifiableLisViewBuilder> createState() =>
-      _NotifiableLisViewBuilderState();
-}
+  Widget build(
+    BuildContext context,
+  ) {
+    final screenSize = MediaQuery.of(context).size;
 
-class _NotifiableLisViewBuilderState
-    extends ConsumerState<NotifiableLisViewBuilder> {
-  @override
-  Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        late final screenSize = constraints.biggest;
-        return NotificationListener<ScrollNotification>(
-          onNotification: (notification) {
-            ref.read(dashBoardScrollMetricsProvider.notifier).state =
-                notification.metrics;
-            return true;
+        return ViewModelBuilder.nonReactive(
+          viewModelBuilder: ScrollObservingViewModel.new,
+          builder: (context, model, child) {
+            return NotificationListener<ScrollNotification>(
+              onNotification: (notification) {
+                model.setMetrics(notification.metrics);
+                return true;
+              },
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                itemCount: delegates.length,
+                itemBuilder: (context, index) {
+                  return SizedBox(
+                    height: delegates[index].freezeViewPortHeight,
+                    width: screenSize.width,
+                    child: ViewModelBuilder.reactive(
+                      viewModelBuilder: () => model,
+                      disposeViewModel: false,
+                      builder: (context, model, child) {
+                        return FreezedChild(
+                          delegates: delegates,
+                          scrollMetrics: model.metrics,
+                          screenSize: screenSize,
+                          index: index,
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+            );
           },
-          child: ListView.builder(
-            itemCount: (widget.children.isEmpty)
-                ? widget.delegates.length
-                : widget.children.length,
-            itemBuilder: (context, index) {
-              return (widget.children.isEmpty).then(
-                () => SizedBox(
-                  height: widget.delegates[index].freezeViewPortHeight,
-                  child: FreezedChild(
-                    delegates: widget.delegates,
-                    screenSize: screenSize,
-                    index: index,
-                  ),
-                ),
-                orElse: () => widget.children[index],
-              );
-            },
-          ),
         );
       },
     );
@@ -61,24 +59,29 @@ class _NotifiableLisViewBuilderState
 }
 
 class FreezedWidgetDelegate {
-  FreezedWidgetDelegate({
+  const FreezedWidgetDelegate({
     required this.freezeViewPortHeight,
     required this.childBuilder,
     this.shouldFreeze = true,
   });
 
-  final double freezeViewPortHeight;
   final Widget Function(FreezedMetrics metrics) childBuilder;
+  final double freezeViewPortHeight;
   final bool shouldFreeze;
 }
 
 class FreezedMetrics {
   const FreezedMetrics({
     required this.scrollOffset,
-    required this.widgetOffset,
+    required this.freezedOffset,
   });
-  const FreezedMetrics.zero(this.scrollOffset) : widgetOffset = 0;
+
+  const FreezedMetrics.zero(this.scrollOffset) : freezedOffset = 0;
 
   final double scrollOffset;
-  final double widgetOffset;
+  final double freezedOffset;
+
+  @override
+  String toString() =>
+      '(scrollOffset: $scrollOffset, widgetOffset: $freezedOffset)';
 }
