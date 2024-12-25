@@ -30,6 +30,7 @@ class NotifiableLisViewBuilder extends StatelessWidget {
               },
               child: ListView.builder(
                 padding: EdgeInsets.zero,
+                physics: const BouncingScrollPhysics(),
                 itemCount: delegates.length,
                 itemBuilder: (context, index) {
                   return SizedBox(
@@ -74,14 +75,16 @@ class FreezedMetrics {
   const FreezedMetrics({
     required this.scrollOffset,
     required this.freezedOffset,
+    required this.height,
   });
 
-  const FreezedMetrics.zero(this.scrollOffset) : freezedOffset = 0;
+  const FreezedMetrics.zero(this.scrollOffset, this.height) : freezedOffset = 0;
 
   final double scrollOffset;
   final double freezedOffset;
+  final double height;
 
   @override
   String toString() =>
-      '(scrollOffset: $scrollOffset, widgetOffset: $freezedOffset)';
+      '(scrollOffset: $scrollOffset, freezedOffset: $freezedOffset, height: $height)';
 }

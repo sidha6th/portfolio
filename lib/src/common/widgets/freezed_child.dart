@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sidharth/src/common/widgets/scrollable/notifiable_list_view_builder.dart';
 import 'package:sidharth/src/common/extensions/bool.dart';
 import 'package:sidharth/src/common/extensions/iterable.dart';
+import 'package:sidharth/src/common/widgets/scrollable/notifiable_list_view_builder.dart';
 
 class FreezedChild extends StatefulWidget {
   const FreezedChild({
@@ -22,17 +22,18 @@ class FreezedChild extends StatefulWidget {
 }
 
 class _FreezedChildState extends State<FreezedChild> {
-  late final currentDelegate = widget.delegates[widget.index];
-  FreezedMetrics metrics = const FreezedMetrics.zero(0);
   double? _pastViewPortTotalHeight;
+  late final currentDelegate = widget.delegates[widget.index];
+  late FreezedMetrics metrics = FreezedMetrics.zero(
+    0,
+    currentDelegate.freezeViewPortHeight,
+  );
 
   @override
   void didUpdateWidget(covariant FreezedChild oldWidget) {
     final offset = widget.scrollMetrics?.pixels ?? 0;
-    currentDelegate.shouldFreeze.then(
-      () => metrics = _metrics(offset),
-      orElse: () => metrics = FreezedMetrics.zero(offset),
-    );
+    metrics = currentDelegate.shouldFreeze.then(() => _metrics(offset)) ??
+        FreezedMetrics.zero(offset, currentDelegate.freezeViewPortHeight);
     super.didUpdateWidget(oldWidget);
   }
 
@@ -69,6 +70,7 @@ class _FreezedChildState extends State<FreezedChild> {
         return FreezedMetrics(
           scrollOffset: offset,
           freezedOffset: offset.clamp(0.0, max),
+          height: currentDelegate.freezeViewPortHeight,
         );
       },
       orElse: () {
@@ -78,6 +80,7 @@ class _FreezedChildState extends State<FreezedChild> {
             offset.clamp(0, totalPastHeight - widget.screenSize.height);
         return FreezedMetrics(
           scrollOffset: offset,
+          height: currentDelegate.freezeViewPortHeight,
           freezedOffset: (clampedOffset - max).clamp(0.0, double.infinity),
         );
       },

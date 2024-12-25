@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:sidharth/src/common/constants/colors.dart';
 
 class ColoredSizedBox extends StatelessWidget {
   const ColoredSizedBox({
     this.margin = EdgeInsets.zero,
-    this.color = Colors.white,
+    this.color = AppColors.white,
     this.height,
     this.width,
     this.child,
