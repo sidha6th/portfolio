@@ -18,17 +18,17 @@ class Dashboard extends StatelessWidget {
       body: NotifiableLisViewBuilder(
         delegates: [
           FreezedWidgetDelegate(
-            freezeViewPortHeight: size.height,
+            viewPortHeight: size.height,
             shouldFreeze: false,
             childBuilder: FirstSection.new,
           ),
           FreezedWidgetDelegate(
-            freezeViewPortHeight: size.height,
+            viewPortHeight: size.height,
             shouldFreeze: false,
             childBuilder: SecondSection.new,
           ),
           FreezedWidgetDelegate(
-            freezeViewPortHeight: size.height * 2,
+            viewPortHeight: size.height * 2,
             childBuilder: (offset) {
               return ColoredSizedBox(
                 color: Colors.yellow,
@@ -42,7 +42,7 @@ class Dashboard extends StatelessWidget {
             },
           ),
           FreezedWidgetDelegate(
-            freezeViewPortHeight: size.height * 2,
+            viewPortHeight: size.height * 2,
             childBuilder: (offset) {
               return ColoredSizedBox(
                 color: Colors.red,

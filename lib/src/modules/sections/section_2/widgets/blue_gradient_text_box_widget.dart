@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sidharth/gen/fonts.gen.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
+import 'package:sidharth/src/common/extensions/build_context.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
 
 class BlueGradientTextBoxWidget extends StatelessWidget {
@@ -12,6 +14,7 @@ class BlueGradientTextBoxWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = context.screenWidth;
     return DecoratedBox(
       decoration: BoxDecoration(
         gradient: const LinearGradient(
@@ -22,7 +25,7 @@ class BlueGradientTextBoxWidget extends StatelessWidget {
         boxShadow: [
           const BoxShadow(
             color: AppColors.black26,
-            blurRadius: 10.0,
+            blurRadius: 8.0,
             spreadRadius: 3.0,
             offset: Offset(0, 3),
           ),
@@ -30,13 +33,19 @@ class BlueGradientTextBoxWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(100),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+        padding: EdgeInsets.symmetric(
+          horizontal: (width * 0.015).clamp(3, 10),
+          vertical: (width * 0.02).clamp(5, 15),
+        ),
         child: TextWidget(
           text,
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.white,
+            fontFamily: FontFamily.elgocThin,
+            fontSize: (width * 0.02).clamp(0, 15),
+            fontWeight: FontWeight.bold,
             shadows: [
-              BoxShadow(
+              const BoxShadow(
                 blurRadius: 10.0,
                 spreadRadius: 2,
                 color: AppColors.white,

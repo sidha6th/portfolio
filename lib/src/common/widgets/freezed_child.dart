@@ -22,38 +22,42 @@ class FreezedChild extends StatefulWidget {
 }
 
 class _FreezedChildState extends State<FreezedChild> {
+  late final delegate = widget.delegates[widget.index];
+  late final totalPastHeight =
+      widget.index == 0 ? 0 : _calcPastViewPortHeight();
+  late final origin = (widget.index == 0)
+      ? delegate.viewPortHeight - widget.screenSize.height
+      : totalPastHeight - delegate.viewPortHeight;
+
   double? _pastViewPortTotalHeight;
-  late final currentDelegate = widget.delegates[widget.index];
-  late FreezedMetrics metrics = FreezedMetrics.zero(
-    0,
-    currentDelegate.freezeViewPortHeight,
-  );
+  late FreezedMetrics metrics =
+      FreezedMetrics.zero(0, delegate.viewPortHeight, 0);
 
   @override
   void didUpdateWidget(covariant FreezedChild oldWidget) {
     final offset = widget.scrollMetrics?.pixels ?? 0;
-    metrics = currentDelegate.shouldFreeze.then(() => _metrics(offset)) ??
-        FreezedMetrics.zero(offset, currentDelegate.freezeViewPortHeight);
+
+    metrics = _metrics(offset);
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
-    return currentDelegate.shouldFreeze.then(
+    return delegate.shouldFreeze.then(
       () {
         return Transform.translate(
           offset: Offset(0, metrics.freezedOffset),
-          child: currentDelegate.childBuilder(metrics),
+          child: delegate.childBuilder(metrics),
         );
       },
-      orElse: () => currentDelegate.childBuilder(metrics),
+      orElse: () => delegate.childBuilder(metrics),
     )!;
   }
 
   double _calcPastViewPortHeight() {
     return _pastViewPortTotalHeight ??= widget.delegates.transform<double>(
           (e, result) {
-            return e.freezeViewPortHeight + (result ?? 0);
+            return e.viewPortHeight + (result ?? 0);
           },
           end: widget.index + 1,
         ) ??
@@ -65,23 +69,21 @@ class _FreezedChildState extends State<FreezedChild> {
   ) {
     return (widget.index == 0).then(
       () {
-        final max =
-            currentDelegate.freezeViewPortHeight - widget.screenSize.height;
         return FreezedMetrics(
           scrollOffset: offset,
-          freezedOffset: offset.clamp(0.0, max),
-          height: currentDelegate.freezeViewPortHeight,
+          freezedOffset: offset.clamp(0.0, origin),
+          height: delegate.viewPortHeight,
+          origin: widget.scrollMetrics?.minScrollExtent ?? 0,
         );
       },
       orElse: () {
-        final totalPastHeight = _calcPastViewPortHeight();
-        final max = totalPastHeight - currentDelegate.freezeViewPortHeight;
         final clampedOffset =
-            offset.clamp(0, totalPastHeight - widget.screenSize.height);
+            offset.clamp(0.0, totalPastHeight - widget.screenSize.height);
         return FreezedMetrics(
           scrollOffset: offset,
-          height: currentDelegate.freezeViewPortHeight,
-          freezedOffset: (clampedOffset - max).clamp(0.0, double.infinity),
+          freezedOffset: (clampedOffset - origin).clamp(0.0, double.infinity),
+          height: delegate.viewPortHeight,
+          origin: origin,
         );
       },
     )!;

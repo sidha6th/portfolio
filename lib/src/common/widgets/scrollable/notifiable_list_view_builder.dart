@@ -34,7 +34,7 @@ class NotifiableLisViewBuilder extends StatelessWidget {
                 itemCount: delegates.length,
                 itemBuilder: (context, index) {
                   return SizedBox(
-                    height: delegates[index].freezeViewPortHeight,
+                    height: delegates[index].viewPortHeight,
                     width: screenSize.width,
                     child: ViewModelBuilder.reactive(
                       viewModelBuilder: () => model,
@@ -61,13 +61,13 @@ class NotifiableLisViewBuilder extends StatelessWidget {
 
 class FreezedWidgetDelegate {
   const FreezedWidgetDelegate({
-    required this.freezeViewPortHeight,
+    required this.viewPortHeight,
     required this.childBuilder,
     this.shouldFreeze = true,
   });
 
   final Widget Function(FreezedMetrics metrics) childBuilder;
-  final double freezeViewPortHeight;
+  final double viewPortHeight;
   final bool shouldFreeze;
 }
 
@@ -75,16 +75,26 @@ class FreezedMetrics {
   const FreezedMetrics({
     required this.scrollOffset,
     required this.freezedOffset,
+    required this.origin,
     required this.height,
   });
 
-  const FreezedMetrics.zero(this.scrollOffset, this.height) : freezedOffset = 0;
+  const FreezedMetrics.zero(
+    this.scrollOffset,
+    this.height,
+    this.origin,
+  ) : freezedOffset = 0;
 
   final double scrollOffset;
   final double freezedOffset;
   final double height;
+  final double origin;
+
+  double get dyFromOrigin => (scrollOffset + height) - origin;
+  double get dy => scrollOffset - origin;
 
   @override
-  String toString() =>
-      '(scrollOffset: $scrollOffset, freezedOffset: $freezedOffset, height: $height)';
+  String toString() {
+    return '(scrollOffset: $scrollOffset, freezedOffset: $freezedOffset, height: $height, origin: $origin)';
+  }
 }
