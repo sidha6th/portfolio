@@ -24,11 +24,11 @@ class NameAndDesignation extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           AnimatedSlide(
-            duration: KDurations.ms300,
+            duration: KDurations.ms100,
             offset: Offset(0, -_dy(maxDy)),
             child: AnimatedOpacity(
               opacity: _opacity(50),
-              duration: KDurations.ms300,
+              duration: KDurations.ms100,
               child: TextWidget(
                 Personal.name,
                 style: TextStyle(
@@ -41,11 +41,11 @@ class NameAndDesignation extends StatelessWidget {
             ),
           ),
           AnimatedSlide(
-            duration: KDurations.ms300,
+            duration: KDurations.ms100,
             offset: Offset(0, -_dy(maxDy, delay: 50)),
             child: AnimatedOpacity(
               opacity: _opacity(100),
-              duration: KDurations.ms300,
+              duration: KDurations.ms100,
               child: TextWidget(
                 Personal.designation,
                 style: TextStyle(
@@ -58,11 +58,11 @@ class NameAndDesignation extends StatelessWidget {
             ),
           ),
           AnimatedSlide(
-            duration: KDurations.ms300,
+            duration: KDurations.ms100,
             offset: Offset(0, -_dy(maxDy, delay: 150)),
             child: AnimatedOpacity(
               opacity: _opacity(150),
-              duration: KDurations.ms300,
+              duration: KDurations.ms100,
               child: TextWidget(
                 Personal.year,
                 style: TextStyle(

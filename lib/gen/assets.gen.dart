@@ -19,6 +19,19 @@ class $AssetsImagesGen {
   $AssetsImagesPngGen get png => const $AssetsImagesPngGen();
 }
 
+class $AssetsRivesGen {
+  const $AssetsRivesGen();
+
+  /// File path: assets/rives/mobile.riv
+  String get mobile => 'assets/rives/mobile.riv';
+
+  /// File path: assets/rives/running_man.riv
+  String get runningMan => 'assets/rives/running_man.riv';
+
+  /// List of all assets
+  List<String> get values => [mobile, runningMan];
+}
+
 class $AssetsImagesJpegGen {
   const $AssetsImagesJpegGen();
 
@@ -44,6 +57,7 @@ class Assets {
   Assets._();
 
   static const $AssetsImagesGen images = $AssetsImagesGen();
+  static const $AssetsRivesGen rives = $AssetsRivesGen();
 }
 
 class AssetGenImage {

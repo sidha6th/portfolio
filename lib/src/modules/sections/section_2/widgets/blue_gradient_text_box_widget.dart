@@ -40,15 +40,22 @@ class BlueGradientTextBoxWidget extends StatelessWidget {
         child: TextWidget(
           text,
           style: TextStyle(
-            color: AppColors.white,
+            color: Colors.white,
             fontFamily: FontFamily.elgocThin,
             fontSize: (width * 0.02).clamp(0, 15),
             fontWeight: FontWeight.bold,
             shadows: [
               const BoxShadow(
                 blurRadius: 10.0,
-                spreadRadius: 2,
-                color: AppColors.white,
+                spreadRadius: 0.2,
+                offset: Offset(-1, 1),
+                color: Colors.white,
+              ),
+              const BoxShadow(
+                blurRadius: 10.0,
+                spreadRadius: 0.2,
+                offset: Offset(1, -1),
+                color: Colors.white,
               ),
             ],
           ),

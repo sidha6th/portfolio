@@ -1,5 +1,5 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:sidharth/src/common/extensions/build_context.dart';
 import 'package:sidharth/src/common/widgets/freezed_child.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/view_model/scroll_offset_state_provider.dart';
 import 'package:stacked/stacked.dart';
@@ -16,7 +16,7 @@ class NotifiableLisViewBuilder extends StatelessWidget {
   Widget build(
     BuildContext context,
   ) {
-    final screenSize = MediaQuery.of(context).size;
+    final screenSize = context.screenSize;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -33,21 +33,38 @@ class NotifiableLisViewBuilder extends StatelessWidget {
                 physics: const BouncingScrollPhysics(),
                 itemCount: delegates.length,
                 itemBuilder: (context, index) {
-                  return SizedBox(
-                    height: delegates[index].viewPortHeight,
-                    width: screenSize.width,
-                    child: ViewModelBuilder.reactive(
-                      viewModelBuilder: () => model,
-                      disposeViewModel: false,
-                      builder: (context, model, child) {
-                        return FreezedChild(
-                          delegates: delegates,
-                          scrollMetrics: model.metrics,
-                          screenSize: screenSize,
-                          index: index,
-                        );
-                      },
+                  final delegate = delegates[index];
+
+                  final child = ViewModelBuilder.reactive(
+                    viewModelBuilder: () => model,
+                    disposeViewModel: false,
+                    builder: (context, model, child) {
+                      return FreezedChild(
+                        delegates: delegates,
+                        scrollMetrics: model.metrics,
+                        screenSize: screenSize,
+                        index: index,
+                      );
+                    },
+                  );
+
+                  return ConstrainedBox(
+                    constraints: BoxConstraints.expand(
+                      height: delegate.viewPortHeight(screenSize),
+                      width: screenSize.width,
                     ),
+                    key: Key('$index-Freezed#Child'),
+                    child: delegate.shouldFreeze
+                        ? Column(
+                            children: [
+                              SizedBox(
+                                height: screenSize.height,
+                                width: screenSize.width,
+                                child: child,
+                              ),
+                            ],
+                          )
+                        : child,
                   );
                 },
               ),
@@ -67,34 +84,39 @@ class FreezedWidgetDelegate {
   });
 
   final Widget Function(FreezedMetrics metrics) childBuilder;
-  final double viewPortHeight;
+  final double Function(Size screenSize) viewPortHeight;
   final bool shouldFreeze;
 }
 
 class FreezedMetrics {
   const FreezedMetrics({
     required this.scrollOffset,
-    required this.freezedOffset,
+    required this.freezedDy,
     required this.origin,
-    required this.height,
+    required this.childHeight,
+    required this.viewPortSize,
   });
 
   const FreezedMetrics.zero(
-    this.scrollOffset,
-    this.height,
-    this.origin,
-  ) : freezedOffset = 0;
+    this.childHeight,
+    this.viewPortSize,
+  )   : freezedDy = 0,
+        scrollOffset = 0,
+        origin = 0;
 
   final double scrollOffset;
-  final double freezedOffset;
-  final double height;
+  final double freezedDy;
+  final double childHeight;
   final double origin;
+  final Size viewPortSize;
 
-  double get dyFromOrigin => (scrollOffset + height) - origin;
   double get dy => scrollOffset - origin;
+
+  double get viewPortHeight => viewPortSize.height;
+  double get viewPortWidth => viewPortSize.width;
 
   @override
   String toString() {
-    return '(scrollOffset: $scrollOffset, freezedOffset: $freezedOffset, height: $height, origin: $origin)';
+    return '(scrollOffset: $scrollOffset, freezedOffset: $freezedDy, height: $childHeight, origin: $origin)';
   }
 }

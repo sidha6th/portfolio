@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
-import 'package:sidharth/src/common/extensions/build_context.dart';
-import 'package:sidharth/src/common/widgets/box/colored_sided_box.dart';
 import 'package:sidharth/src/common/widgets/scrollable/notifiable_list_view_builder.dart';
-import 'package:sidharth/src/common/widgets/text/text_widget.dart';
 import 'package:sidharth/src/modules/sections/section_1/first_section.dart';
 import 'package:sidharth/src/modules/sections/section_2/second_section.dart';
 
@@ -12,51 +9,37 @@ class Dashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = context.screenSize;
     return Scaffold(
       backgroundColor: AppColors.black,
       body: NotifiableLisViewBuilder(
         delegates: [
           FreezedWidgetDelegate(
-            viewPortHeight: size.height,
             shouldFreeze: false,
+            viewPortHeight: (size) => size.height,
             childBuilder: FirstSection.new,
           ),
           FreezedWidgetDelegate(
-            viewPortHeight: size.height,
             shouldFreeze: false,
+            viewPortHeight: (screenSize) => screenSize.height,
             childBuilder: SecondSection.new,
           ),
           FreezedWidgetDelegate(
-            viewPortHeight: size.height * 2,
-            childBuilder: (offset) {
-              return ColoredSizedBox(
-                color: Colors.yellow,
-                height: size.height,
-                width: size.width,
-                child: TextWidget(
-                  'data' * 2,
-                  style: const TextStyle(color: AppColors.white, fontSize: 40),
-                ),
-              );
-            },
-          ),
-          FreezedWidgetDelegate(
-            viewPortHeight: size.height * 2,
-            childBuilder: (offset) {
-              return ColoredSizedBox(
-                color: Colors.red,
-                height: size.height,
-                width: size.width,
-                child: TextWidget(
-                  'data' * 2,
-                  style: const TextStyle(color: AppColors.white, fontSize: 40),
-                ),
-              );
-            },
+            viewPortHeight: (screenSize) => 2000,
+            childBuilder: ThirdSection.new,
           ),
         ],
       ),
     );
+  }
+}
+
+class ThirdSection extends StatelessWidget {
+  const ThirdSection(this.metrics, {super.key});
+
+  final FreezedMetrics metrics;
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }

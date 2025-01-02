@@ -3,7 +3,6 @@ import 'package:sidharth/gen/assets.gen.dart';
 import 'package:sidharth/gen/fonts.gen.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
 import 'package:sidharth/src/common/constants/data/personal.dart';
-import 'package:sidharth/src/common/extensions/build_context.dart';
 import 'package:sidharth/src/common/widgets/scrollable/notifiable_list_view_builder.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
 import 'package:sidharth/src/modules/sections/section_1/widgets/animated_hovering_image.dart';
@@ -17,13 +16,21 @@ class FirstSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final imageWidth = (context.screenWidth / 2).clamp(50.0, 400.0);
+    final imageWidth = (metrics.viewPortWidth / 2)
+        .clamp(50.0, (metrics.viewPortHeight * 0.6).clamp(0.0, 500.0));
+
     return Stack(
       alignment: Alignment.center,
       children: [
+        MainImageWidget(imageWidth: imageWidth),
+        NameAndDesignation(metrics: metrics),
+        AnimatedHoveringImageWidget(
+          path: Assets.images.png.image.path,
+          imageWidth: imageWidth,
+        ),
         Positioned(
-          left: 20,
           top: 20,
+          left: 20,
           child: TextWidget(
             Personal.portfolio,
             style: const TextStyle(
@@ -32,12 +39,6 @@ class FirstSection extends StatelessWidget {
               fontSize: 7,
             ),
           ),
-        ),
-        MainImageWidget(imageWidth: imageWidth),
-        NameAndDesignation(metrics: metrics),
-        AnimatedHoveringImageWidget(
-          path: Assets.images.png.image.path,
-          imageWidth: imageWidth,
         ),
       ],
     );
