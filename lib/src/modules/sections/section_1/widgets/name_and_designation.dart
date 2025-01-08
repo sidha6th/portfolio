@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sidharth/gen/fonts.gen.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
-import 'package:sidharth/src/common/constants/data/personal.dart';
 import 'package:sidharth/src/common/constants/durations.dart';
+import 'package:sidharth/src/common/constants/personal.dart';
+import 'package:sidharth/src/common/constants/string.dart';
 import 'package:sidharth/src/common/extensions/build_context.dart';
-import 'package:sidharth/src/common/widgets/scrollable/notifiable_list_view_builder.dart';
+import 'package:sidharth/src/common/model/freezed_metrics.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
 
 class NameAndDesignation extends StatelessWidget {
@@ -30,7 +31,7 @@ class NameAndDesignation extends StatelessWidget {
               opacity: _opacity(50),
               duration: KDurations.ms100,
               child: TextWidget(
-                Personal.name,
+                KPersonal.name,
                 style: TextStyle(
                   fontSize: fontSize,
                   color: AppColors.white,
@@ -47,7 +48,7 @@ class NameAndDesignation extends StatelessWidget {
               opacity: _opacity(100),
               duration: KDurations.ms100,
               child: TextWidget(
-                Personal.designation,
+                KPersonal.designation,
                 style: TextStyle(
                   fontSize: designationFontSize,
                   color: AppColors.white,
@@ -64,7 +65,7 @@ class NameAndDesignation extends StatelessWidget {
               opacity: _opacity(150),
               duration: KDurations.ms100,
               child: TextWidget(
-                Personal.year,
+                KString.year,
                 style: TextStyle(
                   fontSize: fontSize,
                   color: AppColors.white,

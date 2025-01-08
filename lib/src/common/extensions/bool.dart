@@ -1,4 +1,4 @@
-extension ExtensionOnBool on bool? {
+extension ExtensionOnNullableBool on bool? {
   /// Executes the [ifTrue] callback when the boolean is `true`.
   /// If the boolean is `false` and [orElse] is provided, executes the [orElse] callback.
   /// If the boolean is `null`, it executes based on the [fallbackTo] value.

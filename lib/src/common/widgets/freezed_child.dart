@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sidharth/src/common/extensions/bool.dart';
 import 'package:sidharth/src/common/extensions/iterable.dart';
-import 'package:sidharth/src/common/widgets/scrollable/notifiable_list_view_builder.dart';
+import 'package:sidharth/src/common/model/delegate/freezed_widget_delegate.dart';
+import 'package:sidharth/src/common/model/freezed_metrics.dart';
 
 class FreezedChild extends StatefulWidget {
   const FreezedChild({
@@ -22,13 +22,13 @@ class FreezedChild extends StatefulWidget {
 }
 
 class _FreezedChildState extends State<FreezedChild> {
-  double? _pastViewPortTotalHeight;
+  double _height = 0;
   late final delegate = widget.delegates[widget.index];
-  late final height = delegate.viewPortHeight(widget.screenSize);
-  late FreezedMetrics metrics = FreezedMetrics.zero(height, widget.screenSize);
+  late var metrics = FreezedMetrics.zero(_height, widget.screenSize);
 
   @override
   void didUpdateWidget(covariant FreezedChild oldWidget) {
+    _height = delegate.viewPortHeight(widget.screenSize);
     final offset = widget.scrollMetrics?.pixels ?? 0;
     metrics = _metrics(offset);
     super.didUpdateWidget(oldWidget);
@@ -46,45 +46,41 @@ class _FreezedChildState extends State<FreezedChild> {
   }
 
   FreezedMetrics _metrics(double offset) {
-    return (widget.index == 0).then(
-      () {
-        final max = height - widget.screenSize.height;
-        final dy = offset.clamp(0.0, max);
-        return FreezedMetrics(
-          freezedDy: dy,
-          origin: offset,
-          childHeight: height,
-          scrollOffset: offset,
-          viewPortSize: widget.screenSize,
-        );
-      },
-      orElse: () {
-        final pastScrolledHeight = _calcPastViewPortHeight();
-        final pastScrollableHeight = pastScrolledHeight - height;
-        final origin =
-            (offset + widget.screenSize.height) - pastScrollableHeight;
+    if (widget.index == 0) {
+      final max = (_height - widget.screenSize.height).clamp(0.0, _height);
+      final dy = offset.clamp(0.0, max);
+      return FreezedMetrics(
+        freezedDy: dy,
+        origin: offset,
+        childHeight: _height,
+        scrollOffset: offset,
+        viewPortSize: widget.screenSize,
+      );
+    }
 
-        final max = pastScrolledHeight - widget.screenSize.height;
-        final clampedOffset = offset.clamp(0.0, max);
-        final dy = (clampedOffset - (pastScrollableHeight))
-            .clamp(0.0, max - (pastScrollableHeight));
+    final pastScrolledHeight = _calcPastViewPortHeight;
+    final pastScrollableHeight = pastScrolledHeight - _height;
+    final origin = (offset + widget.screenSize.height) - pastScrollableHeight;
+    final max = (pastScrolledHeight - widget.screenSize.height)
+        .clamp(0, double.infinity);
+    final clampedOffset = offset.clamp(0.0, max);
+    final dy = (clampedOffset - (pastScrollableHeight)).clamp(
+      0.0,
+      (max - (pastScrollableHeight)).clamp(0.0, double.infinity),
+    );
 
-        return FreezedMetrics(
-          origin: origin.abs(),
-          freezedDy: dy,
-          childHeight: height,
-          scrollOffset: offset,
-          viewPortSize: widget.screenSize,
-        );
-      },
-    )!;
+    return FreezedMetrics(
+      origin: origin.clamp(0, double.infinity),
+      freezedDy: dy,
+      childHeight: _height,
+      scrollOffset: offset,
+      viewPortSize: widget.screenSize,
+    );
   }
 
-  double _calcPastViewPortHeight() {
-    return _pastViewPortTotalHeight ??= widget.delegates.transform<double>(
-          (e, result) {
-            return e.viewPortHeight(widget.screenSize) + (result ?? 0);
-          },
+  double get _calcPastViewPortHeight {
+    return widget.delegates.transform<double>(
+          (e, result) => e.viewPortHeight(widget.screenSize) + (result ?? 0),
           end: widget.index + 1,
         ) ??
         0;

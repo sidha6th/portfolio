@@ -3,12 +3,12 @@ import 'dart:math' as m;
 import 'package:flutter/material.dart';
 import 'package:sidharth/gen/fonts.gen.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
-import 'package:sidharth/src/common/constants/data/personal.dart';
-import 'package:sidharth/src/common/constants/durations.dart';
+import 'package:sidharth/src/common/constants/personal.dart';
+import 'package:sidharth/src/common/constants/string.dart';
 import 'package:sidharth/src/common/extensions/build_context.dart';
-import 'package:sidharth/src/common/widgets/scrollable/notifiable_list_view_builder.dart';
+import 'package:sidharth/src/common/model/freezed_metrics.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
-import 'package:sidharth/src/modules/sections/section_2/widgets/blue_gradient_text_box_widget.dart';
+import 'package:sidharth/src/modules/sections/section_2/widgets/animated_floating_text_widget.dart';
 
 class SecondSection extends StatelessWidget {
   const SecondSection(this.metrics, {super.key});
@@ -31,7 +31,7 @@ class SecondSection extends StatelessWidget {
           SizedBox(
             width: size.width.clamp(0, 500),
             child: TextWidget(
-              Personal.introduction,
+              KPersonal.introduction,
               style: const TextStyle(
                 fontSize: 16,
                 color: AppColors.white,
@@ -43,7 +43,7 @@ class SecondSection extends StatelessWidget {
             ),
           ),
           TextWidget(
-            Personal.whatDoIDo,
+            KString.whatDoIDo,
             style: const TextStyle(
               fontFamily: FontFamily.cindieMonoD,
               color: AppColors.white,
@@ -54,7 +54,7 @@ class SecondSection extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               TextWidget(
-                Personal.quote,
+                KString.quote,
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 style: TextStyle(
                   fontFamily: FontFamily.cindieMonoD,
@@ -76,7 +76,7 @@ class SecondSection extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    AnimatingQuestions(
+                    AnimatedFloatingTextWidget(
                       text:
                           'Oh, you work with Flutter? Is that a game or something?',
                       metrics: metrics,
@@ -86,7 +86,7 @@ class SecondSection extends StatelessWidget {
                       dx: -dx,
                       dy: -dy,
                     ),
-                    AnimatingQuestions(
+                    AnimatedFloatingTextWidget(
                       text: 'Can you make me an app for free?',
                       metrics: metrics,
                       initialDx: 0.5,
@@ -94,7 +94,7 @@ class SecondSection extends StatelessWidget {
                       dx: dx,
                       dy: -dy,
                     ),
-                    AnimatingQuestions(
+                    AnimatedFloatingTextWidget(
                       metrics: metrics,
                       text:
                           'Wait, why do apps keep crashing—can’t you fix that?',
@@ -103,7 +103,7 @@ class SecondSection extends StatelessWidget {
                       dx: -dx,
                       dy: dy,
                     ),
-                    AnimatingQuestions(
+                    AnimatedFloatingTextWidget(
                       metrics: metrics,
                       text: 'So, do you just press a bunch of keys all day?',
                       angle: angle,
@@ -112,7 +112,7 @@ class SecondSection extends StatelessWidget {
                       dx: dx,
                       dy: -dy,
                     ),
-                    AnimatingQuestions(
+                    AnimatedFloatingTextWidget(
                       metrics: metrics,
                       text: 'Can you add a feature that reads my mind?',
                       initialDx: 0.4,
@@ -127,56 +127,6 @@ class SecondSection extends StatelessWidget {
             ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-class AnimatingQuestions extends StatefulWidget {
-  const AnimatingQuestions({
-    required this.metrics,
-    required this.text,
-    required this.angle,
-    required this.dx,
-    required this.dy,
-    this.initialDy = 0,
-    this.initialDx = 0,
-    this.initialAngle = 0,
-    this.alignment = Alignment.center,
-    super.key,
-  });
-
-  final FreezedMetrics metrics;
-  final String text;
-  final double angle;
-  final double dy;
-  final double dx;
-  final double initialDy;
-  final double initialDx;
-  final double initialAngle;
-  final Alignment alignment;
-
-  @override
-  State<AnimatingQuestions> createState() => _AnimatingQuestionsState();
-}
-
-class _AnimatingQuestionsState extends State<AnimatingQuestions> {
-  late final child = BlueGradientTextBoxWidget(widget.text);
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedSlide(
-      offset: Offset(
-        widget.initialDx + widget.dx,
-        widget.initialDy + widget.dy,
-      ),
-      duration: KDurations.ms50,
-      child: AnimatedRotation(
-        turns: widget.initialAngle + widget.angle,
-        alignment: widget.alignment,
-        duration: KDurations.ms50,
-        filterQuality: FilterQuality.low,
-        child: child,
       ),
     );
   }

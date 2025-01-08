@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sidharth/gen/assets.gen.dart';
 import 'package:sidharth/gen/fonts.gen.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
-import 'package:sidharth/src/common/constants/data/personal.dart';
-import 'package:sidharth/src/common/widgets/scrollable/notifiable_list_view_builder.dart';
+import 'package:sidharth/src/common/constants/string.dart';
+import 'package:sidharth/src/common/model/freezed_metrics.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
 import 'package:sidharth/src/modules/sections/section_1/widgets/animated_hovering_image.dart';
 import 'package:sidharth/src/modules/sections/section_1/widgets/main_image.dart';
@@ -32,7 +32,7 @@ class FirstSection extends StatelessWidget {
           top: 20,
           left: 20,
           child: TextWidget(
-            Personal.portfolio,
+            KString.portfolio,
             style: const TextStyle(
               fontFamily: FontFamily.cindieMonoD,
               color: AppColors.white,

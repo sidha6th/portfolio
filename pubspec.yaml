@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   stacked: ^3.4.4
+  animated_flip_counter: ^0.3.4
   animate_do: ^3.3.4
   rive: ^0.13.20
 
