@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
+import 'package:sidharth/src/common/constants/dimensions.dart';
 import 'package:sidharth/src/common/model/delegate/freezed_widget_delegate.dart';
 import 'package:sidharth/src/common/widgets/box/colored_sided_box.dart';
 import 'package:sidharth/src/common/widgets/scrollable/notifiable_list_view_builder.dart';
@@ -30,7 +31,7 @@ class Dashboard extends StatelessWidget {
           ),
           FreezedWidgetDelegate(
             viewPortHeight: (screenSize) {
-              return (timeLineWidth + (screenSize.width * 0.5));
+              return (KDimensions.timeLineWidth + (screenSize.width * 0.5));
             },
             childBuilder: ThirdSection.new,
           ),
