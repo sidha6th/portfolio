@@ -17,10 +17,11 @@ class MonthIndicatorWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const ColoredSizedBox(
               height: 50,
-              width: 1,
+              width: 0.5,
             ),
             CircleAvatar(
               radius: 10,

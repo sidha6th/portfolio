@@ -31,7 +31,10 @@ class Dashboard extends StatelessWidget {
           ),
           FreezedWidgetDelegate(
             viewPortHeight: (screenSize) {
-              return (KDimensions.timeLineWidth + (screenSize.width * 0.5));
+              return (KDimensions.timeLineWidth +
+                  (screenSize.height * 0.5) +
+                  (screenSize.width.clamp(0, KDimensions.maxViewPortWidth) *
+                      0.5));
             },
             childBuilder: ThirdSection.new,
           ),

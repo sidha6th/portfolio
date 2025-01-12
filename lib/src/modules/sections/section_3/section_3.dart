@@ -33,22 +33,9 @@ class ThirdSection extends StatelessWidget {
             ],
           ),
         ),
-        Column(
-          children: [
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.arrow_drop_down,
-                  color: AppColors.white,
-                ),
-              ],
-            ),
-            TimeLineCalendar(
-              offset: metrics.origin,
-              metrics: metrics,
-            ),
-          ],
+        TimeLineCalendar(
+          offset: metrics.origin,
+          metrics: metrics,
         ),
       ],
     );

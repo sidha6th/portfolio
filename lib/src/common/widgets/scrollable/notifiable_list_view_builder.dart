@@ -26,31 +26,20 @@ class NotifiableLisViewBuilder extends StatelessWidget {
             builder: (context, constraints) {
               final size = constraints.biggest;
               return NotificationListener<ScrollNotification>(
-                onNotification: (notification) {
-                  if (notification.metrics.axis == Axis.vertical) {
-                    model.setMetrics(notification.metrics);
-                  }
-                  return true;
-                },
+                onNotification: (e) => _onScroll(e, model),
                 child: ListView.builder(
                   padding: EdgeInsets.zero,
                   physics: const BouncingScrollPhysics(),
                   itemCount: delegates.length,
+                  semanticChildCount: delegates.length,
                   itemBuilder: (context, index) {
                     final delegate = delegates[index];
-                    final child = ViewModelBuilder.reactive(
-                      viewModelBuilder: () => model,
-                      disposeViewModel: false,
-                      builder: (context, model, child) {
-                        return FreezedChild(
-                          delegates: delegates,
-                          scrollMetrics: model.metrics,
-                          screenSize: size,
-                          index: index,
-                        );
-                      },
+                    final child = FreezedReactiveChild(
+                      model: model,
+                      delegates: delegates,
+                      index: index,
+                      size: size,
                     );
-
                     return ConstrainedBox(
                       constraints: BoxConstraints.expand(
                         height: delegate.viewPortHeight(size),
@@ -72,6 +61,47 @@ class NotifiableLisViewBuilder extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  bool _onScroll(
+    ScrollNotification notification,
+    ScrollObservingViewModel model,
+  ) {
+    if (notification.metrics.axis == Axis.vertical) {
+      model.setMetrics(notification.metrics);
+    }
+    return true;
+  }
+}
+
+class FreezedReactiveChild extends StatelessWidget {
+  const FreezedReactiveChild({
+    required this.model,
+    required this.delegates,
+    required this.size,
+    required this.index,
+    super.key,
+  });
+
+  final ScrollObservingViewModel model;
+  final List<FreezedWidgetDelegate> delegates;
+  final Size size;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return ViewModelBuilder.reactive(
+      viewModelBuilder: () => model,
+      disposeViewModel: false,
+      builder: (context, model, child) {
+        return FreezedChild(
+          delegates: delegates,
+          scrollMetrics: model.metrics,
+          screenSize: size,
+          index: index,
+        );
+      },
     );
   }
 }

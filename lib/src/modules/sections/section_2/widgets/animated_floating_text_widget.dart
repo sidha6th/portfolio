@@ -3,7 +3,7 @@ import 'package:sidharth/src/common/constants/durations.dart';
 import 'package:sidharth/src/common/model/freezed_metrics.dart';
 import 'package:sidharth/src/modules/sections/section_2/widgets/blue_gradient_text_box_widget.dart';
 
-class AnimatedFloatingTextWidget extends StatefulWidget {
+class AnimatedFloatingTextWidget extends StatelessWidget {
   const AnimatedFloatingTextWidget({
     required this.metrics,
     required this.text,
@@ -28,28 +28,19 @@ class AnimatedFloatingTextWidget extends StatefulWidget {
   final Alignment alignment;
 
   @override
-  State<AnimatedFloatingTextWidget> createState() =>
-      _AnimatedFloatingTextWidgetState();
-}
-
-class _AnimatedFloatingTextWidgetState
-    extends State<AnimatedFloatingTextWidget> {
-  late final child = BlueGradientTextBoxWidget(widget.text);
-
-  @override
   Widget build(BuildContext context) {
     return AnimatedSlide(
       offset: Offset(
-        widget.initialDx + widget.dx,
-        widget.initialDy + widget.dy,
+        initialDx + dx,
+        initialDy + dy,
       ),
       duration: KDurations.ms50,
       child: AnimatedRotation(
-        turns: widget.initialAngle + widget.angle,
-        alignment: widget.alignment,
+        turns: initialAngle + angle,
+        alignment: alignment,
         duration: KDurations.ms50,
         filterQuality: FilterQuality.low,
-        child: child,
+        child: BlueGradientTextBoxWidget(text),
       ),
     );
   }

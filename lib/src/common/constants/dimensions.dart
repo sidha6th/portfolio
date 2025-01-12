@@ -7,8 +7,10 @@ class KDimensions {
   static const kFreezedListHorizontalTotalPadding = 40.0;
   static const kMonthTimelineIndicatorWidth = 31.0;
 
- static final totalMonthsPast = KPersonal.careerStartDate.monthDifference();
+  static final totalMonthsPast = KPersonal.careerStartDate.monthDifference();
 
-static final timeLineWidth =
-    (totalMonthsPast * KDimensions.kMonthTimelineIndicatorWidth).toDouble();
+  static final maxViewPortWidth = 600.0;
+
+  static final timeLineWidth =
+      (totalMonthsPast * KDimensions.kMonthTimelineIndicatorWidth);
 }

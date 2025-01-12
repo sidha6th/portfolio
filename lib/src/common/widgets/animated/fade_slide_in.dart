@@ -6,6 +6,7 @@ class FadeSlideIn extends StatelessWidget {
     required this.child,
     required this.offset,
     required this.opacity,
+    this.animate = true,
     this.duration = KDurations.ms100,
     super.key,
   });
@@ -14,9 +15,12 @@ class FadeSlideIn extends StatelessWidget {
   final Duration duration;
   final double opacity;
   final Offset offset;
+  final bool animate;
 
   @override
   Widget build(BuildContext context) {
+    if (!animate) return child;
+
     return AnimatedSlide(
       offset: offset,
       duration: duration,
