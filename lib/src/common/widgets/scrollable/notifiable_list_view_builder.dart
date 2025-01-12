@@ -12,7 +12,6 @@ class NotifiableLisViewBuilder extends StatelessWidget {
   });
 
   final List<FreezedWidgetDelegate> delegates;
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -27,34 +26,37 @@ class NotifiableLisViewBuilder extends StatelessWidget {
               final size = constraints.biggest;
               return NotificationListener<ScrollNotification>(
                 onNotification: (e) => _onScroll(e, model),
-                child: ListView.builder(
+                child: SingleChildScrollView(
                   padding: EdgeInsets.zero,
                   physics: const BouncingScrollPhysics(),
-                  itemCount: delegates.length,
-                  semanticChildCount: delegates.length,
-                  itemBuilder: (context, index) {
-                    final delegate = delegates[index];
-                    final child = FreezedReactiveChild(
-                      model: model,
-                      delegates: delegates,
-                      index: index,
-                      size: size,
-                    );
-                    return ConstrainedBox(
-                      constraints: BoxConstraints.expand(
-                        height: delegate.viewPortHeight(size),
-                        width: size.width,
-                      ),
-                      key: Key('$index-Freezed#Child'),
-                      child: delegate.shouldFreeze
-                          ? SizedBox(
-                              height: size.height,
-                              width: size.width,
-                              child: child,
-                            )
-                          : child,
-                    );
-                  },
+                  child: Column(
+                    children: List.generate(
+                      delegates.length,
+                      (index) {
+                        final delegate = delegates[index];
+                        final child = FreezedReactiveChild(
+                          model: model,
+                          delegates: delegates,
+                          index: index,
+                          size: size,
+                        );
+                        return ConstrainedBox(
+                          constraints: BoxConstraints.expand(
+                            height: delegate.viewPortHeight(size),
+                            width: size.width,
+                          ),
+                          key: Key('$index-Freezed#Child'),
+                          child: delegate.shouldFreeze
+                              ? SizedBox(
+                                  height: size.height,
+                                  width: size.width,
+                                  child: child,
+                                )
+                              : child,
+                        );
+                      },
+                    ),
+                  ),
                 ),
               );
             },

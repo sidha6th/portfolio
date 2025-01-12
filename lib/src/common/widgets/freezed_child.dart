@@ -26,6 +26,8 @@ class _FreezedChildState extends State<FreezedChild> {
   double get _height => delegate.viewPortHeight(widget.screenSize);
   late var metrics = FreezedMetrics.zero(_height, widget.screenSize);
 
+  late var screenSize = widget.screenSize;
+
   @override
   void didUpdateWidget(covariant FreezedChild oldWidget) {
     final offset = widget.scrollMetrics?.pixels ?? 0;
@@ -57,7 +59,7 @@ class _FreezedChildState extends State<FreezedChild> {
       );
     }
 
-    final pastScrolledHeight = _calcPastViewPortHeight;
+    final pastScrolledHeight = _calcPastViewPortHeight();
     final pastScrollableHeight = pastScrolledHeight - _height;
     final origin = (offset + widget.screenSize.height) - pastScrollableHeight;
     final max = (pastScrolledHeight - widget.screenSize.height)
@@ -82,7 +84,7 @@ class _FreezedChildState extends State<FreezedChild> {
     );
   }
 
-  double get _calcPastViewPortHeight {
+  double _calcPastViewPortHeight() {
     return widget.delegates.transform<double>(
           (e, result) => e.viewPortHeight(widget.screenSize) + (result ?? 0),
           end: widget.index + 1,
