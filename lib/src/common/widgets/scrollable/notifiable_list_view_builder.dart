@@ -12,6 +12,7 @@ class NotifiableLisViewBuilder extends StatelessWidget {
   });
 
   final List<FreezedWidgetDelegate> delegates;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -20,42 +21,41 @@ class NotifiableLisViewBuilder extends StatelessWidget {
       ),
       child: ViewModelBuilder.nonReactive(
         viewModelBuilder: ScrollObservingViewModel.new,
+        onViewModelReady: (viewModel) => viewModel.listenController(),
         builder: (context, model, child) {
           return LayoutBuilder(
             builder: (context, constraints) {
               final size = constraints.biggest;
-              return NotificationListener<ScrollNotification>(
-                onNotification: (e) => _onScroll(e, model),
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.zero,
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
-                    children: List.generate(
-                      delegates.length,
-                      (index) {
-                        final delegate = delegates[index];
-                        final child = FreezedReactiveChild(
-                          model: model,
-                          delegates: delegates,
-                          index: index,
-                          size: size,
-                        );
-                        return ConstrainedBox(
-                          constraints: BoxConstraints.expand(
-                            height: delegate.viewPortHeight(size),
-                            width: size.width,
-                          ),
-                          key: Key('$index-Freezed#Child'),
-                          child: delegate.shouldFreeze
-                              ? SizedBox(
-                                  height: size.height,
-                                  width: size.width,
-                                  child: child,
-                                )
-                              : child,
-                        );
-                      },
-                    ),
+              return SingleChildScrollView(
+                padding: EdgeInsets.zero,
+                controller: model.scrollController,
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  children: List.generate(
+                    delegates.length,
+                    (index) {
+                      final delegate = delegates[index];
+                      final child = FreezedReactiveChild(
+                        model: model,
+                        delegates: delegates,
+                        index: index,
+                        size: size,
+                      );
+                      return ConstrainedBox(
+                        constraints: BoxConstraints.expand(
+                          height: delegate.viewPortHeight(size),
+                          width: size.width,
+                        ),
+                        key: Key('$index-Freezed#Child'),
+                        child: delegate.shouldFreeze
+                            ? SizedBox(
+                                height: size.height,
+                                width: size.width,
+                                child: child,
+                              )
+                            : child,
+                      );
+                    },
                   ),
                 ),
               );
@@ -64,16 +64,6 @@ class NotifiableLisViewBuilder extends StatelessWidget {
         },
       ),
     );
-  }
-
-  bool _onScroll(
-    ScrollNotification notification,
-    ScrollObservingViewModel model,
-  ) {
-    if (notification.metrics.axis == Axis.vertical) {
-      model.setMetrics(notification.metrics);
-    }
-    return true;
   }
 }
 

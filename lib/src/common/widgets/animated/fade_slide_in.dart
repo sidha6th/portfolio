@@ -7,7 +7,9 @@ class FadeSlideIn extends StatelessWidget {
     required this.offset,
     required this.opacity,
     this.animate = true,
+    this.slidCurve = Curves.linear,
     this.duration = KDurations.ms100,
+    this.opacityCurve = Curves.linear,
     super.key,
   });
 
@@ -16,6 +18,8 @@ class FadeSlideIn extends StatelessWidget {
   final double opacity;
   final Offset offset;
   final bool animate;
+  final Curve opacityCurve;
+  final Curve slidCurve;
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +27,12 @@ class FadeSlideIn extends StatelessWidget {
 
     return AnimatedSlide(
       offset: offset,
+      curve: slidCurve,
       duration: duration,
       child: AnimatedOpacity(
         opacity: opacity,
         duration: duration,
+        curve: opacityCurve,
         child: child,
       ),
     );

@@ -6,9 +6,10 @@ import 'package:sidharth/src/common/widgets/box/colored_sided_box.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
 
 class MonthIndicatorWidget extends StatelessWidget {
-  const MonthIndicatorWidget(this.month, {super.key});
+  const MonthIndicatorWidget(this.month, {required this.height, super.key});
 
   final int month;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +19,10 @@ class MonthIndicatorWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 5),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            const ColoredSizedBox(
-              height: 50,
+            ColoredSizedBox(
+              height: height,
               width: 0.5,
             ),
             CircleAvatar(

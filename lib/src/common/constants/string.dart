@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 class KString {
   const KString._();
   // Misc
@@ -9,6 +11,5 @@ class KString {
   // Titles
   static const experience = 'Experience';
   static const portfolio = 'Portfolio © $year';
+  static const mmm_yyyy = 'MMM-yyyy';
 }
-
-
