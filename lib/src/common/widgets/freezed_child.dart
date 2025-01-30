@@ -22,13 +22,14 @@ class FreezedChild extends StatefulWidget {
 }
 
 class _FreezedChildState extends State<FreezedChild> {
-  double _height = 0;
-  late final delegate = widget.delegates[widget.index];
+  FreezedWidgetDelegate get delegate => widget.delegates[widget.index];
+  double get _height => delegate.viewPortHeight(widget.screenSize);
   late var metrics = FreezedMetrics.zero(_height, widget.screenSize);
+
+  late var screenSize = widget.screenSize;
 
   @override
   void didUpdateWidget(covariant FreezedChild oldWidget) {
-    _height = delegate.viewPortHeight(widget.screenSize);
     final offset = widget.scrollMetrics?.pixels ?? 0;
     metrics = _metrics(offset);
     super.didUpdateWidget(oldWidget);
@@ -38,6 +39,7 @@ class _FreezedChildState extends State<FreezedChild> {
   Widget build(BuildContext context) {
     if (delegate.shouldFreeze) {
       return Transform.translate(
+        transformHitTests: delegate.transformHitTests,
         offset: Offset(0, metrics.freezedDy),
         child: delegate.childBuilder(metrics),
       );
@@ -48,7 +50,7 @@ class _FreezedChildState extends State<FreezedChild> {
   FreezedMetrics _metrics(double offset) {
     if (widget.index == 0) {
       final max = (_height - widget.screenSize.height).clamp(0.0, _height);
-      final dy = offset.clamp(0.0, max);
+      final dy = delegate.shouldFreeze ? offset.clamp(0.0, max) : 0.0;
       return FreezedMetrics(
         freezedDy: dy,
         origin: offset,
@@ -58,27 +60,32 @@ class _FreezedChildState extends State<FreezedChild> {
       );
     }
 
-    final pastScrolledHeight = _calcPastViewPortHeight;
+    final pastScrolledHeight = _calcPastViewPortHeight();
     final pastScrollableHeight = pastScrolledHeight - _height;
     final origin = (offset + widget.screenSize.height) - pastScrollableHeight;
     final max = (pastScrolledHeight - widget.screenSize.height)
         .clamp(0, double.infinity);
     final clampedOffset = offset.clamp(0.0, max);
-    final dy = (clampedOffset - (pastScrollableHeight)).clamp(
-      0.0,
-      (max - (pastScrollableHeight)).clamp(0.0, double.infinity),
-    );
+    final freezedDy = _calcDy(clampedOffset, pastScrollableHeight, max);
 
     return FreezedMetrics(
       origin: origin.clamp(0, double.infinity),
-      freezedDy: dy,
+      freezedDy: freezedDy,
       childHeight: _height,
       scrollOffset: offset,
       viewPortSize: widget.screenSize,
     );
   }
 
-  double get _calcPastViewPortHeight {
+  double _calcDy(num clampedOffset, double pastScrollableHeight, num max) {
+    if (!delegate.shouldFreeze) return 0;
+    return (clampedOffset - (pastScrollableHeight)).clamp(
+      0.0,
+      (max - (pastScrollableHeight)).clamp(0.0, double.infinity),
+    );
+  }
+
+  double _calcPastViewPortHeight() {
     return widget.delegates.transform<double>(
           (e, result) => e.viewPortHeight(widget.screenSize) + (result ?? 0),
           end: widget.index + 1,

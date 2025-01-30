@@ -21,51 +21,38 @@ class NotifiableLisViewBuilder extends StatelessWidget {
       ),
       child: ViewModelBuilder.nonReactive(
         viewModelBuilder: ScrollObservingViewModel.new,
+        onViewModelReady: (viewModel) => viewModel.listenController(),
         builder: (context, model, child) {
           return LayoutBuilder(
             builder: (context, constraints) {
               final size = constraints.biggest;
-              return NotificationListener<ScrollNotification>(
-                onNotification: (notification) {
-                  if (notification.metrics.axis == Axis.vertical) {
-                    model.setMetrics(notification.metrics);
-                  }
-                  return true;
-                },
-                child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: delegates.length,
-                  itemBuilder: (context, index) {
-                    final delegate = delegates[index];
-                    final child = ViewModelBuilder.reactive(
-                      viewModelBuilder: () => model,
-                      disposeViewModel: false,
-                      builder: (context, model, child) {
-                        return FreezedChild(
-                          delegates: delegates,
-                          scrollMetrics: model.metrics,
-                          screenSize: size,
-                          index: index,
-                        );
-                      },
-                    );
-
-                    return ConstrainedBox(
+              return SingleChildScrollView(
+                padding: EdgeInsets.zero,
+                controller: model.scrollController,
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  children: List.generate(
+                    delegates.length,
+                    (index) => ConstrainedBox(
+                      key: Key('$index-Freezed#Child'),
                       constraints: BoxConstraints.expand(
-                        height: delegate.viewPortHeight(size),
+                        height: delegates[index].viewPortHeight(size),
                         width: size.width,
                       ),
-                      key: Key('$index-Freezed#Child'),
-                      child: delegate.shouldFreeze
-                          ? SizedBox(
-                              height: size.height,
-                              width: size.width,
-                              child: child,
-                            )
-                          : child,
-                    );
-                  },
+                      child: ViewModelBuilder.reactive(
+                        viewModelBuilder: () => model,
+                        disposeViewModel: false,
+                        builder: (context, model, child) {
+                          return FreezedChild(
+                            delegates: delegates,
+                            scrollMetrics: model.metrics,
+                            screenSize: size,
+                            index: index,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
                 ),
               );
             },

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
+import 'package:sidharth/src/common/constants/dimensions.dart';
 import 'package:sidharth/src/common/model/delegate/freezed_widget_delegate.dart';
-import 'package:sidharth/src/common/widgets/box/colored_sided_box.dart';
 import 'package:sidharth/src/common/widgets/scrollable/notifiable_list_view_builder.dart';
 import 'package:sidharth/src/modules/sections/section_1/section_1.dart';
 import 'package:sidharth/src/modules/sections/section_2/section_2.dart';
 import 'package:sidharth/src/modules/sections/section_3/section_3.dart';
+import 'package:sidharth/src/modules/sections/section_5/section_5.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({super.key});
@@ -30,67 +31,24 @@ class Dashboard extends StatelessWidget {
           ),
           FreezedWidgetDelegate(
             viewPortHeight: (screenSize) {
-              return (timeLineWidth + (screenSize.width * 0.5));
+              return (KDimensions.timeLineWidth +
+                  (screenSize.height * 0.5) +
+                  (screenSize.width.clamp(0, KDimensions.maxViewPortWidth) *
+                      0.5));
             },
             childBuilder: ThirdSection.new,
           ),
           FreezedWidgetDelegate(
-            viewPortHeight: (screenSize) => screenSize.width * 2,
-            childBuilder: (metrics) {
-              return ColoredSizedBox(
-                height: metrics.viewPortHeight,
-                width: metrics.viewPortWidth,
-              );
-            },
+            transformHitTests: true,
+            viewPortHeight: (screenSize) =>
+                (screenSize.width > screenSize.height
+                    ? screenSize.width
+                    : screenSize.height) +
+                (screenSize.height / 2),
+            childBuilder: FifthSection.new,
           ),
         ],
       ),
     );
   }
 }
-
-// class ThirdSection extends StatefulWidget {
-//   const ThirdSection(this.metrics, {super.key});
-
-//   final FreezedMetrics metrics;
-
-//   @override
-//   _ThirdSectionState createState() => _ThirdSectionState();
-// }
-
-// class _ThirdSectionState extends State<ThirdSection> {
-//   Artboard? _artboard;
-
-//   @override
-//   void initState() {
-//     _loadRiveFile();
-//     super.initState();
-//   }
-
-//   Future<void> _loadRiveFile() async {
-//     final file = await RiveFile.asset(Assets.rives.runningMan);
-//     _artboard = file.mainArtboard;
-//     if (_artboard == null) {
-//       log('Failed to load artboard.');
-//       return;
-//     }
-//     final controller =
-//         StateMachineController.fromArtboard(_artboard!, 'State Machine 1');
-//     if (controller == null) {
-//       log('Failed to initialize state machine controller.');
-//       return;
-//     }
-//     _artboard!.addController(controller);
-//     setState(() {});
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return _artboard == null
-//         ? const Center(child: CircularProgressIndicator())
-//         : Rive(
-//             artboard: _artboard!,
-//             useArtboardSize: true, // Rive widget respects artboard size
-//           );
-//   }
-// }
