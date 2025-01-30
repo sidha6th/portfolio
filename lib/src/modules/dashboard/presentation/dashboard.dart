@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
 import 'package:sidharth/src/common/constants/dimensions.dart';
 import 'package:sidharth/src/common/model/delegate/freezed_widget_delegate.dart';
-import 'package:sidharth/src/common/widgets/box/colored_sided_box.dart';
 import 'package:sidharth/src/common/widgets/scrollable/notifiable_list_view_builder.dart';
 import 'package:sidharth/src/modules/sections/section_1/section_1.dart';
 import 'package:sidharth/src/modules/sections/section_2/section_2.dart';
 import 'package:sidharth/src/modules/sections/section_3/section_3.dart';
+import 'package:sidharth/src/modules/sections/section_5/section_5.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({super.key});
@@ -39,13 +39,13 @@ class Dashboard extends StatelessWidget {
             childBuilder: ThirdSection.new,
           ),
           FreezedWidgetDelegate(
-            viewPortHeight: (screenSize) => screenSize.width * 2,
-            childBuilder: (metrics) {
-              return ColoredSizedBox(
-                height: metrics.viewPortHeight,
-                width: metrics.viewPortWidth,
-              );
-            },
+            transformHitTests: true,
+            viewPortHeight: (screenSize) =>
+                (screenSize.width > screenSize.height
+                    ? screenSize.width
+                    : screenSize.height) +
+                (screenSize.height / 2),
+            childBuilder: FifthSection.new,
           ),
         ],
       ),

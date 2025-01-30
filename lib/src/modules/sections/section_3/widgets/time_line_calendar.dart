@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -80,9 +81,7 @@ class _TimeLineCalendarState extends State<TimeLineCalendar> {
         ),
         Column(
           children: [
-            MonthArrowIndicator(
-              enteredIntoCareerTimeLine: enteredIntoCareerTimeLine,
-            ),
+            const MonthArrowIndicator(),
             TimeLineWidget(
               clampedWidth: clampedWidth,
               controller: controller,
@@ -177,10 +176,14 @@ class _TimeLineCalendarState extends State<TimeLineCalendar> {
   }
 
   Future<void> _scroll() async {
-    controller.jumpTo(
-      (widget.offset - (widget.metrics.viewPortHeight / 2)).clamp(
-        0,
-        controller.position.maxScrollExtent,
+    unawaited(
+      controller.animateTo(
+        (widget.offset - (widget.metrics.viewPortHeight / 2)).clamp(
+          0,
+          controller.position.maxScrollExtent,
+        ),
+        duration: KDurations.ms200,
+        curve: Curves.linear,
       ),
     );
   }

@@ -17,7 +17,7 @@ class ThirdSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextWidget(
-          KString.experience,
+          KString.career,
           style: TextStyle(
             fontFamily: FontFamily.cindieMonoD,
             color: AppColors.white,

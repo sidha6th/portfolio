@@ -33,29 +33,25 @@ class NotifiableLisViewBuilder extends StatelessWidget {
                 child: Column(
                   children: List.generate(
                     delegates.length,
-                    (index) {
-                      final delegate = delegates[index];
-                      final child = FreezedReactiveChild(
-                        model: model,
-                        delegates: delegates,
-                        index: index,
-                        size: size,
-                      );
-                      return ConstrainedBox(
-                        constraints: BoxConstraints.expand(
-                          height: delegate.viewPortHeight(size),
-                          width: size.width,
-                        ),
-                        key: Key('$index-Freezed#Child'),
-                        child: delegate.shouldFreeze
-                            ? SizedBox(
-                                height: size.height,
-                                width: size.width,
-                                child: child,
-                              )
-                            : child,
-                      );
-                    },
+                    (index) => ConstrainedBox(
+                      key: Key('$index-Freezed#Child'),
+                      constraints: BoxConstraints.expand(
+                        height: delegates[index].viewPortHeight(size),
+                        width: size.width,
+                      ),
+                      child: ViewModelBuilder.reactive(
+                        viewModelBuilder: () => model,
+                        disposeViewModel: false,
+                        builder: (context, model, child) {
+                          return FreezedChild(
+                            delegates: delegates,
+                            scrollMetrics: model.metrics,
+                            screenSize: size,
+                            index: index,
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 ),
               );
@@ -63,37 +59,6 @@ class NotifiableLisViewBuilder extends StatelessWidget {
           );
         },
       ),
-    );
-  }
-}
-
-class FreezedReactiveChild extends StatelessWidget {
-  const FreezedReactiveChild({
-    required this.model,
-    required this.delegates,
-    required this.size,
-    required this.index,
-    super.key,
-  });
-
-  final ScrollObservingViewModel model;
-  final List<FreezedWidgetDelegate> delegates;
-  final Size size;
-  final int index;
-
-  @override
-  Widget build(BuildContext context) {
-    return ViewModelBuilder.reactive(
-      viewModelBuilder: () => model,
-      disposeViewModel: false,
-      builder: (context, model, child) {
-        return FreezedChild(
-          delegates: delegates,
-          scrollMetrics: model.metrics,
-          screenSize: size,
-          index: index,
-        );
-      },
     );
   }
 }

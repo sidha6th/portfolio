@@ -39,6 +39,7 @@ class _FreezedChildState extends State<FreezedChild> {
   Widget build(BuildContext context) {
     if (delegate.shouldFreeze) {
       return Transform.translate(
+        transformHitTests: delegate.transformHitTests,
         offset: Offset(0, metrics.freezedDy),
         child: delegate.childBuilder(metrics),
       );

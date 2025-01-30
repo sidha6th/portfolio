@@ -5,11 +5,15 @@ class KString {
   // Misc
   static const year = '2024';
   static const whatDoIDo = 'What I do?';
+  static const findMeOn = 'Find me on';
   static const quote =
       'I code\n I debug\n and I Develop\nNo, I don’t do magic.';
 
   // Titles
-  static const experience = 'Experience';
+  static const career = 'Career Journey';
   static const portfolio = 'Portfolio © $year';
+  static const madeWithFlutter = 'Made with flutter';
+
+  // Date time format
   static const mmm_yyyy = 'MMM-yyyy';
 }

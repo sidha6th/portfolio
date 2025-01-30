@@ -25,7 +25,7 @@ class NameAndDesignation extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           AnimatedSlide(
-            duration: KDurations.ms100,
+            duration: KDurations.ms200,
             offset: Offset(0, -_dy(maxDy)),
             child: AnimatedOpacity(
               opacity: _opacity(50),
@@ -42,7 +42,7 @@ class NameAndDesignation extends StatelessWidget {
             ),
           ),
           AnimatedSlide(
-            duration: KDurations.ms100,
+            duration: KDurations.ms200,
             offset: Offset(0, -_dy(maxDy, delay: 50)),
             child: AnimatedOpacity(
               opacity: _opacity(100),
@@ -59,7 +59,7 @@ class NameAndDesignation extends StatelessWidget {
             ),
           ),
           AnimatedSlide(
-            duration: KDurations.ms100,
+            duration: KDurations.ms200,
             offset: Offset(0, -_dy(maxDy, delay: 150)),
             child: AnimatedOpacity(
               opacity: _opacity(150),

@@ -17,6 +17,9 @@ class $AssetsImagesGen {
 
   /// Directory path: assets/images/png
   $AssetsImagesPngGen get png => const $AssetsImagesPngGen();
+
+  /// Directory path: assets/images/svg
+  $AssetsImagesSvgGen get svg => const $AssetsImagesSvgGen();
 }
 
 class $AssetsRivesGen {
@@ -51,6 +54,19 @@ class $AssetsImagesPngGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [image];
+}
+
+class $AssetsImagesSvgGen {
+  const $AssetsImagesSvgGen();
+
+  /// File path: assets/images/svg/Flutter.svg
+  String get flutter => 'assets/images/svg/Flutter.svg';
+
+  /// File path: assets/images/svg/Flutter1.svg
+  String get flutter1 => 'assets/images/svg/Flutter1.svg';
+
+  /// List of all assets
+  List<String> get values => [flutter, flutter1];
 }
 
 class Assets {

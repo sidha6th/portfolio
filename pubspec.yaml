@@ -9,11 +9,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  intl: ^0.20.2
   stacked: ^3.4.4
   animate_do: ^3.3.4
+  url_launcher: ^6.3.1
+  flutter_svg: ^2.0.17
   dotted_border: ^2.1.0
   animated_flip_counter: ^0.3.4
-  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
@@ -25,7 +27,7 @@ flutter:
   assets:
     - assets/images/jpeg/
     - assets/images/png/
-    - assets/rives/
+    - assets/images/svg/
 
   fonts:
     - family: Elgoc-Thin

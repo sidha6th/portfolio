@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sidharth/src/core/theme/theme.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/dashboard.dart';
 
 class App extends StatelessWidget {
@@ -6,8 +7,9 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Dashboard(),
+    return MaterialApp(
+      theme: theme,
+      home: const Dashboard(),
     );
   }
 }
