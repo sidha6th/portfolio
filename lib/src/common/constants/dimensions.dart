@@ -11,6 +11,8 @@ class KDimensions {
 
   static final maxViewPortWidth = 600.0;
 
+  static final skillCardHeight = 400.0;
+
   static final timeLineWidth =
       (totalMonthsPast * KDimensions.kMonthTimelineIndicatorWidth);
 }

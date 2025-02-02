@@ -10,20 +10,20 @@ import 'package:sidharth/src/modules/sections/section_1/widgets/main_image.dart'
 import 'package:sidharth/src/modules/sections/section_1/widgets/name_and_designation.dart';
 
 class FirstSection extends StatelessWidget {
-  const FirstSection(this.metrics, {super.key});
+  const FirstSection(this._metrics, {super.key});
 
-  final FreezedMetrics metrics;
+  final FreezeMetrics _metrics;
 
   @override
   Widget build(BuildContext context) {
-    final imageWidth = (metrics.viewPortWidth / 2)
-        .clamp(50.0, (metrics.viewPortHeight * 0.6).clamp(0.0, 500.0));
+    final imageWidth = (_metrics.windowWidth / 2)
+        .clamp(50.0, (_metrics.windowHeight * 0.6).clamp(0.0, 500.0));
 
     return Stack(
       alignment: Alignment.center,
       children: [
         MainImageWidget(imageWidth: imageWidth),
-        NameAndDesignation(metrics: metrics),
+        NameAndDesignation(metrics: _metrics),
         AnimatedHoveringImageWidget(
           path: Assets.images.png.image.path,
           imageWidth: imageWidth,
@@ -42,5 +42,9 @@ class FirstSection extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  static double viewPortSize(Size screenSize) {
+    return screenSize.height.clamp(400, double.infinity);
   }
 }

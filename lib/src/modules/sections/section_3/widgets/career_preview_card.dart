@@ -11,7 +11,7 @@ class CareerPreviewCard extends StatelessWidget {
     super.key,
   });
 
-  final FreezedMetrics metrics;
+  final FreezeMetrics metrics;
   final Widget child;
   final double height;
   @override
@@ -23,7 +23,7 @@ class CareerPreviewCard extends StatelessWidget {
         color: AppColors.offWhite,
         dashPattern: [2, 3],
         child: SizedBox(
-          width: (metrics.viewPortWidth * 0.3).clamp(200, 300),
+          width: (metrics.windowWidth * 0.3).clamp(200, 300),
           height: height,
           child: child,
         ),

@@ -1,52 +1,64 @@
-import 'dart:ui';
+import 'dart:math';
 
-class FreezedMetrics {
-  const FreezedMetrics({
-    required this.scrollOffset,
+import 'package:flutter/material.dart';
+
+@immutable
+class FreezeMetrics {
+  const FreezeMetrics({
+    required this.topDy,
+    required this.bottomDy,
     required this.freezedDy,
-    required this.origin,
-    required this.childHeight,
-    required this.viewPortSize,
+    required this.windowSize,
+    required this.totalHeight,
+    required this.scrollOffset,
   });
 
-  const FreezedMetrics.zero(
-    this.childHeight,
-    this.viewPortSize,
-  )   : freezedDy = 0,
-        scrollOffset = 0,
-        origin = 0;
+  const FreezeMetrics.zero(
+    this.totalHeight,
+    this.windowSize, {
+    this.topDy = 0,
+    this.bottomDy = 0,
+    this.scrollOffset = 0,
+  }) : freezedDy = 0;
 
-  final double scrollOffset;
+  final double topDy;
+  final double bottomDy;
+  final Size windowSize;
   final double freezedDy;
-  final double childHeight;
-  final double origin;
-  final Size viewPortSize;
+  final double totalHeight;
+  final double scrollOffset;
 
-  double get viewPortHeight => viewPortSize.height;
-  double get viewPortWidth => viewPortSize.width;
-
-  @override
-  String toString() {
-    return '(scrollOffset: $scrollOffset, freezedDy: $freezedDy, childHeight: $childHeight, origin: $origin, viewPortSize: $viewPortSize)';
-  }
+  double get windowWidth => windowSize.width;
+  double get windowHeight => windowSize.height;
+  double get minWindowSide => min(windowHeight, windowWidth);
+  double get maxWindowSide => max(windowHeight, windowWidth);
+  double get clampedOrigin => bottomDy.clamp(0, double.infinity);
+  double get availableViewPortHeight => bottomDy.clamp(0, windowHeight);
 
   @override
-  bool operator ==(covariant FreezedMetrics other) {
+  bool operator ==(covariant FreezeMetrics other) {
     if (identical(this, other)) return true;
 
-    return other.scrollOffset == scrollOffset &&
-        other.freezedDy == freezedDy &&
-        other.childHeight == childHeight &&
-        other.origin == origin &&
-        other.viewPortSize == viewPortSize;
+    return other.freezedDy == freezedDy &&
+        other.topDy == topDy &&
+        other.bottomDy == bottomDy &&
+        other.windowSize == windowSize &&
+        other.totalHeight == totalHeight &&
+        other.scrollOffset == scrollOffset;
   }
 
   @override
   int get hashCode {
-    return scrollOffset.hashCode ^
-        freezedDy.hashCode ^
-        childHeight.hashCode ^
-        origin.hashCode ^
-        viewPortSize.hashCode;
+    return freezedDy.hashCode ^
+        topDy.hashCode ^
+        bottomDy.hashCode ^
+        windowSize.hashCode ^
+        totalHeight.hashCode ^
+        scrollOffset.hashCode;
+  }
+
+  @override
+  String toString() {
+    return '(scrollOffset: $scrollOffset, dy: $freezedDy, totalHeight: $totalHeight, bottomDy: $bottomDy, topDy: $topDy, windowSize: $windowSize)';
   }
 }

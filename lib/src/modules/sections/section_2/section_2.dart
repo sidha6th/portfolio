@@ -11,14 +11,18 @@ import 'package:sidharth/src/common/widgets/text/text_widget.dart';
 import 'package:sidharth/src/modules/sections/section_2/widgets/animated_floating_text_widget.dart';
 
 class SecondSection extends StatelessWidget {
-  const SecondSection(this.metrics, {super.key});
+  const SecondSection(this._metrics, {super.key});
 
-  final FreezedMetrics metrics;
+  final FreezeMetrics _metrics;
+
+  static double freezedHeight(Size screenSize) {
+    return (screenSize.width * 0.68).clamp(500, double.infinity);
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = context.screenSize;
-    final offset = (metrics.origin - (metrics.childHeight * 0.05))
+    final offset = (_metrics.bottomDy - (_metrics.totalHeight * 0.05))
         .clamp(0, double.infinity);
     final dy = offset / (size.height / 2);
     final dx = offset / (size.width * 5);
@@ -59,7 +63,7 @@ class SecondSection extends StatelessWidget {
                 style: TextStyle(
                   fontFamily: FontFamily.cindieMonoD,
                   color: AppColors.white,
-                  fontSize: (metrics.viewPortWidth * 0.01).clamp(13, 40),
+                  fontSize: (_metrics.windowWidth * 0.01).clamp(13, 40),
                   height: 2,
                   shadows: [
                     const Shadow(
@@ -79,7 +83,7 @@ class SecondSection extends StatelessWidget {
                     AnimatedFloatingTextWidget(
                       text:
                           'Oh, you work with Flutter? Is that a game or something?',
-                      metrics: metrics,
+                      metrics: _metrics,
                       initialDy: 0.5,
                       initialDx: -0.4,
                       angle: -angle,
@@ -88,14 +92,14 @@ class SecondSection extends StatelessWidget {
                     ),
                     AnimatedFloatingTextWidget(
                       text: 'Can you make me an app for free?',
-                      metrics: metrics,
+                      metrics: _metrics,
                       initialDx: 0.5,
                       angle: -angle,
                       dx: dx,
                       dy: -dy,
                     ),
                     AnimatedFloatingTextWidget(
-                      metrics: metrics,
+                      metrics: _metrics,
                       text:
                           'Wait, why do apps keep crashing—can’t you fix that?',
                       initialDx: -0.4,
@@ -104,7 +108,7 @@ class SecondSection extends StatelessWidget {
                       dy: dy,
                     ),
                     AnimatedFloatingTextWidget(
-                      metrics: metrics,
+                      metrics: _metrics,
                       text: 'So, do you just press a bunch of keys all day?',
                       angle: angle,
                       initialDy: -0.5,
@@ -113,7 +117,7 @@ class SecondSection extends StatelessWidget {
                       dy: -dy,
                     ),
                     AnimatedFloatingTextWidget(
-                      metrics: metrics,
+                      metrics: _metrics,
                       text: 'Can you add a feature that reads my mind?',
                       initialDx: 0.4,
                       initialDy: -1,
