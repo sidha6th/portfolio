@@ -11,7 +11,7 @@ import 'package:sidharth/src/common/widgets/text/text_widget.dart';
 class NameAndDesignation extends StatelessWidget {
   const NameAndDesignation({required this.metrics, super.key});
 
-  final FreezedMetrics metrics;
+  final FreezeMetrics metrics;
 
   @override
   Widget build(BuildContext context) {

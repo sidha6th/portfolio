@@ -22,19 +22,6 @@ class $AssetsImagesGen {
   $AssetsImagesSvgGen get svg => const $AssetsImagesSvgGen();
 }
 
-class $AssetsRivesGen {
-  const $AssetsRivesGen();
-
-  /// File path: assets/rives/mobile.riv
-  String get mobile => 'assets/rives/mobile.riv';
-
-  /// File path: assets/rives/running_man.riv
-  String get runningMan => 'assets/rives/running_man.riv';
-
-  /// List of all assets
-  List<String> get values => [mobile, runningMan];
-}
-
 class $AssetsImagesJpegGen {
   const $AssetsImagesJpegGen();
 
@@ -49,11 +36,73 @@ class $AssetsImagesJpegGen {
 class $AssetsImagesPngGen {
   const $AssetsImagesPngGen();
 
+  /// File path: assets/images/png/css.png
+  AssetGenImage get css => const AssetGenImage('assets/images/png/css.png');
+
+  /// File path: assets/images/png/dart.png
+  AssetGenImage get dart => const AssetGenImage('assets/images/png/dart.png');
+
+  /// File path: assets/images/png/flutter.png
+  AssetGenImage get flutter =>
+      const AssetGenImage('assets/images/png/flutter.png');
+
+  /// File path: assets/images/png/git.png
+  AssetGenImage get git => const AssetGenImage('assets/images/png/git.png');
+
+  /// File path: assets/images/png/html.png
+  AssetGenImage get html => const AssetGenImage('assets/images/png/html.png');
+
   /// File path: assets/images/png/image.png
   AssetGenImage get image => const AssetGenImage('assets/images/png/image.png');
 
+  /// File path: assets/images/png/jetpack compose.png
+  AssetGenImage get jetpackCompose =>
+      const AssetGenImage('assets/images/png/jetpack compose.png');
+
+  /// File path: assets/images/png/js.png
+  AssetGenImage get js => const AssetGenImage('assets/images/png/js.png');
+
+  /// File path: assets/images/png/kotlin.png
+  AssetGenImage get kotlin =>
+      const AssetGenImage('assets/images/png/kotlin.png');
+
+  /// File path: assets/images/png/nodejs.png
+  AssetGenImage get nodejs =>
+      const AssetGenImage('assets/images/png/nodejs.png');
+
+  /// File path: assets/images/png/react.png
+  AssetGenImage get react => const AssetGenImage('assets/images/png/react.png');
+
+  /// File path: assets/images/png/scss.png
+  AssetGenImage get scss => const AssetGenImage('assets/images/png/scss.png');
+
+  /// File path: assets/images/png/swift.png
+  AssetGenImage get swift => const AssetGenImage('assets/images/png/swift.png');
+
+  /// File path: assets/images/png/ts.png
+  AssetGenImage get ts => const AssetGenImage('assets/images/png/ts.png');
+
+  /// File path: assets/images/png/unity.png
+  AssetGenImage get unity => const AssetGenImage('assets/images/png/unity.png');
+
   /// List of all assets
-  List<AssetGenImage> get values => [image];
+  List<AssetGenImage> get values => [
+        css,
+        dart,
+        flutter,
+        git,
+        html,
+        image,
+        jetpackCompose,
+        js,
+        kotlin,
+        nodejs,
+        react,
+        scss,
+        swift,
+        ts,
+        unity
+      ];
 }
 
 class $AssetsImagesSvgGen {
@@ -62,18 +111,14 @@ class $AssetsImagesSvgGen {
   /// File path: assets/images/svg/Flutter.svg
   String get flutter => 'assets/images/svg/Flutter.svg';
 
-  /// File path: assets/images/svg/Flutter1.svg
-  String get flutter1 => 'assets/images/svg/Flutter1.svg';
-
   /// List of all assets
-  List<String> get values => [flutter, flutter1];
+  List<String> get values => [flutter];
 }
 
 class Assets {
   Assets._();
 
   static const $AssetsImagesGen images = $AssetsImagesGen();
-  static const $AssetsRivesGen rives = $AssetsRivesGen();
 }
 
 class AssetGenImage {

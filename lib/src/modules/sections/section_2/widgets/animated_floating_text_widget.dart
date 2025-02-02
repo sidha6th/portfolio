@@ -17,7 +17,7 @@ class AnimatedFloatingTextWidget extends StatelessWidget {
     super.key,
   });
 
-  final FreezedMetrics metrics;
+  final FreezeMetrics metrics;
   final String text;
   final double angle;
   final double dy;

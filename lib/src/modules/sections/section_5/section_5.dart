@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:sidharth/gen/fonts.gen.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
@@ -10,9 +12,12 @@ import 'package:sidharth/src/modules/sections/section_5/widgets/launchable_text_
 import 'package:sidharth/src/modules/sections/section_5/widgets/made_with_flutter_indicating_widget.dart';
 
 class FifthSection extends StatefulWidget {
-  const FifthSection(this.metrics, {super.key});
+  const FifthSection(this._metrics, {super.key});
 
-  final FreezedMetrics metrics;
+  final FreezeMetrics _metrics;
+
+  static double freezedHeight(Size screenSize) =>
+      max(screenSize.width, screenSize.height) + (screenSize.height / 2);
 
   @override
   State<FifthSection> createState() => _FifthSectionState();
@@ -21,9 +26,9 @@ class FifthSection extends StatefulWidget {
 class _FifthSectionState extends State<FifthSection> {
   final scrollController = ScrollController();
   late double origin =
-      widget.metrics.origin - (widget.metrics.viewPortHeight / 2);
-  late double width = origin.clamp(10.0, widget.metrics.viewPortWidth);
-  late double height = origin.clamp(10.0, widget.metrics.viewPortHeight);
+      widget._metrics.bottomDy - (widget._metrics.windowHeight / 2);
+  late double width = origin.clamp(10.0, widget._metrics.windowWidth);
+  late double height = origin.clamp(10.0, widget._metrics.windowHeight);
   double offsetToScroll = 0;
   late var socialMediaTextWidgets = List.generate(
     KPersonal.social.length,
@@ -31,7 +36,7 @@ class _FifthSectionState extends State<FifthSection> {
       final social = KPersonal.social[index];
       return LaunchableTextWidget(
         text: social.label,
-        width: widget.metrics.viewPortWidth,
+        width: widget._metrics.windowWidth,
         url: social.urlAsString,
       );
     },
@@ -42,8 +47,9 @@ class _FifthSectionState extends State<FifthSection> {
     super.didUpdateWidget(oldWidget);
     _updateOuterBoxSize();
     if (scrollController.hasClients) {
-      offsetToScroll = (widget.metrics.origin - (widget.metrics.viewPortHeight))
-          .clamp(0.0, scrollController.position.maxScrollExtent);
+      offsetToScroll =
+          (widget._metrics.bottomDy - (widget._metrics.windowHeight))
+              .clamp(0.0, scrollController.position.maxScrollExtent);
       scrollController.jumpTo(offsetToScroll);
     }
   }
@@ -56,95 +62,102 @@ class _FifthSectionState extends State<FifthSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    final topPadding =
+        ((widget._metrics.windowHeight * 0.2) - widget._metrics.topDy)
+            .clamp(0.0, double.infinity);
+    return Stack(
+      alignment: Alignment.topCenter,
       children: [
-        DecoratedBox(
-          decoration: BoxDecoration(
-            color: AppColors.offWhite,
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF000000).withAlpha(60),
-                blurRadius: 6.0,
-                offset: const Offset(
-                  0.0,
-                  3.0,
-                ),
-              ),
-            ],
+        Padding(
+          padding: EdgeInsets.only(
+            top: topPadding,
           ),
-          child: SizedBox(
-            width: width,
-            height: height,
-            child: AnimatedOpacity(
-              opacity: width >=
-                          (widget.metrics.viewPortWidth / 2).clamp(0, 60) &&
-                      height >=
-                          (widget.metrics.viewPortHeight / 2).clamp(
-                            0,
-                            scrollController.hasClients
-                                ? scrollController.position.maxScrollExtent / 2
-                                : 0,
-                          )
-                  ? 1
-                  : 0,
-              duration: KDurations.ms200,
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Flexible(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: TextWidget(
-                            KString.findMeOn,
-                            style: const TextStyle(
-                              color: AppColors.black,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w900,
-                              fontFamily: FontFamily.cindieMonoD,
-                            ),
-                            softWrap: false,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: Stack(
-                      fit: StackFit.expand,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: AppColors.offWhite,
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF000000).withAlpha(60),
+                  blurRadius: 6.0,
+                  offset: const Offset(0.0, 3.0),
+                ),
+              ],
+            ),
+            child: SizedBox(
+              width: width,
+              height: height,
+              child: AnimatedOpacity(
+                opacity: width >=
+                            (widget._metrics.windowWidth / 2).clamp(0, 60) &&
+                        height >=
+                            (widget._metrics.windowHeight / 2).clamp(
+                              0,
+                              scrollController.hasClients
+                                  ? scrollController.position.maxScrollExtent /
+                                      2
+                                  : 0,
+                            )
+                    ? 1
+                    : 0,
+                duration: KDurations.ms200,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ListView(
-                          controller: scrollController,
-                          padding: EdgeInsets.only(
-                            top: widget.metrics.viewPortHeight * 0.3,
-                          ),
-                          physics: const NeverScrollableScrollPhysics(),
-                          children: [
-                            ...socialMediaTextWidgets,
-                            IgnorePointer(
-                              child: SizedBox(
-                                height: widget.metrics.viewPortHeight * 0.2,
+                        Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: TextWidget(
+                              KString.findMeOn,
+                              style: const TextStyle(
+                                color: AppColors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w900,
+                                fontFamily: FontFamily.cindieMonoD,
                               ),
-                            ),
-                          ],
-                        ),
-                        if (scrollController.hasClients)
-                          Positioned(
-                            bottom: 0,
-                            left: widget.metrics.viewPortWidth > 700
-                                ? width * 0.1
-                                : 0,
-                            child: MadeWithFlutterIndicatingWidget(
-                              scrollController: scrollController,
-                              offsetToScroll: offsetToScroll,
-                              width: width,
+                              softWrap: false,
                             ),
                           ),
+                        ),
                       ],
                     ),
-                  ),
-                ],
+                    Expanded(
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          ListView(
+                            controller: scrollController,
+                            padding: EdgeInsets.only(
+                              top: widget._metrics.windowHeight * 0.3,
+                            ),
+                            physics: const NeverScrollableScrollPhysics(),
+                            children: [
+                              ...socialMediaTextWidgets,
+                              IgnorePointer(
+                                child: SizedBox(
+                                  height: widget._metrics.windowHeight * 0.2,
+                                ),
+                              ),
+                            ],
+                          ),
+                          if (scrollController.hasClients)
+                            Positioned(
+                              bottom: 0,
+                              left: widget._metrics.windowWidth > 700
+                                  ? width * 0.1
+                                  : 0,
+                              child: MadeWithFlutterIndicatingWidget(
+                                scrollController: scrollController,
+                                offsetToScroll: offsetToScroll,
+                                width: width,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -154,8 +167,8 @@ class _FifthSectionState extends State<FifthSection> {
   }
 
   void _updateOuterBoxSize() {
-    origin = widget.metrics.origin - (widget.metrics.viewPortHeight / 2);
-    width = origin.clamp(10.0, widget.metrics.viewPortWidth);
-    height = origin.clamp(10.0, widget.metrics.viewPortHeight);
+    origin = widget._metrics.bottomDy - (widget._metrics.windowHeight / 2);
+    width = origin.clamp(10.0, widget._metrics.windowWidth);
+    height = origin.clamp(10.0, widget._metrics.windowHeight);
   }
 }

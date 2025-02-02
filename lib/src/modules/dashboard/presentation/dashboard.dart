@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
-import 'package:sidharth/src/common/constants/dimensions.dart';
 import 'package:sidharth/src/common/model/delegate/freezed_widget_delegate.dart';
 import 'package:sidharth/src/common/widgets/scrollable/notifiable_list_view_builder.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/widgets/scroll_progress_indicator_widget.dart';
 import 'package:sidharth/src/modules/sections/section_1/section_1.dart';
 import 'package:sidharth/src/modules/sections/section_2/section_2.dart';
 import 'package:sidharth/src/modules/sections/section_3/section_3.dart';
+import 'package:sidharth/src/modules/sections/section_4/section_4.dart';
 import 'package:sidharth/src/modules/sections/section_5/section_5.dart';
 
 class Dashboard extends StatelessWidget {
@@ -17,37 +18,36 @@ class Dashboard extends StatelessWidget {
       backgroundColor: AppColors.black,
       body: NotifiableLisViewBuilder(
         delegates: [
-          FreezedWidgetDelegate(
+          const FreezedWidgetDelegate(
             shouldFreeze: false,
-            viewPortHeight: (size) => size.height.clamp(400, double.infinity),
+            freezedScrollHeight: FirstSection.viewPortSize,
             childBuilder: FirstSection.new,
           ),
-          FreezedWidgetDelegate(
+          const FreezedWidgetDelegate(
             shouldFreeze: false,
-            viewPortHeight: (screenSize) {
-              return (screenSize.width * 0.68).clamp(500, double.infinity);
-            },
+            freezedScrollHeight: SecondSection.freezedHeight,
             childBuilder: SecondSection.new,
           ),
-          FreezedWidgetDelegate(
-            viewPortHeight: (screenSize) {
-              return (KDimensions.timeLineWidth +
-                  (screenSize.height * 0.5) +
-                  (screenSize.width.clamp(0, KDimensions.maxViewPortWidth) *
-                      0.5));
-            },
+          const FreezedWidgetDelegate(
+            freezedScrollHeight: ThirdSection.freezedHeight,
             childBuilder: ThirdSection.new,
           ),
-          FreezedWidgetDelegate(
+          const FreezedWidgetDelegate(
             transformHitTests: true,
-            viewPortHeight: (screenSize) =>
-                (screenSize.width > screenSize.height
-                    ? screenSize.width
-                    : screenSize.height) +
-                (screenSize.height / 2),
+            freezedScrollHeight: FourthSection.freezedHeight,
+            childBuilder: FourthSection.new,
+          ),
+          const FreezedWidgetDelegate(
+            transformHitTests: true,
+            freezedScrollHeight: FifthSection.freezedHeight,
             childBuilder: FifthSection.new,
           ),
         ],
+        foregroundWidgetBuilder: (model, windowSize) {
+          return [
+            ScrollProgressIndicatorWidget(model: model),
+          ];
+        },
       ),
     );
   }

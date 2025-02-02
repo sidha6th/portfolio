@@ -20,7 +20,7 @@ class TimeLineCalendar extends StatefulWidget {
   });
 
   final double offset;
-  final FreezedMetrics metrics;
+  final FreezeMetrics metrics;
 
   @override
   State<TimeLineCalendar> createState() => _TimeLineCalendarState();
@@ -71,13 +71,15 @@ class _TimeLineCalendarState extends State<TimeLineCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    final isHeightLessThanMin = widget.metrics.viewPortHeight < 500;
+    final isHeightLessThanMin = widget.metrics.windowHeight < 500;
     return Column(
       mainAxisSize: MainAxisSize.min,
-      spacing: isHeightLessThanMin ? 0 : widget.metrics.viewPortHeight * 0.1,
+      spacing: isHeightLessThanMin ? 0 : (widget.metrics.windowHeight * 0.1),
       children: [
         SizedBox(
-          height: isHeightLessThanMin ? 0 : widget.metrics.viewPortHeight * 0.1,
+          height: isHeightLessThanMin
+              ? 0
+              : (widget.metrics.windowHeight * 0.05).clamp(60, double.infinity),
         ),
         Column(
           children: [
@@ -141,7 +143,7 @@ class _TimeLineCalendarState extends State<TimeLineCalendar> {
 
   void _updateWidth() {
     final viewPortWidth =
-        widget.metrics.viewPortWidth.clamp(0.0, KDimensions.maxViewPortWidth);
+        widget.metrics.windowWidth.clamp(0.0, KDimensions.maxViewPortWidth);
     if (clampedWidth == viewPortWidth) return;
     clampedWidth = viewPortWidth;
     halfOfWidth = clampedWidth / 2;
@@ -178,7 +180,7 @@ class _TimeLineCalendarState extends State<TimeLineCalendar> {
   Future<void> _scroll() async {
     unawaited(
       controller.animateTo(
-        (widget.offset - (widget.metrics.viewPortHeight / 2)).clamp(
+        (widget.offset - (widget.metrics.windowHeight / 2)).clamp(
           0,
           controller.position.maxScrollExtent,
         ),
