@@ -10,4 +10,5 @@ class AppColors {
   static const offWhite = Color(0xffF8F8F8);
   static const blue = Color(0xff4083ff);
   static const lightBlue = Color(0xff4fa4ff);
+  static const yellow = Colors.amber;
 }

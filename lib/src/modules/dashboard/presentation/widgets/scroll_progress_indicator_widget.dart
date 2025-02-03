@@ -25,7 +25,8 @@ class ScrollProgressIndicatorWidget extends StatelessWidget {
         disposeViewModel: false,
         builder: (context, model, child) {
           final shouldRemove = (model.index > 3) ||
-              (model.index >= 3 && model.normalizedValue > 0.8);
+              (model.index >= 3 &&
+                  model.normalizedCurrentSectionScrolledOffset > 0.8);
           return FadeSlideIn(
             offset: Offset(
               0,
@@ -46,7 +47,7 @@ class ScrollProgressIndicatorWidget extends StatelessWidget {
                 SizedBox(
                   width: 100,
                   child: LinearProgressIndicator(
-                    value: model.normalizedValue,
+                    value: model.normalizedCurrentSectionScrolledOffset,
                     backgroundColor: Colors.grey,
                     minHeight: 0.5,
                     color: AppColors.offWhite,

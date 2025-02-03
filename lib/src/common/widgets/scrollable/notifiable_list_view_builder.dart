@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sidharth/src/common/extensions/iterable.dart';
 import 'package:sidharth/src/common/model/delegate/freezed_widget_delegate.dart';
+import 'package:sidharth/src/common/widgets/box/loading_indicator.dart';
+import 'package:sidharth/src/common/widgets/box/under_development_indicator.dart';
 import 'package:sidharth/src/common/widgets/freezed_child.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/view_model/loading_handler_view_model.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/view_model/scroll_observing_view_model.dart';
 import 'package:stacked/stacked.dart';
 
@@ -12,6 +15,7 @@ class NotifiableLisViewBuilder extends StatelessWidget {
     this.padding = EdgeInsets.zero,
     this.physics = const BouncingScrollPhysics(),
     this.foregroundWidgetBuilder,
+    this.isUnderDevelopment = false,
     this.restorationId = 'NotifiableScrollView',
   });
 
@@ -19,6 +23,7 @@ class NotifiableLisViewBuilder extends StatelessWidget {
   final EdgeInsets padding;
   final String restorationId;
   final ScrollPhysics physics;
+  final bool isUnderDevelopment;
   final List<Widget> Function(
     ScrollObservingViewModel model,
     Size windowSize,
@@ -28,33 +33,53 @@ class NotifiableLisViewBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder.nonReactive(
       viewModelBuilder: ScrollObservingViewModel.new,
-      onViewModelReady: (viewModel) => viewModel.listenController(),
+      onViewModelReady: (viewModel) => viewModel.init(),
       builder: (context, model, child) {
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            final windowSize = constraints.biggest;
-            return Stack(
-              children: [
-                SingleChildScrollView(
-                  padding: padding,
-                  physics: physics,
-                  restorationId: restorationId,
-                  controller: model.scrollController,
-                  child: Column(
-                    children: List.generate(
-                      delegates.length,
-                      (index) => _ChildWrapper(
-                        size: windowSize,
-                        index: index,
-                        model: model,
-                        delegates: delegates,
+        return ViewModelBuilder.nonReactive(
+          viewModelBuilder: () =>
+              LoadingHandlerViewModel(scrollController: model.scrollController),
+          onViewModelReady: (viewModel) => viewModel.init(),
+          builder: (context, loadingHandler, child) {
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                final windowSize = constraints.biggest;
+                return Stack(
+                  children: [
+                    ListView(
+                      padding: padding,
+                      physics: physics,
+                      restorationId: restorationId,
+                      primary: false,
+                      controller: model.scrollController,
+                      children: List.generate(
+                        delegates.length,
+                        (index) => _ChildWrapper(
+                          size: windowSize,
+                          index: index,
+                          model: model,
+                          delegates: delegates,
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                if (foregroundWidgetBuilder != null)
-                  ...foregroundWidgetBuilder!(model, windowSize),
-              ],
+                    if (isUnderDevelopment)
+                      UnderDevelopmentIndicator(size: windowSize),
+                    if (foregroundWidgetBuilder != null)
+                      ...foregroundWidgetBuilder!(model, windowSize),
+                    ViewModelBuilder.reactive(
+                      viewModelBuilder: () => loadingHandler,
+                      disposeViewModel: false,
+                      builder: (context, loadingHandler, child) {
+                        return LoadingIndicator(
+                          size: windowSize,
+                          isLoading: loadingHandler.loadingContent,
+                          animate: !loadingHandler.loadingContent,
+                          value: loadingHandler.progress,
+                        );
+                      },
+                    ),
+                  ],
+                );
+              },
             );
           },
         );

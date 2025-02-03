@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:sidharth/src/common/constants/dimensions.dart';
@@ -186,42 +185,6 @@ class _TimeLineCalendarState extends State<TimeLineCalendar> {
         ),
         duration: KDurations.ms200,
         curve: Curves.linear,
-      ),
-    );
-  }
-}
-
-class GlassCardWidget extends StatelessWidget {
-  const GlassCardWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 200,
-        height: 250,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.white.withAlpha(51),
-              Colors.white.withAlpha(13),
-            ],
-            stops: [0.2, 1],
-          ),
-          border: Border.all(
-            color: Colors.white.withAlpha(51),
-            width: 1.5,
-          ),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-          ),
-        ),
       ),
     );
   }

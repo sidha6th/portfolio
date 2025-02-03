@@ -19,9 +19,7 @@ class LaunchableTextWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       mouseCursor: SystemMouseCursors.click,
-      onTap: () {
-        launchUrlString(url);
-      },
+      onTap: () => launchUrlString(url),
       child: TextWidget(
         text,
         style: TextStyle(

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:sidharth/src/common/constants/dimensions.dart';
 import 'package:sidharth/src/common/model/freezed_metrics.dart';
@@ -12,7 +10,6 @@ class ThirdSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log((_metrics.windowHeight).toString());
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 20,

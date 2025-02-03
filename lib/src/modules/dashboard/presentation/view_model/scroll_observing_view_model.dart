@@ -6,15 +6,19 @@ class ScrollObservingViewModel extends BaseViewModel {
   ScrollMetrics? metrics;
   late final scrollController = ScrollController();
   int index = 0;
-  double normalizedValue = 0;
+  double normalizedCurrentSectionScrolledOffset = 0;
   FreezedWidgetDelegate? currentDelegate;
+
+  void init() {
+    _listenController();
+  }
 
   void setMetrics(ScrollMetrics metrics) {
     this.metrics = metrics;
     notifyListeners();
   }
 
-  void listenController() {
+  void _listenController() {
     scrollController.addListener(() {
       setMetrics(scrollController.position);
     });
@@ -27,7 +31,8 @@ class ScrollObservingViewModel extends BaseViewModel {
   ) {
     if (this.index != index) this.index = index;
     if (currentDelegate != delegate) currentDelegate = delegate;
-    if (normalizedValue != lerp) normalizedValue = lerp;
+    if (normalizedCurrentSectionScrolledOffset != lerp)
+      normalizedCurrentSectionScrolledOffset = lerp;
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sidharth/src/common/helper/methods.dart';
 import 'package:sidharth/src/common/model/delegate/freezed_widget_delegate.dart';
 import 'package:sidharth/src/common/model/freezed_metrics.dart';
 
@@ -108,17 +109,8 @@ class _FreezedChildState extends State<FreezedChild> {
   void _setGlobalState() {
     if (_metrics.topDy > 0 && _metrics.topDy <= _scrollFreezeHeight) {
       final normalizedValue =
-          _normalize(value: _metrics.topDy, end: _scrollFreezeHeight);
+          normalize(value: _metrics.topDy, end: _scrollFreezeHeight);
       widget.setFocusedDelegate(widget.index, _delegate, normalizedValue);
     }
-  }
-
-  double _normalize({
-    required double value,
-    required double end,
-    double start = 0,
-  }) {
-    if (start == end) return 0; // Prevent division by zero
-    return (value - start) / (end - start);
   }
 }

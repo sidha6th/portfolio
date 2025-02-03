@@ -3,6 +3,7 @@ import 'package:sidharth/src/common/constants/colors.dart';
 import 'package:sidharth/src/common/model/delegate/freezed_widget_delegate.dart';
 import 'package:sidharth/src/common/widgets/scrollable/notifiable_list_view_builder.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/widgets/scroll_progress_indicator_widget.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/widgets/slidable_title_widget.dart';
 import 'package:sidharth/src/modules/sections/section_1/section_1.dart';
 import 'package:sidharth/src/modules/sections/section_2/section_2.dart';
 import 'package:sidharth/src/modules/sections/section_3/section_3.dart';
@@ -17,6 +18,7 @@ class Dashboard extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.black,
       body: NotifiableLisViewBuilder(
+        isUnderDevelopment: true,
         delegates: [
           const FreezedWidgetDelegate(
             shouldFreeze: false,
@@ -45,6 +47,7 @@ class Dashboard extends StatelessWidget {
         ],
         foregroundWidgetBuilder: (model, windowSize) {
           return [
+            SlidableTitleWidget(model: model, windowSize: windowSize),
             ScrollProgressIndicatorWidget(model: model),
           ];
         },

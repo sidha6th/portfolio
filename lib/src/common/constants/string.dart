@@ -11,6 +11,7 @@ class KString {
 
   // Titles
   static const career = 'Career Journey';
+  static const underDevelopment = 'Under development';
   static const skills = 'Skills';
   static const portfolio = 'Portfolio © $year';
   static const madeWithFlutter = 'Made with flutter';
