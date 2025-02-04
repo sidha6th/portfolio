@@ -1,77 +1,101 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:sidharth/gen/assets.gen.dart';
 import 'package:sidharth/src/common/constants/durations.dart';
 
-class AnimatedHoveringImageWidget extends StatefulWidget {
-  const AnimatedHoveringImageWidget({
+class EmptyBackgroundImage extends StatefulWidget {
+  const EmptyBackgroundImage({
+    required this.scale,
     required this.imageWidth,
-    required this.path,
+    required this.clipBehavior,
+    required this.imageSlideInFrom,
+    required this.opacityAnimationDuration,
     super.key,
   });
 
+  final double scale;
   final double imageWidth;
-  final String path;
+  final Duration opacityAnimationDuration;
+  final Clip clipBehavior;
+  final double imageSlideInFrom;
 
   @override
-  State<AnimatedHoveringImageWidget> createState() =>
-      _AnimatedHoveringImageWidgetState();
+  State<EmptyBackgroundImage> createState() => _EmptyBackgroundImageState();
 }
 
-class _AnimatedHoveringImageWidgetState
-    extends State<AnimatedHoveringImageWidget>
-    with AutomaticKeepAliveClientMixin {
-  bool isHovering = true;
+class _EmptyBackgroundImageState extends State<EmptyBackgroundImage> {
+  bool visible = true;
+  bool opacityAnimationDoneOnce = false;
+  late final image = Assets.images.png.image.image(
+    fit: BoxFit.cover,
+    colorBlendMode: BlendMode.darken,
+    filterQuality: FilterQuality.none,
+  );
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return MouseRegion(
-      onEnter: (_) => _onEnter(),
-      onExit: (_) => _onExit(),
-      child: AnimatedOpacity(
-        duration: KDurations.ms300,
-        opacity: isHovering ? 1 : 0,
-        child: FadeInDown(
-          from: 50,
-          onFinish: (direction) => disableIt(),
-          child: Image.asset(
-            widget.path,
-            width: widget.imageWidth,
-            fit: BoxFit.cover,
+      onEnter: _onEnter,
+      onExit: _onExit,
+      child: ClipRect(
+        clipBehavior: widget.clipBehavior,
+        child: AnimatedOpacity(
+          opacity: visible ? 1 : 0,
+          curve: opacityAnimationDoneOnce
+              ? (visible ? Curves.bounceOut : Curves.bounceIn)
+              : Curves.linear,
+          onEnd: _whenAnimatedOpacityFinished,
+          duration: widget.opacityAnimationDuration,
+          child: SlideInDown(
+            from: widget.imageSlideInFrom,
+            onFinish: _whenSlideAnimationFinished,
+            child: Transform.scale(
+              scale: widget.scale,
+              filterQuality: FilterQuality.none,
+              child: SizedBox(
+                width: widget.imageWidth,
+                child: image,
+              ),
+            ),
           ),
         ),
       ),
     );
   }
 
-  void _onEnter() {
+  void _onEnter(_) {
+    if (visible) return;
     setState(() {
-      isHovering = true;
+      visible = true;
     });
   }
 
-  void _onExit() {
+  void _onExit(_) {
+    if (!visible) return;
     setState(() {
-      isHovering = false;
+      visible = false;
     });
   }
 
-  void disableIt() {
+  void _whenSlideAnimationFinished(_) {
     Future.delayed(
-      const Duration(milliseconds: 500),
+      KDurations.ms300,
       () {
         setState(() {
-          isHovering = false;
+          visible = false;
         });
       },
     );
   }
 
   @override
-  bool get wantKeepAlive => true;
-
-  @override
   void setState(VoidCallback fn) {
     if (mounted) super.setState(fn);
+  }
+
+  void _whenAnimatedOpacityFinished() {
+    if (!opacityAnimationDoneOnce) {
+      opacityAnimationDoneOnce = true;
+    }
   }
 }

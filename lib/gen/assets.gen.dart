@@ -85,9 +85,6 @@ class $AssetsImagesPngGen {
   /// File path: assets/images/png/unity.png
   AssetGenImage get unity => const AssetGenImage('assets/images/png/unity.png');
 
-  /// File path: assets/images/png/wip.png
-  AssetGenImage get wip => const AssetGenImage('assets/images/png/wip.png');
-
   /// List of all assets
   List<AssetGenImage> get values => [
         css,
@@ -104,8 +101,7 @@ class $AssetsImagesPngGen {
         scss,
         swift,
         ts,
-        unity,
-        wip
+        unity
       ];
 }
 

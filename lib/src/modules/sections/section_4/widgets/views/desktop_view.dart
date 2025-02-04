@@ -27,7 +27,7 @@ class SkillsDesktopViewWidget extends StatelessWidget {
           children: [
             const Spacer(),
             SkillsDescriptionTextWidget(fontSize: descriptionFontSize),
-            const SizedBox(width: 50),
+            const Spacer(),
             VerticalSkillSlides.vertical(
               slideStartDelay: slideStartDelay,
               cardWidth: cardWidth,

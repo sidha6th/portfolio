@@ -26,36 +26,37 @@ class TimeLineCalendar extends StatefulWidget {
 }
 
 class _TimeLineCalendarState extends State<TimeLineCalendar> {
-  late final controller = ScrollController();
-  late final wheelScrollController = ScrollController();
-
-  late final halfOfMonthIndicator =
-      (KDimensions.kMonthTimelineIndicatorWidth / 2);
+  final _careerCardExtend = 100.0;
+  late final timeLineController = ScrollController();
+  late final listWheelController = ScrollController();
   final careerStartDateTime = KPersonal.careerStartDate;
-  late var currentDate = KPersonal.careerStartDate;
-  double clampedWidth = 0;
-  double halfOfWidth = 0;
-  bool enteredIntoCareerTimeLine = false;
-  int leftMonthFillerCount = 0;
-  int rightMonthFillerCount = 0;
-  double leftSpacing = 0;
-  double rightSpacing = 0;
-  double careerCardExtend = 100;
+
+  double _leftSpacing = 0;
+  double _rightSpacing = 0;
   int careerWheelIndex = 0;
+  double halfOfWindowWidth = 0;
+  double clampedWindowWidth = 0;
+  int _leftMonthFillerCount = 0;
+  int _rightMonthFillerCount = 0;
+  bool _enteredIntoCareerTimeLine = false;
+  late var _currentDate = KPersonal.careerStartDate;
+  late final _halfOfMonthIndicatorWidth =
+      (KDimensions.kMonthTimelineIndicatorWidth / 2);
 
   @override
   void didUpdateWidget(covariant TimeLineCalendar oldWidget) {
     _updateWidth();
-    if (!controller.hasClients) return;
+    if (!timeLineController.hasClients) return;
     _scroll();
-    final focusPoint = controller.offset - (halfOfWidth + halfOfMonthIndicator);
-    enteredIntoCareerTimeLine = focusPoint >= 0;
+    final focusPoint = timeLineController.offset -
+        (halfOfWindowWidth + _halfOfMonthIndicatorWidth);
+    _enteredIntoCareerTimeLine = focusPoint >= 0;
 
-    if (!enteredIntoCareerTimeLine) return;
+    if (!_enteredIntoCareerTimeLine) return;
 
     final indicatorPos =
         (focusPoint / KDimensions.kMonthTimelineIndicatorWidth);
-    currentDate = _datetime(indicatorPos);
+    _currentDate = _datetime(indicatorPos);
     _animateCareerCard();
 
     super.didUpdateWidget(oldWidget);
@@ -63,8 +64,8 @@ class _TimeLineCalendarState extends State<TimeLineCalendar> {
 
   @override
   void dispose() {
-    controller.dispose();
-    wheelScrollController.dispose();
+    timeLineController.dispose();
+    listWheelController.dispose();
     super.dispose();
   }
 
@@ -84,25 +85,25 @@ class _TimeLineCalendarState extends State<TimeLineCalendar> {
           children: [
             const MonthArrowIndicator(),
             TimeLineWidget(
-              clampedWidth: clampedWidth,
-              controller: controller,
-              leftSpacing: leftSpacing,
-              rightSpacing: rightSpacing,
-              leftMonthFillerCount: leftMonthFillerCount,
-              rightMonthFillerCount: rightMonthFillerCount,
+              clampedWidth: clampedWindowWidth,
+              controller: timeLineController,
+              leftSpacing: _leftSpacing,
+              rightSpacing: _rightSpacing,
+              leftMonthFillerCount: _leftMonthFillerCount,
+              rightMonthFillerCount: _rightMonthFillerCount,
               careerStartDateTime: careerStartDateTime,
             ),
             YearIndicatorTextWidget(
-              enteredIntoCareerTimeLine: enteredIntoCareerTimeLine,
-              year: currentDate.year,
+              enteredIntoCareerTimeLine: _enteredIntoCareerTimeLine,
+              year: _currentDate.year,
             ),
           ],
         ),
         SizedBox(
           height: 200,
           child: ListWheelScrollView.useDelegate(
-            itemExtent: careerCardExtend,
-            controller: wheelScrollController,
+            itemExtent: _careerCardExtend,
+            controller: listWheelController,
             physics: const NeverScrollableScrollPhysics(),
             perspective: 0.01,
             overAndUnderCenterOpacity: 0.3,
@@ -110,13 +111,13 @@ class _TimeLineCalendarState extends State<TimeLineCalendar> {
               childCount: KPersonal.careerJourney.length,
               builder: (context, index) {
                 final career = KPersonal.careerJourney[index];
-                final isCurrent = career.isCurrent(currentDate);
+                final isCurrent = career.isCurrent(_currentDate);
                 final timeToSwitch = isCurrent && careerWheelIndex != index;
                 if (timeToSwitch) careerWheelIndex = index;
 
                 return CareerPreviewCard(
                   metrics: widget.metrics,
-                  height: careerCardExtend,
+                  height: _careerCardExtend,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: CareerDetailsHoldingWidget(career: career),
@@ -131,9 +132,9 @@ class _TimeLineCalendarState extends State<TimeLineCalendar> {
   }
 
   void _animateCareerCard() {
-    final newOffset = careerCardExtend * careerWheelIndex;
-    if (wheelScrollController.position.pixels == newOffset) return;
-    wheelScrollController.animateTo(
+    final newOffset = _careerCardExtend * careerWheelIndex;
+    if (listWheelController.position.pixels == newOffset) return;
+    listWheelController.animateTo(
       newOffset,
       duration: KDurations.ms200,
       curve: Curves.slowMiddle,
@@ -143,30 +144,31 @@ class _TimeLineCalendarState extends State<TimeLineCalendar> {
   void _updateWidth() {
     final viewPortWidth =
         widget.metrics.windowWidth.clamp(0.0, KDimensions.maxViewPortWidth);
-    if (clampedWidth == viewPortWidth) return;
-    clampedWidth = viewPortWidth;
-    halfOfWidth = clampedWidth / 2;
-    leftFillerCount();
-    rightFillerCount();
+    if (clampedWindowWidth == viewPortWidth) return;
+    clampedWindowWidth = viewPortWidth;
+    halfOfWindowWidth = clampedWindowWidth / 2;
+    _calcLeftFillerCount();
+    _calcRightFillerCount();
   }
 
-  Future<void> leftFillerCount() async {
+  Future<void> _calcLeftFillerCount() async {
     final countAsDouble =
-        clampedWidth / KDimensions.kMonthTimelineIndicatorWidth;
-    leftMonthFillerCount = countAsDouble.toInt();
-    leftSpacing = (clampedWidth -
-            (leftMonthFillerCount * KDimensions.kMonthTimelineIndicatorWidth)) +
-        (countAsDouble - leftMonthFillerCount);
-  }
-
-  Future<void> rightFillerCount() async {
-    final countAsDouble =
-        halfOfWidth / KDimensions.kMonthTimelineIndicatorWidth;
-    rightMonthFillerCount = countAsDouble.toInt();
-    rightSpacing = (halfOfWidth -
-            (rightMonthFillerCount *
+        clampedWindowWidth / KDimensions.kMonthTimelineIndicatorWidth;
+    _leftMonthFillerCount = countAsDouble.toInt();
+    _leftSpacing = (clampedWindowWidth -
+            (_leftMonthFillerCount *
                 KDimensions.kMonthTimelineIndicatorWidth)) +
-        (countAsDouble - rightMonthFillerCount);
+        (countAsDouble - _leftMonthFillerCount);
+  }
+
+  Future<void> _calcRightFillerCount() async {
+    final countAsDouble =
+        halfOfWindowWidth / KDimensions.kMonthTimelineIndicatorWidth;
+    _rightMonthFillerCount = countAsDouble.toInt();
+    _rightSpacing = (halfOfWindowWidth -
+            (_rightMonthFillerCount *
+                KDimensions.kMonthTimelineIndicatorWidth)) +
+        (countAsDouble - _rightMonthFillerCount);
   }
 
   DateTime _datetime(double indicatorPos) {
@@ -177,14 +179,10 @@ class _TimeLineCalendarState extends State<TimeLineCalendar> {
   }
 
   Future<void> _scroll() async {
-    unawaited(
-      controller.animateTo(
-        (widget.offset - (widget.metrics.windowHeight / 2)).clamp(
-          0,
-          controller.position.maxScrollExtent,
-        ),
-        duration: KDurations.ms200,
-        curve: Curves.linear,
+    timeLineController.jumpTo(
+      (widget.offset - (widget.metrics.windowHeight / 2)).clamp(
+        0,
+        timeLineController.position.maxScrollExtent,
       ),
     );
   }

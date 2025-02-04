@@ -12,6 +12,7 @@ class FreezedChild extends StatefulWidget {
     required this.scrollFreezeHeight,
     required this.pastScrolledHeight,
     required this.setFocusedDelegate,
+    required this.hasInitialized,
     this.scrollMetrics,
     super.key,
   });
@@ -23,6 +24,7 @@ class FreezedChild extends StatefulWidget {
   final ScrollMetrics? scrollMetrics;
   final FreezedWidgetDelegate currentDelegate;
   final List<FreezedWidgetDelegate> delegates;
+  final bool hasInitialized;
   final void Function(
     int index,
     FreezedWidgetDelegate delegate,
@@ -41,6 +43,7 @@ class _FreezedChildState extends State<FreezedChild> {
   late var _metrics = FreezeMetrics.zero(
     _scrollFreezeHeight,
     widget.screenSize,
+    initialized: widget.hasInitialized,
   );
 
   @override
@@ -76,6 +79,7 @@ class _FreezedChildState extends State<FreezedChild> {
         scrollOffset: offset,
         windowSize: widget.screenSize,
         totalHeight: _scrollFreezeHeight,
+        initialized: widget.hasInitialized,
         bottomDy: offset + widget.screenSize.height,
       );
     }
@@ -94,6 +98,7 @@ class _FreezedChildState extends State<FreezedChild> {
       scrollOffset: offset,
       windowSize: widget.screenSize,
       totalHeight: _scrollFreezeHeight,
+      initialized: widget.hasInitialized,
       topDy: origin - widget.screenSize.height,
     );
   }

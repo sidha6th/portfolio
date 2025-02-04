@@ -33,40 +33,53 @@ class NotifiableLisViewBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder.nonReactive(
       viewModelBuilder: ScrollObservingViewModel.new,
-      onViewModelReady: (viewModel) => viewModel.init(),
-      builder: (context, model, child) {
+      builder: (context, scrollObserver, child) {
         return ViewModelBuilder.nonReactive(
-          viewModelBuilder: () =>
-              LoadingHandlerViewModel(scrollController: model.scrollController),
-          onViewModelReady: (viewModel) => viewModel.init(),
-          builder: (context, loadingHandler, child) {
+          viewModelBuilder: () => LoadingHandlerViewModel(
+            scrollController: scrollObserver.scrollController,
+            whenLoadingCompleted: scrollObserver.init,
+          ),
+          onViewModelReady: (loadingController) => loadingController.init(),
+          builder: (context, loadingController, child) {
             return LayoutBuilder(
               builder: (context, constraints) {
                 final windowSize = constraints.biggest;
                 return Stack(
                   children: [
-                    ListView(
+                    SingleChildScrollView(
                       padding: padding,
                       physics: physics,
                       restorationId: restorationId,
                       primary: false,
-                      controller: model.scrollController,
-                      children: List.generate(
-                        delegates.length,
-                        (index) => _ChildWrapper(
-                          size: windowSize,
-                          index: index,
-                          model: model,
-                          delegates: delegates,
-                        ),
+                      controller: scrollObserver.scrollController,
+                      child: ViewModelBuilder.reactive(
+                        viewModelBuilder: () => loadingController,
+                        builder: (context, loadingController, child) {
+                          return Column(
+                            children: List.generate(
+                              delegates.length,
+                              (index) => _ChildWrapper(
+                                index: index,
+                                size: windowSize,
+                                delegates: delegates,
+                                model: scrollObserver,
+                                hasInitialized:
+                                    !loadingController.loadingContent,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
                     if (isUnderDevelopment)
                       UnderDevelopmentIndicator(size: windowSize),
                     if (foregroundWidgetBuilder != null)
-                      ...foregroundWidgetBuilder!(model, windowSize),
+                      ...foregroundWidgetBuilder!(
+                        scrollObserver,
+                        windowSize,
+                      ),
                     ViewModelBuilder.reactive(
-                      viewModelBuilder: () => loadingHandler,
+                      viewModelBuilder: () => loadingController,
                       disposeViewModel: false,
                       builder: (context, loadingHandler, child) {
                         return LoadingIndicator(
@@ -94,12 +107,14 @@ class _ChildWrapper extends StatefulWidget {
     required this.index,
     required this.model,
     required this.delegates,
+    required this.hasInitialized,
   });
 
   final Size size;
   final int index;
   final ScrollObservingViewModel model;
   final List<FreezedWidgetDelegate> delegates;
+  final bool hasInitialized;
 
   @override
   State<_ChildWrapper> createState() => _ChildWrapperState();
@@ -109,13 +124,13 @@ class _ChildWrapperState extends State<_ChildWrapper> {
   late final _key = Key('${widget.index}-Freezed#Child');
   FreezedWidgetDelegate get _delegate => widget.delegates[widget.index];
   late var scrollFreezeHeight = _delegate.freezedScrollHeight(widget.size);
-  late var pastScrolledHeight = _calcPastViewPortHeight;
+  late var pastScrolledHeight = _calcPastViewPortHeight();
 
   @override
   void didUpdateWidget(covariant _ChildWrapper oldWidget) {
     super.didUpdateWidget(oldWidget);
     scrollFreezeHeight = _delegate.freezedScrollHeight(widget.size);
-    pastScrolledHeight = _calcPastViewPortHeight;
+    pastScrolledHeight = _calcPastViewPortHeight();
   }
 
   @override
@@ -134,6 +149,7 @@ class _ChildWrapperState extends State<_ChildWrapper> {
             currentDelegate: _delegate,
             delegates: widget.delegates,
             scrollMetrics: model.metrics,
+            hasInitialized: widget.hasInitialized,
             pastScrolledHeight: pastScrolledHeight,
             scrollFreezeHeight: scrollFreezeHeight,
             setFocusedDelegate: model.setCurrentFocusingIndex,
@@ -143,7 +159,7 @@ class _ChildWrapperState extends State<_ChildWrapper> {
     );
   }
 
-  double get _calcPastViewPortHeight {
+  double _calcPastViewPortHeight() {
     return widget.delegates.transform<double>(
           (e, result) => e.freezedScrollHeight(widget.size) + (result ?? 0),
           end: widget.index + 1,

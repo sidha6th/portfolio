@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sidharth/gen/assets.gen.dart';
 import 'package:sidharth/gen/fonts.gen.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
 import 'package:sidharth/src/common/constants/durations.dart';
@@ -21,42 +20,50 @@ class _UnderDevelopmentIndicatorState extends State<UnderDevelopmentIndicator> {
 
   @override
   Widget build(BuildContext context) {
+    const maxWidth = 140.0;
+    const minWidth = 22.0;
+
     return Positioned(
       top: 20,
       right: 30,
       child: MouseRegion(
-        onHover: _onHover,
+        onEnter: _onHover,
         onExit: _onExitHover,
         child: DecoratedBox(
           decoration: BoxDecoration(
             color: AppColors.offWhite,
-            borderRadius: BorderRadiusDirectional.circular(90),
+            borderRadius: BorderRadiusDirectional.circular(140),
           ),
           child: TweenAnimationBuilder(
             tween: Tween<double>(
-              begin: isHovering ? 30 : 200,
-              end: isHovering ? 200 : 30,
+              begin: isHovering ? minWidth : maxWidth,
+              end: isHovering ? maxWidth : minWidth,
             ),
             duration: KDurations.ms200,
             curve: Curves.fastOutSlowIn,
             builder: (context, value, child) {
               return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 5),
+                padding: const EdgeInsets.symmetric(vertical: 3.5),
                 child: SizedBox(
                   width: value,
                   child: Row(
                     mainAxisAlignment: isHovering
-                        ? MainAxisAlignment.spaceAround
+                        ? MainAxisAlignment.spaceEvenly
                         : MainAxisAlignment.center,
                     children: [
-                      Assets.images.png.wip.image(width: 20),
+                      const Icon(
+                        Icons.warning_amber_rounded,
+                        color: AppColors.yellow,
+                        size: 14,
+                        applyTextScaling: true,
+                      ),
                       if (isHovering)
                         Flexible(
                           child: TextWidget(
                             KString.underDevelopment,
                             style: const TextStyle(
                               color: AppColors.black45,
-                              fontSize: 6,
+                              fontSize: 4,
                               fontFamily: FontFamily.cindieMonoD,
                             ),
                             softWrap: false,
@@ -81,6 +88,7 @@ class _UnderDevelopmentIndicatorState extends State<UnderDevelopmentIndicator> {
   }
 
   void _onExitHover(_) {
+    if (!isHovering) return;
     setState(() {
       isHovering = false;
     });

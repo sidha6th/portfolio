@@ -17,11 +17,11 @@ class FourthSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final slideStartDelay = _metrics.windowHeight * 0.4;
-    final lessThanTabViewPort = _metrics.windowWidth < 900;
+    final lessThanTabViewPort = _metrics.windowWidth < 740;
     final valueUsingAsWidth = !lessThanTabViewPort
         ? _metrics.windowWidth * 0.2
         : _metrics.windowHeight * 0.2;
-    final minWidth = !lessThanTabViewPort ? 200.0 : 100.0;
+    final minWidth = !lessThanTabViewPort ? 150.0 : 100.0;
     late final skillCardWidth =
         (valueUsingAsWidth).clamp(minWidth, maxCardWidth);
     final fontSize = (_metrics.minWindowSide * 0.04).clamp(4.0, 20.0);
@@ -43,7 +43,7 @@ class FourthSection extends StatelessWidget {
   }
 
   static double freezedHeight(Size screenSize) {
-    final lessThanTabViewPort = screenSize.width < 900;
+    final lessThanTabViewPort = screenSize.width < 740;
     final valueUsingAsWidth =
         !lessThanTabViewPort ? screenSize.width * 0.2 : screenSize.height * 0.2;
     final minWidth = !lessThanTabViewPort ? 200.0 : 100.0;

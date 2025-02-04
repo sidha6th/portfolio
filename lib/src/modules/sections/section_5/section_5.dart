@@ -62,15 +62,13 @@ class _FifthSectionState extends State<FifthSection> {
 
   @override
   Widget build(BuildContext context) {
-    final topPadding =
-        ((widget._metrics.windowHeight * 0.2) - widget._metrics.topDy)
-            .clamp(0.0, double.infinity);
     return Stack(
       alignment: Alignment.topCenter,
       children: [
         Padding(
           padding: EdgeInsets.only(
-            top: topPadding,
+            top: ((widget._metrics.windowHeight * 0.1) - widget._metrics.topDy)
+                .clamp(0, double.infinity),
           ),
           child: DecoratedBox(
             decoration: BoxDecoration(
@@ -102,25 +100,19 @@ class _FifthSectionState extends State<FifthSection> {
                 duration: KDurations.ms200,
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Flexible(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: TextWidget(
-                              KString.findMeOn,
-                              style: const TextStyle(
-                                color: AppColors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w900,
-                                fontFamily: FontFamily.cindieMonoD,
-                              ),
-                              softWrap: false,
-                            ),
-                          ),
+                    SizedBox(
+                      height: 50,
+                      child: TextWidget(
+                        KString.findMeOn,
+                        margin: const EdgeInsets.only(top: 20),
+                        style: const TextStyle(
+                          color: AppColors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w900,
+                          fontFamily: FontFamily.cindieMonoD,
                         ),
-                      ],
+                        softWrap: false,
+                      ),
                     ),
                     Expanded(
                       child: Stack(

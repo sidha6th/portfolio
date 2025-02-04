@@ -25,26 +25,29 @@ class SkillsSmallScreenView extends StatelessWidget {
         SizedBox(
           height: metrics.windowHeight,
           width: metrics.windowWidth,
-          child: Column(
-            children: [
-              VerticalSkillSlides.horizontal(
-                slideStartDelay: slideStartDelay,
-                cardWidth: cardWidth,
-                metrics: metrics,
-                icons: KPersonal.skillsIcons.first,
-              ),
-              const SizedBox(height: 20),
-              VerticalSkillSlides.horizontal(
-                slideStartDelay: slideStartDelay,
-                reverse: true,
-                cardWidth: cardWidth,
-                metrics: metrics,
-                icons: KPersonal.skillsIcons.last,
-              ),
-              const Spacer(),
-              SkillsDescriptionTextWidget(fontSize: descriptionFontSize),
-              const Spacer(),
-            ],
+          child: Padding(
+            padding: EdgeInsets.only(top: metrics.windowHeight * 0.1),
+            child: Column(
+              children: [
+                VerticalSkillSlides.horizontal(
+                  slideStartDelay: slideStartDelay,
+                  cardWidth: cardWidth,
+                  metrics: metrics,
+                  icons: KPersonal.skillsIcons.first,
+                ),
+                const SizedBox(height: 20),
+                VerticalSkillSlides.horizontal(
+                  slideStartDelay: slideStartDelay,
+                  reverse: true,
+                  cardWidth: cardWidth,
+                  metrics: metrics,
+                  icons: KPersonal.skillsIcons.last,
+                ),
+                const Spacer(),
+                SkillsDescriptionTextWidget(fontSize: descriptionFontSize),
+                const Spacer(),
+              ],
+            ),
           ),
         ),
       ],

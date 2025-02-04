@@ -11,11 +11,13 @@ class FreezeMetrics {
     required this.windowSize,
     required this.totalHeight,
     required this.scrollOffset,
+    required this.initialized,
   });
 
   const FreezeMetrics.zero(
     this.totalHeight,
     this.windowSize, {
+    required this.initialized,
     this.topDy = 0,
     this.bottomDy = 0,
     this.scrollOffset = 0,
@@ -27,6 +29,7 @@ class FreezeMetrics {
   final double freezedDy;
   final double totalHeight;
   final double scrollOffset;
+  final bool initialized;
 
   double get windowWidth => windowSize.width;
   double get windowHeight => windowSize.height;
@@ -35,30 +38,32 @@ class FreezeMetrics {
   double get clampedOrigin => bottomDy.clamp(0, double.infinity);
   double get availableViewPortHeight => bottomDy.clamp(0, windowHeight);
 
+  void whenWindowResized(Size size, void Function(Size windowsSize) cb) {
+    if (size == windowSize) return;
+    return cb(windowSize);
+  }
+
   @override
   bool operator ==(covariant FreezeMetrics other) {
     if (identical(this, other)) return true;
 
-    return other.freezedDy == freezedDy &&
-        other.topDy == topDy &&
+    return other.topDy == topDy &&
         other.bottomDy == bottomDy &&
         other.windowSize == windowSize &&
+        other.freezedDy == freezedDy &&
         other.totalHeight == totalHeight &&
-        other.scrollOffset == scrollOffset;
+        other.scrollOffset == scrollOffset &&
+        other.initialized == initialized;
   }
 
   @override
   int get hashCode {
-    return freezedDy.hashCode ^
-        topDy.hashCode ^
+    return topDy.hashCode ^
         bottomDy.hashCode ^
         windowSize.hashCode ^
+        freezedDy.hashCode ^
         totalHeight.hashCode ^
-        scrollOffset.hashCode;
-  }
-
-  @override
-  String toString() {
-    return '(scrollOffset: $scrollOffset, dy: $freezedDy, totalHeight: $totalHeight, bottomDy: $bottomDy, topDy: $topDy, windowSize: $windowSize)';
+        scrollOffset.hashCode ^
+        initialized.hashCode;
   }
 }

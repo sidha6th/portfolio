@@ -5,21 +5,24 @@ import 'package:stacked/stacked.dart';
 class LoadingHandlerViewModel extends BaseViewModel {
   LoadingHandlerViewModel({
     required this.scrollController,
+    required this.whenLoadingCompleted,
   });
 
   final ScrollController scrollController;
   bool loadingContent = true;
   double? progress;
   late var maxProgress = scrollController.position.maxScrollExtent * 2;
+  final VoidCallback whenLoadingCompleted;
 
   void init() {
+    addScrollListener();
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) async {
         await scroll();
-        addScrollListener();
         await scroll(0);
-        notifyListeners();
+        whenLoadingCompleted();
         loadingContent = false;
+        notifyListeners();
         removeScrollListener();
       },
     );
@@ -29,7 +32,7 @@ class LoadingHandlerViewModel extends BaseViewModel {
     return scrollController.animateTo(
       offset ?? scrollController.position.maxScrollExtent,
       duration: const Duration(seconds: 1),
-      curve: Curves.elasticIn,
+      curve: Curves.fastOutSlowIn,
     );
   }
 

@@ -31,8 +31,9 @@ class ScrollObservingViewModel extends BaseViewModel {
   ) {
     if (this.index != index) this.index = index;
     if (currentDelegate != delegate) currentDelegate = delegate;
-    if (normalizedCurrentSectionScrolledOffset != lerp)
+    if (normalizedCurrentSectionScrolledOffset != lerp) {
       normalizedCurrentSectionScrolledOffset = lerp;
+    }
   }
 
   @override

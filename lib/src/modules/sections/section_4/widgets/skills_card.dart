@@ -31,7 +31,7 @@ class _SlidingSkillCardState extends State<SlidingSkillCard> {
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      onHover: _onHover,
+      onEnter: _onHover,
       onExit: _onExit,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),

@@ -10,9 +10,9 @@ class KString {
       'I code\n I debug\n and I Develop\nNo, I don’t do magic.';
 
   // Titles
-  static const career = 'Career Journey';
+  static const titles = ['', '', 'Career Journey', 'Skills', ''];
+
   static const underDevelopment = 'Under development';
-  static const skills = 'Skills';
   static const portfolio = 'Portfolio © $year';
   static const madeWithFlutter = 'Made with flutter';
 

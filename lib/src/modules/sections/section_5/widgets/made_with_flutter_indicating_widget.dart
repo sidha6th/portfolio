@@ -31,18 +31,29 @@ class _MadeWithFlutterIndicatingWidgetState
     Assets.images.svg.flutter,
     width: 12,
   );
+
+  bool visible = false;
+  double opacity = 0;
   Offset? position;
+
   @override
-  Widget build(BuildContext context) {
-    final double opacity = widget.scrollController.hasClients &&
-            widget.offsetToScroll >=
-                widget.scrollController.position.maxScrollExtent
+  void didUpdateWidget(covariant MadeWithFlutterIndicatingWidget oldWidget) {
+    opacity = widget.offsetToScroll >=
+            widget.scrollController.position.maxScrollExtent
         ? 1
         : 0;
+    visible = opacity > 0;
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!visible) return const SizedBox.shrink();
     return Stack(
       children: [
         AnimatedOpacity(
           opacity: opacity,
+          onEnd: _onAnimationEnd,
           duration: KDurations.ms200,
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -98,5 +109,9 @@ class _MadeWithFlutterIndicatingWidgetState
     setState(() {
       position = null;
     });
+  }
+
+  void _onAnimationEnd() {
+    visible = opacity > 0;
   }
 }
