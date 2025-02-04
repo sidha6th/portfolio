@@ -108,8 +108,8 @@ class $AssetsImagesPngGen {
 class $AssetsImagesSvgGen {
   const $AssetsImagesSvgGen();
 
-  /// File path: assets/images/svg/Flutter.svg
-  String get flutter => 'assets/images/svg/Flutter.svg';
+  /// File path: assets/images/svg/flutter.svg
+  String get flutter => 'assets/images/svg/flutter.svg';
 
   /// List of all assets
   List<String> get values => [flutter];

@@ -4,6 +4,7 @@ import 'package:sidharth/src/common/model/delegate/freezed_widget_delegate.dart'
 import 'package:sidharth/src/common/widgets/box/loading_indicator.dart';
 import 'package:sidharth/src/common/widgets/box/under_development_indicator.dart';
 import 'package:sidharth/src/common/widgets/freezed_child.dart';
+import 'package:sidharth/src/common/widgets/text/loading_info_text.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/view_model/loading_handler_view_model.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/view_model/scroll_observing_view_model.dart';
 import 'package:stacked/stacked.dart';
@@ -90,6 +91,7 @@ class NotifiableLisViewBuilder extends StatelessWidget {
                         );
                       },
                     ),
+                    LoadingInfoTextWidget(model: loadingController),
                   ],
                 );
               },

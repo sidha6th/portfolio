@@ -11,6 +11,7 @@ class LoadingHandlerViewModel extends BaseViewModel {
   final ScrollController scrollController;
   bool loadingContent = true;
   double? progress;
+  int loadingInfoTextIndex = 0;
   late var maxProgress = scrollController.position.maxScrollExtent * 2;
   final VoidCallback whenLoadingCompleted;
 
@@ -29,11 +30,13 @@ class LoadingHandlerViewModel extends BaseViewModel {
   }
 
   Future<void> scroll([double? offset]) {
-    return scrollController.animateTo(
-      offset ?? scrollController.position.maxScrollExtent,
-      duration: const Duration(seconds: 1),
-      curve: Curves.fastOutSlowIn,
-    );
+    return scrollController
+        .animateTo(
+          offset ?? scrollController.position.maxScrollExtent,
+          duration: const Duration(seconds: 1),
+          curve: Curves.fastOutSlowIn,
+        )
+        .then((value) => loadingInfoTextIndex++);
   }
 
   void addScrollListener() {

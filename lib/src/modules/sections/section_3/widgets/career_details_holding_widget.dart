@@ -21,7 +21,7 @@ class CareerDetailsHoldingWidget extends StatelessWidget {
         Row(
           children: [
             TextWidget(
-              career.begin.format(KString.mmm_yyyy),
+              career.begin.format(KString.careerCardDateFormat),
               style: const TextStyle(
                 fontSize: 9,
                 fontWeight: FontWeight.w600,
@@ -57,7 +57,7 @@ class CareerDetailsHoldingWidget extends StatelessWidget {
             TextWidget(
               career.end == null
                   ? 'Present'
-                  : career.end!.format(KString.mmm_yyyy),
+                  : career.end!.format(KString.careerCardDateFormat),
               style: const TextStyle(
                 fontSize: 9,
                 fontWeight: FontWeight.w600,
