@@ -43,7 +43,7 @@ class _EmptyBackgroundImageState extends State<EmptyBackgroundImage> {
           opacity: visible ? 1 : 0,
           curve: opacityAnimationDoneOnce
               ? (visible ? Curves.bounceOut : Curves.bounceIn)
-              : Curves.linear,
+              : Curves.ease,
           onEnd: _whenAnimatedOpacityFinished,
           duration: widget.opacityAnimationDuration,
           child: SlideInDown(
@@ -51,6 +51,7 @@ class _EmptyBackgroundImageState extends State<EmptyBackgroundImage> {
             onFinish: _whenSlideAnimationFinished,
             child: Transform.scale(
               scale: widget.scale,
+              alignment: Alignment.topCenter,
               filterQuality: FilterQuality.none,
               child: SizedBox(
                 width: widget.imageWidth,
@@ -79,7 +80,7 @@ class _EmptyBackgroundImageState extends State<EmptyBackgroundImage> {
 
   void _whenSlideAnimationFinished(_) {
     Future.delayed(
-      KDurations.ms300,
+      KDurations.ms100,
       () {
         setState(() {
           visible = false;

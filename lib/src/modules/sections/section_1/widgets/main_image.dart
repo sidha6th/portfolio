@@ -40,6 +40,7 @@ class _MainImageWidgetState extends State<MainImageWidget> {
           child: Transform.scale(
             scale: widget.scale,
             transformHitTests: false,
+            alignment: Alignment.topCenter,
             filterQuality: FilterQuality.none,
             child: SizedBox(
               width: widget.imageWidth,

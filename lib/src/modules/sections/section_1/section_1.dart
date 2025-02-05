@@ -26,17 +26,12 @@ class _FirstSectionState extends State<FirstSection>
     with SingleTickerProviderStateMixin {
   final _maxScale = 1.1;
   final _imageSlideInFrom = 30.0;
+  late var _minScale = _maxScale;
   late var _imageWidth = _calcImageWidth;
   late var _portFolioTextWidget = _title;
   final _scaleDuration = KDurations.ms300;
   late var _size = widget._metrics.windowSize;
-  late final _animationController = AnimationController(
-    vsync: this,
-    lowerBound: 1,
-    value: _maxScale,
-    upperBound: _maxScale,
-    duration: _scaleDuration,
-  );
+  final curve = Curves.fastOutSlowIn;
 
   @override
   void didUpdateWidget(covariant FirstSection oldWidget) {
@@ -46,16 +41,13 @@ class _FirstSectionState extends State<FirstSection>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: CurvedAnimation(
-        curve: Curves.elasticOut,
-        parent: _animationController,
-      ),
-      builder: (context, child) {
-        final value = _animationController.value;
+    return TweenAnimationBuilder(
+      tween: Tween<double>(begin: _maxScale, end: _minScale),
+      curve: Curves.fastOutSlowIn,
+      duration: _scaleDuration,
+      builder: (context, value, child) {
         final animationCompleted = value <= 1;
         final clipBehavior = animationCompleted ? Clip.none : Clip.hardEdge;
-
         return Stack(
           alignment: Alignment.center,
           children: [
@@ -72,8 +64,7 @@ class _FirstSectionState extends State<FirstSection>
               imageWidth: _imageWidth,
               clipBehavior: clipBehavior,
               imageSlideInFrom: _imageSlideInFrom,
-              opacityAnimationDuration:
-                  animationCompleted ? KDurations.ms400 : Duration.zero,
+              opacityAnimationDuration: KDurations.ms400,
             ),
             _portFolioTextWidget,
           ],
@@ -107,6 +98,6 @@ class _FirstSectionState extends State<FirstSection>
   }
 
   void _whenSlideAnimationDone(_) {
-    _animationController.reverse();
+    setState(() => _minScale = 1);
   }
 }
