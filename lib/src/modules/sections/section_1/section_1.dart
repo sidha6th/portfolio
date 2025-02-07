@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sidharth/gen/fonts.gen.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
+import 'package:sidharth/src/common/constants/dimensions.dart';
 import 'package:sidharth/src/common/constants/durations.dart';
 import 'package:sidharth/src/common/constants/string.dart';
 import 'package:sidharth/src/common/model/freezed_metrics.dart';
@@ -32,6 +33,7 @@ class _FirstSectionState extends State<FirstSection>
   final _scaleDuration = KDurations.ms300;
   late var _size = widget._metrics.windowSize;
   final curve = Curves.fastOutSlowIn;
+  final slideDownDelay = KDimensions.loadingScaleTransitionDuration;
 
   @override
   void didUpdateWidget(covariant FirstSection oldWidget) {
@@ -42,7 +44,10 @@ class _FirstSectionState extends State<FirstSection>
   @override
   Widget build(BuildContext context) {
     return TweenAnimationBuilder(
-      tween: Tween<double>(begin: _maxScale, end: _minScale),
+      tween: Tween<double>(
+        begin: _maxScale,
+        end: _minScale,
+      ),
       curve: Curves.fastOutSlowIn,
       duration: _scaleDuration,
       builder: (context, value, child) {
@@ -55,6 +60,7 @@ class _FirstSectionState extends State<FirstSection>
               scale: value,
               imageWidth: _imageWidth,
               clipBehavior: clipBehavior,
+              slideDownDelay: slideDownDelay,
               imageSlideInFrom: _imageSlideInFrom,
               whenSlideAnimationEnd: _whenSlideAnimationDone,
             ),
@@ -63,6 +69,7 @@ class _FirstSectionState extends State<FirstSection>
               scale: value,
               imageWidth: _imageWidth,
               clipBehavior: clipBehavior,
+              slideDownDelay: slideDownDelay,
               imageSlideInFrom: _imageSlideInFrom,
               opacityAnimationDuration: KDurations.ms400,
             ),

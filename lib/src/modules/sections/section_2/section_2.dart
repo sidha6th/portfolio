@@ -15,9 +15,8 @@ class SecondSection extends StatelessWidget {
 
   final FreezeMetrics _metrics;
 
-  static double freezedHeight(Size screenSize) {
-    return (screenSize.width * 0.68).clamp(500, double.infinity);
-  }
+  static double freezedHeight(Size screenSize) =>
+      (screenSize.width * 0.68).clamp(500, double.infinity);
 
   @override
   Widget build(BuildContext context) {

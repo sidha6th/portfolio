@@ -85,9 +85,10 @@ class NotifiableLisViewBuilder extends StatelessWidget {
                       builder: (context, loadingHandler, child) {
                         return LoadingIndicator(
                           size: windowSize,
-                          isLoading: loadingHandler.loadingContent,
-                          animate: !loadingHandler.loadingContent,
                           value: loadingHandler.progress,
+                          animate: !loadingHandler.loadingContent,
+                          isLoading: loadingHandler.loadingContent,
+                          startScale: loadingHandler.testScrollCompleted,
                         );
                       },
                     ),

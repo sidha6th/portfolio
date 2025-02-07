@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sidharth/src/common/constants/dimensions.dart';
 import 'package:sidharth/src/common/helper/methods.dart';
 import 'package:stacked/stacked.dart';
 
@@ -12,29 +13,31 @@ class LoadingHandlerViewModel extends BaseViewModel {
   bool loadingContent = true;
   double? progress;
   int loadingInfoTextIndex = 0;
-  late var maxProgress = scrollController.position.maxScrollExtent * 2;
+  bool testScrollCompleted = false;
   final VoidCallback whenLoadingCompleted;
 
   void init() {
     addScrollListener();
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) async {
-        await scroll();
-        await scroll(0);
-        whenLoadingCompleted();
-        loadingContent = false;
+        await _scroll();
+        await _scroll(0);
+        testScrollCompleted = true;
         notifyListeners();
-        removeScrollListener();
+        Future.delayed(
+          KDimensions.loadingScaleTransitionDuration,
+          _closeLoading,
+        );
       },
     );
   }
 
-  Future<void> scroll([double? offset]) {
+  Future<void> _scroll([double? offset]) {
     return scrollController
         .animateTo(
           offset ?? scrollController.position.maxScrollExtent,
           duration: const Duration(seconds: 1),
-          curve: Curves.fastOutSlowIn,
+          curve: Curves.slowMiddle,
         )
         .then((value) => loadingInfoTextIndex++);
   }
@@ -54,5 +57,12 @@ class LoadingHandlerViewModel extends BaseViewModel {
       end: scrollController.position.maxScrollExtent,
     );
     notifyListeners();
+  }
+
+  void _closeLoading() {
+    whenLoadingCompleted();
+    loadingContent = false;
+    notifyListeners();
+    removeScrollListener();
   }
 }

@@ -15,10 +15,7 @@ class ThirdSection extends StatelessWidget {
         horizontal: 20,
         vertical: _metrics.windowHeight < 500 ? 40 : 0,
       ),
-      child: TimeLineCalendar(
-        offset: _metrics.bottomDy,
-        metrics: _metrics,
-      ),
+      child: TimeLineCalendar(_metrics),
     );
   }
 
