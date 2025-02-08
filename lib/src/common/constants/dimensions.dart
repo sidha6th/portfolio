@@ -1,4 +1,3 @@
-import 'package:sidharth/src/common/constants/durations.dart';
 import 'package:sidharth/src/common/constants/personal.dart';
 import 'package:sidharth/src/common/extensions/date_time.dart';
 
@@ -16,6 +15,4 @@ class KDimensions {
 
   static final timeLineWidth =
       (totalMonthsPast * KDimensions.kMonthTimelineIndicatorWidth);
-
-  static const loadingScaleTransitionDuration = KDurations.ms400;
 }

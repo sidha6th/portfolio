@@ -20,9 +20,9 @@ class LoadingInfoTextWidget extends StatelessWidget {
       viewModelBuilder: () => model,
       disposeViewModel: false,
       builder: (context, model, child) {
-        if (!model.loadingContent) return const SizedBox.shrink();
+        if (!model.isLoading) return const SizedBox.shrink();
 
-        final index = model.loadingInfoTextIndex;
+        final index = model.loadingStepCount ?? 0;
         return Positioned(
           bottom: 20,
           right: 20,

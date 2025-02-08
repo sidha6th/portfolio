@@ -7,7 +7,6 @@ class MainImageWidget extends StatefulWidget {
     required this.scale,
     required this.imageWidth,
     required this.clipBehavior,
-    required this.slideDownDelay,
     required this.imageSlideInFrom,
     required this.whenSlideAnimationEnd,
     super.key,
@@ -17,7 +16,6 @@ class MainImageWidget extends StatefulWidget {
   final Clip clipBehavior;
   final double imageWidth;
   final double imageSlideInFrom;
-  final Duration slideDownDelay;
   final void Function(AnimateDoDirection)? whenSlideAnimationEnd;
 
   @override
@@ -38,7 +36,6 @@ class _MainImageWidgetState extends State<MainImageWidget> {
         clipBehavior: widget.clipBehavior,
         child: SlideInDown(
           from: widget.imageSlideInFrom,
-          delay: widget.slideDownDelay,
           onFinish: widget.whenSlideAnimationEnd,
           child: Transform.scale(
             scale: widget.scale,

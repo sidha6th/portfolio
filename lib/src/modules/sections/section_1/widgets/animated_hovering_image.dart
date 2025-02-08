@@ -8,7 +8,6 @@ class EmptyBackgroundImage extends StatefulWidget {
     required this.scale,
     required this.imageWidth,
     required this.clipBehavior,
-    required this.slideDownDelay,
     required this.imageSlideInFrom,
     required this.opacityAnimationDuration,
     super.key,
@@ -17,7 +16,6 @@ class EmptyBackgroundImage extends StatefulWidget {
   final double scale;
   final double imageWidth;
   final Clip clipBehavior;
-  final Duration slideDownDelay;
   final double imageSlideInFrom;
   final Duration opacityAnimationDuration;
 
@@ -49,7 +47,6 @@ class _EmptyBackgroundImageState extends State<EmptyBackgroundImage> {
           onEnd: _whenAnimatedOpacityFinished,
           duration: widget.opacityAnimationDuration,
           child: SlideInDown(
-            delay: widget.slideDownDelay,
             from: widget.imageSlideInFrom,
             onFinish: _whenSlideAnimationFinished,
             child: Transform.scale(

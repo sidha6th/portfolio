@@ -37,7 +37,7 @@ class NotifiableLisViewBuilder extends StatelessWidget {
       builder: (context, scrollObserver, child) {
         return ViewModelBuilder.nonReactive(
           viewModelBuilder: () => LoadingHandlerViewModel(
-            scrollController: scrollObserver.scrollController,
+            scrollObserver.scrollController,
             whenLoadingCompleted: scrollObserver.init,
           ),
           onViewModelReady: (loadingController) => loadingController.init(),
@@ -64,8 +64,7 @@ class NotifiableLisViewBuilder extends StatelessWidget {
                                 size: windowSize,
                                 delegates: delegates,
                                 model: scrollObserver,
-                                hasInitialized:
-                                    !loadingController.loadingContent,
+                                hasInitialized: !loadingController.isLoading,
                               ),
                             ),
                           );
@@ -79,18 +78,9 @@ class NotifiableLisViewBuilder extends StatelessWidget {
                         scrollObserver,
                         windowSize,
                       ),
-                    ViewModelBuilder.reactive(
-                      viewModelBuilder: () => loadingController,
-                      disposeViewModel: false,
-                      builder: (context, loadingHandler, child) {
-                        return LoadingIndicator(
-                          size: windowSize,
-                          value: loadingHandler.progress,
-                          animate: !loadingHandler.loadingContent,
-                          isLoading: loadingHandler.loadingContent,
-                          startScale: loadingHandler.testScrollCompleted,
-                        );
-                      },
+                    FullScreenLoadingIndicator(
+                      loadingController: loadingController,
+                      size: windowSize,
                     ),
                     LoadingInfoTextWidget(model: loadingController),
                   ],

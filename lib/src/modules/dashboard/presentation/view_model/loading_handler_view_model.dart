@@ -1,68 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:sidharth/src/common/constants/dimensions.dart';
+import 'package:sidharth/src/common/constants/durations.dart';
 import 'package:sidharth/src/common/helper/methods.dart';
 import 'package:stacked/stacked.dart';
 
 class LoadingHandlerViewModel extends BaseViewModel {
-  LoadingHandlerViewModel({
-    required this.scrollController,
+  LoadingHandlerViewModel(
+    ScrollController this.scrollController, {
     required this.whenLoadingCompleted,
-  });
+  })  : progress = 0,
+        loadingStepCount = 0;
 
-  final ScrollController scrollController;
-  bool loadingContent = true;
   double? progress;
-  int loadingInfoTextIndex = 0;
-  bool testScrollCompleted = false;
+  bool isLoading = true;
+  int? loadingStepCount;
+  ScrollController? scrollController;
   final VoidCallback whenLoadingCompleted;
 
   void init() {
-    addScrollListener();
+    _addScrollListener();
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) async {
         await _scroll();
         await _scroll(0);
-        testScrollCompleted = true;
-        notifyListeners();
-        Future.delayed(
-          KDimensions.loadingScaleTransitionDuration,
-          _closeLoading,
-        );
+        _closeLoading();
       },
     );
   }
 
   Future<void> _scroll([double? offset]) {
-    return scrollController
+    return scrollController!
         .animateTo(
-          offset ?? scrollController.position.maxScrollExtent,
-          duration: const Duration(seconds: 1),
+          offset ?? scrollController!.position.maxScrollExtent,
+          duration: KDurations.s1,
           curve: Curves.slowMiddle,
         )
-        .then((value) => loadingInfoTextIndex++);
+        .then(_incrementLoadingStepCount);
   }
 
-  void addScrollListener() {
-    scrollController.addListener(updateLoadingProgress);
+  void _addScrollListener() {
+    scrollController!.addListener(_updateLoadingProgress);
   }
 
-  void removeScrollListener() {
-    scrollController.removeListener(updateLoadingProgress);
+  void _removeScrollListener() {
+    scrollController!.removeListener(_updateLoadingProgress);
   }
 
-  void updateLoadingProgress() {
+  void _incrementLoadingStepCount(_) {
+    loadingStepCount = loadingStepCount! + 1;
+  }
+
+  void _updateLoadingProgress() {
     progress = normalize(
       value:
-          scrollController.position.maxScrollExtent - scrollController.offset,
-      end: scrollController.position.maxScrollExtent,
+          scrollController!.position.maxScrollExtent - scrollController!.offset,
+      end: scrollController!.position.maxScrollExtent,
     );
     notifyListeners();
   }
 
   void _closeLoading() {
     whenLoadingCompleted();
-    loadingContent = false;
+    progress = null;
+    isLoading = false;
+    loadingStepCount = null;
     notifyListeners();
-    removeScrollListener();
+    _removeScrollListener();
+    scrollController = null;
+
+    dispose();
   }
 }
