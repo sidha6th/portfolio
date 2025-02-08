@@ -7,15 +7,18 @@ class LoadingHandlerViewModel extends BaseViewModel {
   LoadingHandlerViewModel(
     ScrollController this.scrollController, {
     required this.whenLoadingCompleted,
-  })  : progress = 0,
-        loadingStepCount = 0;
+  })  : _progress = 0,
+        _loadingStepCount = 0;
 
-  double? progress;
+  double? _progress;
+
   bool isLoading = true;
-  int? loadingStepCount;
   ScrollController? scrollController;
   final VoidCallback whenLoadingCompleted;
+  int? _loadingStepCount;
 
+  int get loadingStepCount => _loadingStepCount ?? 0;
+  double get progress => _progress ?? 0;
   void init() {
     _addScrollListener();
     WidgetsBinding.instance.addPostFrameCallback(
@@ -46,11 +49,11 @@ class LoadingHandlerViewModel extends BaseViewModel {
   }
 
   void _incrementLoadingStepCount(_) {
-    loadingStepCount = loadingStepCount! + 1;
+    _loadingStepCount = loadingStepCount + 1;
   }
 
   void _updateLoadingProgress() {
-    progress = normalize(
+    _progress = normalize(
       value:
           scrollController!.position.maxScrollExtent - scrollController!.offset,
       end: scrollController!.position.maxScrollExtent,
@@ -60,9 +63,9 @@ class LoadingHandlerViewModel extends BaseViewModel {
 
   void _closeLoading() {
     whenLoadingCompleted();
-    progress = null;
+    _progress = null;
     isLoading = false;
-    loadingStepCount = null;
+    _loadingStepCount = null;
     notifyListeners();
     _removeScrollListener();
     scrollController = null;

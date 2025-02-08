@@ -21,25 +21,21 @@ class LoadingInfoTextWidget extends StatelessWidget {
       disposeViewModel: false,
       builder: (context, model, child) {
         if (!model.isLoading) return const SizedBox.shrink();
-
-        final index = model.loadingStepCount ?? 0;
         return Positioned(
           bottom: 20,
           right: 20,
-          child: Column(
-            children: [
-              Opacity(
-                opacity: (model.progress ?? 0),
-                child: TextWidget(
-                  KString.loadingInfoTexts[index],
-                  style: const TextStyle(
-                    fontSize: 5,
-                    fontFamily: FontFamily.cindieMonoD,
-                    color: AppColors.white,
-                  ),
+          child: IgnorePointer(
+            child: Opacity(
+              opacity: model.progress,
+              child: TextWidget(
+                KString.loadingInfoTexts[model.loadingStepCount],
+                style: const TextStyle(
+                  fontSize: 5,
+                  fontFamily: FontFamily.cindieMonoD,
+                  color: AppColors.white,
                 ),
               ),
-            ],
+            ),
           ),
         );
       },
