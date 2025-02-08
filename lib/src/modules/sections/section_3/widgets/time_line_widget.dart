@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sidharth/src/common/constants/colors.dart';
 import 'package:sidharth/src/common/constants/dimensions.dart';
+import 'package:sidharth/src/common/constants/personal.dart';
 import 'package:sidharth/src/modules/sections/section_3/widgets/month_indicator.dart';
 import 'package:sidharth/src/modules/sections/section_3/widgets/shadow_widget.dart';
 
@@ -12,6 +14,7 @@ class TimeLineWidget extends StatelessWidget {
     required this.leftMonthFillerCount,
     required this.rightMonthFillerCount,
     required this.careerStartDateTime,
+    required this.now,
     super.key,
   });
 
@@ -22,6 +25,7 @@ class TimeLineWidget extends StatelessWidget {
   final int leftMonthFillerCount;
   final int rightMonthFillerCount;
   final DateTime careerStartDateTime;
+  final DateTime now;
 
   @override
   Widget build(BuildContext context) {
@@ -47,14 +51,24 @@ class TimeLineWidget extends StatelessWidget {
                 careerStartDateTime.year,
                 (careerStartDateTime.month - leftMonthFillerCount) + index,
               );
+              final dateTimeWithPreviousMonth = DateTime(
+                KPersonal.careerStartDate.year,
+                KPersonal.careerStartDate.month - 1,
+              );
+              final isInCareerTimeLine =
+                  dateTime.isAfter(dateTimeWithPreviousMonth) &&
+                      dateTime.isBefore(now);
+
               return MonthIndicatorWidget(
-                dateTime.month,
                 height: 50,
+                dateTime.month,
+                indicate: KPersonal.milestoneDates.contains(dateTime),
+                color: isInCareerTimeLine ? AppColors.white : Colors.grey,
               );
             },
           ),
-          const TimeLineShadowWidget.start(height: 71),
-          const TimeLineShadowWidget.end(height: 71),
+          TimeLineShadowWidget.start(height: 71, width: clampedWidth * 0.3),
+          TimeLineShadowWidget.end(height: 71, width: clampedWidth * 0.3),
         ],
       ),
     );

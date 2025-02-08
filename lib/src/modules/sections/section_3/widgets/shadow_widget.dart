@@ -4,14 +4,16 @@ import 'package:sidharth/src/common/constants/colors.dart';
 class TimeLineShadowWidget extends StatelessWidget {
   const TimeLineShadowWidget.start({
     required this.height,
-    this.stops = const [0.8, 1],
+    required this.width,
+    this.stops = const [0.5, 1],
     this.alignment = Alignment.centerLeft,
     this.colors = const [AppColors.black, Colors.transparent],
     super.key,
   });
   const TimeLineShadowWidget.end({
     required this.height,
-    this.stops = const [0, 0.2],
+    required this.width,
+    this.stops = const [0, 0.5],
     this.alignment = Alignment.centerRight,
     this.colors = const [Colors.transparent, AppColors.black],
     super.key,
@@ -21,6 +23,7 @@ class TimeLineShadowWidget extends StatelessWidget {
   final List<double> stops;
   final double height;
   final List<Color> colors;
+  final double width;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +38,7 @@ class TimeLineShadowWidget extends StatelessWidget {
         ),
         child: SizedBox(
           height: height,
-          width: 50,
+          width: width,
         ),
       ),
     );

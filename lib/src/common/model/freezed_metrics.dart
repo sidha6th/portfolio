@@ -38,9 +38,12 @@ class FreezeMetrics {
   double get clampedOrigin => bottomDy.clamp(0, double.infinity);
   double get availableViewPortHeight => bottomDy.clamp(0, windowHeight);
 
-  void whenWindowResized(Size size, void Function(Size windowsSize) cb) {
+  void whenWindowResized(
+    Size size,
+    void Function(Size windowsSize) callback,
+  ) {
     if (size == windowSize) return;
-    return cb(windowSize);
+    return callback(windowSize);
   }
 
   @override

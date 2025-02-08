@@ -58,8 +58,9 @@ class _SlidableTitleWidgetState extends State<SlidableTitleWidget> {
           viewModelBuilder: () => widget.model,
           disposeViewModel: false,
           builder: (context, model, child) {
+            final width = widget.windowSize.width;
             return SizedBox(
-              width: widget.windowSize.width * 0.4,
+              width: width < 600 ? width * 0.5 : width * 0.4,
               height: _titleHeight,
               child: ListView.builder(
                 primary: false,

@@ -6,10 +6,20 @@ import 'package:sidharth/src/common/widgets/box/colored_sided_box.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
 
 class MonthIndicatorWidget extends StatelessWidget {
-  const MonthIndicatorWidget(this.month, {required this.height, super.key});
+  const MonthIndicatorWidget(
+    this.month, {
+    required this.height,
+    this.indicate = false,
+    this.indicatorStickWidth = 0.5,
+    this.color = AppColors.white,
+    super.key,
+  });
 
   final int month;
+  final Color color;
+  final bool indicate;
   final double height;
+  final double indicatorStickWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -23,19 +33,36 @@ class MonthIndicatorWidget extends StatelessWidget {
           children: [
             ColoredSizedBox(
               height: height,
-              width: 0.5,
+              width: indicatorStickWidth,
             ),
-            CircleAvatar(
-              radius: 10,
-              backgroundColor: AppColors.white,
-              child: TextWidget(
-                month,
-                style: const TextStyle(
-                  fontSize: 5,
-                  color: AppColors.black,
-                  fontFamily: FontFamily.cindieMonoD,
+            Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                CircleAvatar(
+                  radius: 10,
+                  backgroundColor: color,
+                  child: TextWidget(
+                    month,
+                    style: const TextStyle(
+                      fontSize: 5,
+                      color: AppColors.black,
+                      fontFamily: FontFamily.cindieMonoD,
+                    ),
+                  ),
                 ),
-              ),
+                if (indicate)
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 2),
+                    child: DecoratedBox(
+                      position: DecorationPosition.foreground,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.blue,
+                      ),
+                      child: SizedBox.square(dimension: 4),
+                    ),
+                  ),
+              ],
             ),
           ],
         ),

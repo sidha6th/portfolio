@@ -12,6 +12,12 @@ class KPersonal {
   static const skillsDescription =
       'Every project, every challenge, and every solution—these are the tools that have shaped my journey as a developer.';
   static final careerStartDate = DateTime(2021, 11);
+  static final milestoneDates = {
+    DateTime(2021, 11),
+    DateTime(2022, 8),
+    DateTime(2023, 8),
+    DateTime(2024, 10),
+  };
   static final careerJourney = <ExperienceDetails>[
     ExperienceDetails(
       org: 'Brototype',

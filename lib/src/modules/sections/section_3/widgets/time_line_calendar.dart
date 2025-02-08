@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:sidharth/src/common/constants/colors.dart';
 import 'package:sidharth/src/common/constants/dimensions.dart';
 import 'package:sidharth/src/common/constants/durations.dart';
 import 'package:sidharth/src/common/constants/personal.dart';
 import 'package:sidharth/src/common/model/freezed_metrics.dart';
 import 'package:sidharth/src/modules/sections/section_3/widgets/career_details_holding_widget.dart';
 import 'package:sidharth/src/modules/sections/section_3/widgets/career_preview_card.dart';
-import 'package:sidharth/src/modules/sections/section_3/widgets/month_arrow_indicator.dart';
 import 'package:sidharth/src/modules/sections/section_3/widgets/time_line_widget.dart';
 import 'package:sidharth/src/modules/sections/section_3/widgets/year_indicator_text_widget.dart';
 
@@ -24,11 +24,17 @@ class TimeLineCalendar extends StatefulWidget {
 }
 
 class _TimeLineCalendarState extends State<TimeLineCalendar> {
+  late final arrow = const Icon(
+    Icons.arrow_drop_down,
+    color: AppColors.offWhite,
+  );
+
   late var size = widget._metrics.windowSize;
   final _careerCardExtend = 100.0;
   late final timeLineController = ScrollController();
   late final listWheelController = ScrollController();
   final careerStartDateTime = KPersonal.careerStartDate;
+  final now = DateTime.now();
 
   double _leftSpacing = 0;
   double _rightSpacing = 0;
@@ -88,30 +94,31 @@ class _TimeLineCalendarState extends State<TimeLineCalendar> {
         ),
         Column(
           children: [
-            const MonthArrowIndicator(),
+            arrow,
             TimeLineWidget(
-              clampedWidth: clampedWindowWidth,
-              controller: timeLineController,
+              now: now,
               leftSpacing: _leftSpacing,
               rightSpacing: _rightSpacing,
+              controller: timeLineController,
+              clampedWidth: clampedWindowWidth,
+              careerStartDateTime: careerStartDateTime,
               leftMonthFillerCount: _leftMonthFillerCount,
               rightMonthFillerCount: _rightMonthFillerCount,
-              careerStartDateTime: careerStartDateTime,
             ),
             YearIndicatorTextWidget(
-              enteredIntoCareerTimeLine: _enteredIntoCareerTimeLine,
               year: _currentDate.year,
+              enteredIntoCareerTimeLine: _enteredIntoCareerTimeLine,
             ),
           ],
         ),
         SizedBox(
           height: 200,
           child: ListWheelScrollView.useDelegate(
+            perspective: 0.01,
             itemExtent: _careerCardExtend,
+            overAndUnderCenterOpacity: 0.3,
             controller: listWheelController,
             physics: const NeverScrollableScrollPhysics(),
-            perspective: 0.01,
-            overAndUnderCenterOpacity: 0.3,
             childDelegate: ListWheelChildBuilderDelegate(
               childCount: KPersonal.careerJourney.length,
               builder: (context, index) {
