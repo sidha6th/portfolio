@@ -80,8 +80,7 @@ class SecondSection extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     AnimatedFloatingTextWidget(
-                      text:
-                          'Oh, you work with Flutter? Is that a game or something?',
+                      text: 'Why can’t you just make an app overnight?',
                       metrics: _metrics,
                       initialDy: 0.5,
                       initialDx: -0.4,
@@ -90,7 +89,7 @@ class SecondSection extends StatelessWidget {
                       dy: -dy,
                     ),
                     AnimatedFloatingTextWidget(
-                      text: 'Can you make me an app for free?',
+                      text: 'My computer is slow, can you fix it?',
                       metrics: _metrics,
                       initialDx: 0.5,
                       angle: -angle,
@@ -99,8 +98,7 @@ class SecondSection extends StatelessWidget {
                     ),
                     AnimatedFloatingTextWidget(
                       metrics: _metrics,
-                      text:
-                          'Wait, why do apps keep crashing—can’t you fix that?',
+                      text: 'Why do apps need updates? Just make it perfect!',
                       initialDx: -0.4,
                       angle: angle,
                       dx: -dx,
@@ -108,7 +106,7 @@ class SecondSection extends StatelessWidget {
                     ),
                     AnimatedFloatingTextWidget(
                       metrics: _metrics,
-                      text: 'So, do you just press a bunch of keys all day?',
+                      text: 'So, coding is just copying from Google, right?',
                       angle: angle,
                       initialDy: -0.5,
                       initialDx: 0.4,
