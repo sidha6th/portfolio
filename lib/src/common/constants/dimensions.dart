@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:sidharth/src/common/constants/personal.dart';
 import 'package:sidharth/src/common/extensions/date_time.dart';
 
@@ -15,4 +16,7 @@ class KDimensions {
 
   static final timeLineWidth =
       (totalMonthsPast * KDimensions.kMonthTimelineIndicatorWidth);
+
+  static final isMobile = defaultTargetPlatform == TargetPlatform.android ||
+      defaultTargetPlatform == TargetPlatform.iOS;
 }

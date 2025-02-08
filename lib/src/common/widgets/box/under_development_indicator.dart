@@ -3,6 +3,7 @@ import 'package:sidharth/gen/fonts.gen.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
 import 'package:sidharth/src/common/constants/durations.dart';
 import 'package:sidharth/src/common/constants/string.dart';
+import 'package:sidharth/src/common/widgets/custom_mouse_region.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
 
 class UnderDevelopmentIndicator extends StatefulWidget {
@@ -26,7 +27,7 @@ class _UnderDevelopmentIndicatorState extends State<UnderDevelopmentIndicator> {
     return Positioned(
       top: 20,
       right: 30,
-      child: MouseRegion(
+      child: CustomMouseRegion(
         onEnter: _onHover,
         onExit: _onExitHover,
         child: DecoratedBox(

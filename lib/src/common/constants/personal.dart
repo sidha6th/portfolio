@@ -64,7 +64,7 @@ class KPersonal {
     ),
   ];
 
-  static final skillsIcons = [
+  static final skillsSets = [
     [
       Assets.images.png.flutter,
       Assets.images.png.dart,

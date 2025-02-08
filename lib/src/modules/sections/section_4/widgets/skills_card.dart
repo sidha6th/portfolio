@@ -3,6 +3,7 @@ import 'package:sidharth/gen/assets.gen.dart';
 import 'package:sidharth/src/common/constants/durations.dart';
 import 'package:sidharth/src/common/model/freezed_metrics.dart';
 import 'package:sidharth/src/common/widgets/box/colored_sided_box.dart';
+import 'package:sidharth/src/common/widgets/custom_mouse_region.dart';
 
 class SlidingSkillCard extends StatefulWidget {
   const SlidingSkillCard({
@@ -30,7 +31,7 @@ class _SlidingSkillCardState extends State<SlidingSkillCard> {
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
+    return CustomMouseRegion(
       onEnter: _onHover,
       onExit: _onExit,
       child: ClipRRect(

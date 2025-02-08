@@ -33,7 +33,7 @@ class SkillsSmallScreenView extends StatelessWidget {
                   slideStartDelay: slideStartDelay,
                   cardWidth: cardWidth,
                   metrics: metrics,
-                  icons: KPersonal.skillsIcons.first,
+                  icons: KPersonal.skillsSets.first,
                 ),
                 const SizedBox(height: 20),
                 VerticalSkillSlides.horizontal(
@@ -41,7 +41,7 @@ class SkillsSmallScreenView extends StatelessWidget {
                   reverse: true,
                   cardWidth: cardWidth,
                   metrics: metrics,
-                  icons: KPersonal.skillsIcons.last,
+                  icons: KPersonal.skillsSets.last,
                 ),
                 const Spacer(),
                 SkillsDescriptionTextWidget(fontSize: descriptionFontSize),

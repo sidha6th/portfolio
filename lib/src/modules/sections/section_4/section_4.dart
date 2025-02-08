@@ -50,7 +50,7 @@ class FourthSection extends StatelessWidget {
     late final singleCardHeight =
         (valueUsingAsWidth).clamp(minWidth, 400.0) + 30;
     final delay = screenSize.height * 0.4;
-    final cardsCount = KPersonal.skillsIcons.first.length;
+    final cardsCount = KPersonal.skillsSets.first.length;
     final separatorsHeight = (cardsCount - 1) * 20;
     final cardsHeight = (cardsCount * singleCardHeight);
     return (cardsHeight + delay + separatorsHeight) - (screenSize.width * 0.5);

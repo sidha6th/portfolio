@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:sidharth/gen/assets.gen.dart';
 import 'package:sidharth/src/common/constants/durations.dart';
+import 'package:sidharth/src/common/widgets/custom_mouse_region.dart';
 
 class EmptyBackgroundImage extends StatefulWidget {
   const EmptyBackgroundImage({
@@ -34,7 +35,7 @@ class _EmptyBackgroundImageState extends State<EmptyBackgroundImage> {
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
+    return CustomMouseRegion(
       onEnter: _onEnter,
       onExit: _onExit,
       child: ClipRect(
