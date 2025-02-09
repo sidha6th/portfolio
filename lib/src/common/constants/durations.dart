@@ -8,4 +8,5 @@ class KDurations {
   static const ms200 = Duration(milliseconds: 200);
   static const ms100 = Duration(milliseconds: 100);
   static const ms50 = Duration(milliseconds: 50);
+  static const mi50 = Duration(microseconds: 50);
 }

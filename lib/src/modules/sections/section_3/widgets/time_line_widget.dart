@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
-import 'package:sidharth/src/common/constants/dimensions.dart';
+import 'package:sidharth/src/common/constants/constants.dart';
 import 'package:sidharth/src/common/constants/personal.dart';
 import 'package:sidharth/src/modules/sections/section_3/widgets/month_indicator.dart';
 import 'package:sidharth/src/modules/sections/section_3/widgets/shadow_widget.dart';
@@ -45,7 +45,7 @@ class TimeLineWidget extends StatelessWidget {
             ),
             itemCount: leftMonthFillerCount +
                 rightMonthFillerCount +
-                KDimensions.totalMonthsPast,
+                Constants.monthsElapsedInCareer,
             itemBuilder: (context, index) {
               final dateTime = DateTime(
                 careerStartDateTime.year,

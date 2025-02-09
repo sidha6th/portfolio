@@ -38,7 +38,6 @@ class FreezedChild extends StatefulWidget {
 class _FreezedChildState extends State<FreezedChild> {
   double get _scrollFreezeHeight => widget.scrollFreezeHeight;
   FreezedWidgetDelegate get _delegate => widget.currentDelegate;
-
   late final _key = ValueKey(_delegate);
   late var _metrics = FreezeMetrics.zero(
     _scrollFreezeHeight,
@@ -49,8 +48,8 @@ class _FreezedChildState extends State<FreezedChild> {
   @override
   void didUpdateWidget(covariant FreezedChild oldWidget) {
     final offset = widget.scrollMetrics?.pixels ?? 0;
-    _metrics = _getMetrics(offset);
-    _setGlobalState();
+    if (offset > widget.pastScrolledHeight) return;
+    _getMetrics(offset).then((_) => _setGlobalState());
     super.didUpdateWidget(oldWidget);
   }
 
@@ -68,12 +67,12 @@ class _FreezedChildState extends State<FreezedChild> {
     );
   }
 
-  FreezeMetrics _getMetrics(double offset) {
+  Future<void> _getMetrics(double offset) async {
     if (widget.index == 0) {
       final max = (_scrollFreezeHeight - widget.screenSize.height)
           .clamp(0.0, _scrollFreezeHeight);
       final dy = _delegate.shouldFreeze ? offset.clamp(0.0, max) : 0.0;
-      return FreezeMetrics(
+      _metrics = FreezeMetrics(
         freezedDy: dy,
         topDy: offset,
         scrollOffset: offset,
@@ -82,6 +81,7 @@ class _FreezedChildState extends State<FreezedChild> {
         initialized: widget.hasInitialized,
         bottomDy: offset + widget.screenSize.height,
       );
+      return;
     }
 
     final pastScrolledHeight = widget.pastScrolledHeight;
@@ -92,7 +92,7 @@ class _FreezedChildState extends State<FreezedChild> {
     final clampedOffset = offset.clamp(0, max);
     final freezedDy = _calcDy(clampedOffset, pastScrollableHeight, max);
 
-    return FreezeMetrics(
+    _metrics = FreezeMetrics(
       freezedDy: freezedDy,
       bottomDy: origin,
       scrollOffset: offset,

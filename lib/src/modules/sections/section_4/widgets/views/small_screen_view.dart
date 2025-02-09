@@ -1,53 +1,76 @@
 import 'package:flutter/material.dart';
+import 'package:sidharth/src/common/constants/durations.dart';
 import 'package:sidharth/src/common/constants/personal.dart';
+import 'package:sidharth/src/common/helper/methods.dart';
 import 'package:sidharth/src/common/model/freezed_metrics.dart';
 import 'package:sidharth/src/modules/sections/section_4/widgets/skills_description_widget.dart';
 import 'package:sidharth/src/modules/sections/section_4/widgets/skills_slider.dart';
 
 class SkillsSmallScreenView extends StatelessWidget {
   const SkillsSmallScreenView({
-    required this.slideStartDelay,
-    required this.cardWidth,
     required this.metrics,
+    required this.cardWidth,
+    required this.slideStartDelay,
     required this.descriptionFontSize,
     super.key,
   });
 
-  final double slideStartDelay;
   final double cardWidth;
   final FreezeMetrics metrics;
+  final double slideStartDelay;
   final double descriptionFontSize;
 
   @override
   Widget build(BuildContext context) {
+    final origin = metrics.topDy.clamp(0.0, metrics.totalHeight);
+    final double descriptionOffset =
+        normalize(value: origin, end: metrics.totalHeight);
+
     return Stack(
       children: [
         SizedBox(
-          height: metrics.windowHeight,
           width: metrics.windowWidth,
-          child: Padding(
-            padding: EdgeInsets.only(top: metrics.windowHeight * 0.1),
-            child: Column(
-              children: [
-                VerticalSkillSlides.horizontal(
-                  slideStartDelay: slideStartDelay,
-                  cardWidth: cardWidth,
-                  metrics: metrics,
-                  icons: KPersonal.skillsSets.first,
+          height: metrics.windowHeight,
+          child: Stack(
+            alignment: Alignment.bottomRight,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: metrics.windowHeight * 0.1),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Spacer(),
+                    VerticalSkillSlides.vertical(
+                      metrics: metrics,
+                      cardWidth: cardWidth,
+                      slideStartDelay: slideStartDelay,
+                      icons: KPersonal.skillsSets.first,
+                    ),
+                    const SizedBox(width: 20),
+                    VerticalSkillSlides.vertical(
+                      reverse: true,
+                      metrics: metrics,
+                      cardWidth: cardWidth,
+                      slideStartDelay: slideStartDelay,
+                      icons: KPersonal.skillsSets.last,
+                    ),
+                    const Spacer(),
+                  ],
                 ),
-                const SizedBox(height: 20),
-                VerticalSkillSlides.horizontal(
-                  slideStartDelay: slideStartDelay,
-                  reverse: true,
-                  cardWidth: cardWidth,
-                  metrics: metrics,
-                  icons: KPersonal.skillsSets.last,
+              ),
+              Positioned(
+                bottom: (metrics.totalHeight * 0.02).clamp(30, 100),
+                right: 0,
+                child: AnimatedSlide(
+                  offset: Offset(0, descriptionOffset),
+                  duration: KDurations.ms100,
+                  child: SkillsDescriptionTextWidget(
+                    fontSize: descriptionFontSize,
+                    maxWidth: metrics.windowWidth.clamp(0, 300),
+                  ),
                 ),
-                const Spacer(),
-                SkillsDescriptionTextWidget(fontSize: descriptionFontSize),
-                const Spacer(),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ],

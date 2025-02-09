@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sidharth/src/common/constants/dimensions.dart';
+import 'package:sidharth/src/common/constants/constants.dart';
 
 class CustomMouseRegion extends StatelessWidget {
   const CustomMouseRegion({
@@ -15,7 +15,7 @@ class CustomMouseRegion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (KDimensions.isMobile) {
+    if (Constants.isMobile) {
       return GestureDetector(
         onLongPressUp: () => onExit(null),
         onLongPressDown: onEnter,

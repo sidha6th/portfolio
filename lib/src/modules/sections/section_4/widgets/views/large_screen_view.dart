@@ -4,8 +4,8 @@ import 'package:sidharth/src/common/model/freezed_metrics.dart';
 import 'package:sidharth/src/modules/sections/section_4/widgets/skills_description_widget.dart';
 import 'package:sidharth/src/modules/sections/section_4/widgets/skills_slider.dart';
 
-class SkillsDesktopViewWidget extends StatelessWidget {
-  const SkillsDesktopViewWidget({
+class SkillsLargeScreenViewWidget extends StatelessWidget {
+  const SkillsLargeScreenViewWidget({
     required this.metrics,
     required this.cardWidth,
     required this.slideStartDelay,
@@ -14,8 +14,8 @@ class SkillsDesktopViewWidget extends StatelessWidget {
   });
 
   final double cardWidth;
-  final double slideStartDelay;
   final FreezeMetrics metrics;
+  final double slideStartDelay;
   final double descriptionFontSize;
 
   @override
@@ -23,22 +23,22 @@ class SkillsDesktopViewWidget extends StatelessWidget {
     return Stack(
       children: [
         Row(
-          spacing: 20,
           children: [
             const Spacer(),
             SkillsDescriptionTextWidget(fontSize: descriptionFontSize),
             const Spacer(),
             VerticalSkillSlides.vertical(
-              slideStartDelay: slideStartDelay,
-              cardWidth: cardWidth,
               metrics: metrics,
+              cardWidth: cardWidth,
+              slideStartDelay: slideStartDelay,
               icons: KPersonal.skillsSets.first,
             ),
+            const SizedBox(width: 20),
             VerticalSkillSlides.vertical(
-              slideStartDelay: slideStartDelay,
-              cardWidth: cardWidth,
-              metrics: metrics,
               reverse: true,
+              metrics: metrics,
+              cardWidth: cardWidth,
+              slideStartDelay: slideStartDelay,
               icons: KPersonal.skillsSets.last,
             ),
             const Spacer(),

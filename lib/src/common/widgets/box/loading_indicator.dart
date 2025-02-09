@@ -6,8 +6,8 @@ import 'package:stacked/stacked.dart';
 
 class FullScreenLoadingIndicator extends StatelessWidget {
   const FullScreenLoadingIndicator({
-    required this.loadingController,
     required this.size,
+    required this.loadingController,
     super.key,
   });
 
@@ -17,12 +17,10 @@ class FullScreenLoadingIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
-      viewModelBuilder: () => loadingController,
       disposeViewModel: false,
+      viewModelBuilder: () => loadingController,
       builder: (context, loadingHandler, child) {
-        if (!loadingHandler.isLoading) {
-          return const SizedBox.shrink();
-        }
+        if (!loadingHandler.isLoading) return const SizedBox.shrink();
 
         return MouseRegion(
           cursor: SystemMouseCursors.wait,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sidharth/gen/fonts.gen.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
-import 'package:sidharth/src/common/constants/dimensions.dart';
+import 'package:sidharth/src/common/constants/constants.dart';
 import 'package:sidharth/src/common/widgets/box/colored_sided_box.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
 
@@ -24,7 +24,7 @@ class MonthIndicatorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: KDimensions.kMonthTimelineIndicatorWidth,
+      width: Constants.kMonthIndicatorWidth,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5),
         child: Column(

@@ -24,11 +24,11 @@ class FifthSection extends StatefulWidget {
 }
 
 class _FifthSectionState extends State<FifthSection> {
+  late var size = widget._metrics.windowSize;
   final scrollController = ScrollController();
-  late double origin =
-      widget._metrics.bottomDy - (widget._metrics.windowHeight / 2);
-  late double width = origin.clamp(10.0, widget._metrics.windowWidth);
-  late double height = origin.clamp(10.0, widget._metrics.windowHeight);
+  late var origin = widget._metrics.bottomDy - (size.height / 2);
+  late var width = origin.clamp(10.0, size.width);
+  late var height = origin.clamp(10.0, size.height);
   double offsetToScroll = 0;
   late var socialMediaTextWidgets = List.generate(
     KPersonal.social.length,
@@ -45,13 +45,13 @@ class _FifthSectionState extends State<FifthSection> {
   @override
   void didUpdateWidget(covariant FifthSection oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _updateOuterBoxSize();
-    if (scrollController.hasClients) {
-      offsetToScroll =
-          (widget._metrics.bottomDy - (widget._metrics.windowHeight))
-              .clamp(0.0, scrollController.position.maxScrollExtent);
-      scrollController.jumpTo(offsetToScroll);
-    }
+
+    origin = widget._metrics.bottomDy - (size.height / 2);
+    width = origin.clamp(10.0, size.width);
+    height = origin.clamp(10.0, size.height);
+    widget._metrics.whenWindowResized(size, _whenResize);
+    if (!scrollController.hasClients) return;
+    _scroll();
   }
 
   @override
@@ -67,7 +67,7 @@ class _FifthSectionState extends State<FifthSection> {
       children: [
         Padding(
           padding: EdgeInsets.only(
-            top: ((widget._metrics.windowHeight * 0.1) - widget._metrics.topDy)
+            top: ((widget._metrics.maxWindowSide * 0.1) - widget._metrics.topDy)
                 .clamp(0, double.infinity),
           ),
           child: DecoratedBox(
@@ -85,18 +85,7 @@ class _FifthSectionState extends State<FifthSection> {
               width: width,
               height: height,
               child: AnimatedOpacity(
-                opacity: width >=
-                            (widget._metrics.windowWidth / 2).clamp(0, 60) &&
-                        height >=
-                            (widget._metrics.windowHeight / 2).clamp(
-                              0,
-                              scrollController.hasClients
-                                  ? scrollController.position.maxScrollExtent /
-                                      2
-                                  : 0,
-                            )
-                    ? 1
-                    : 0,
+                opacity: width > 100 ? 1 : 0,
                 duration: KDurations.ms200,
                 child: Column(
                   children: [
@@ -158,9 +147,13 @@ class _FifthSectionState extends State<FifthSection> {
     );
   }
 
-  void _updateOuterBoxSize() {
-    origin = widget._metrics.bottomDy - (widget._metrics.windowHeight / 2);
-    width = origin.clamp(10.0, widget._metrics.windowWidth);
-    height = origin.clamp(10.0, widget._metrics.windowHeight);
+  void _whenResize(Size windowsSize) {
+    size = windowsSize;
+  }
+
+  Future<void> _scroll() async {
+    offsetToScroll = (widget._metrics.bottomDy - size.height)
+        .clamp(0.0, scrollController.position.maxScrollExtent);
+    scrollController.jumpTo(offsetToScroll);
   }
 }

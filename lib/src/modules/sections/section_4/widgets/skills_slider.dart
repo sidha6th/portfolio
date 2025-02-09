@@ -49,6 +49,7 @@ class _VerticalSkillSlidesState extends State<VerticalSkillSlides> {
         _controller.position.maxScrollExtent,
       ),
     );
+    
     super.didUpdateWidget(oldWidget);
   }
 
@@ -60,10 +61,10 @@ class _VerticalSkillSlidesState extends State<VerticalSkillSlides> {
 
   @override
   Widget build(BuildContext context) {
-    final isVertical = widget.slideDirection == Axis.vertical;
     final visibleHeight = widget.metrics.availableViewPortHeight;
-    final endMaskHeight = visibleHeight * 0.4;
+    final isVertical = widget.slideDirection == Axis.vertical;
     final maskHeight = widget.metrics.windowHeight * 0.4;
+    final endMaskHeight = visibleHeight * 0.4;
     final cardHeight = widget.cardWidth + 30;
 
     return SizedBox(

@@ -3,11 +3,11 @@ import 'package:sidharth/src/common/model/delegate/freezed_widget_delegate.dart'
 import 'package:stacked/stacked.dart';
 
 class ScrollObservingViewModel extends BaseViewModel {
-  ScrollMetrics? metrics;
-  late final scrollController = ScrollController();
   int index = 0;
-  double normalizedCurrentSectionScrolledOffset = 0;
+  ScrollMetrics? metrics;
   FreezedWidgetDelegate? currentDelegate;
+  late final scrollController = ScrollController();
+  double normalizedCurrentSectionScrolledOffset = 0;
 
   void init() {
     _listenController();
@@ -24,16 +24,15 @@ class ScrollObservingViewModel extends BaseViewModel {
     });
   }
 
-  void setCurrentFocusingIndex(
+  void setCurrentDelegateState(
     int index,
     FreezedWidgetDelegate delegate,
     double lerp,
   ) {
     if (this.index != index) this.index = index;
     if (currentDelegate != delegate) currentDelegate = delegate;
-    if (normalizedCurrentSectionScrolledOffset != lerp) {
-      normalizedCurrentSectionScrolledOffset = lerp;
-    }
+    if (normalizedCurrentSectionScrolledOffset == lerp) return;
+    normalizedCurrentSectionScrolledOffset = lerp;
   }
 
   @override

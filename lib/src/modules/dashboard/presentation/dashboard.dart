@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
 import 'package:sidharth/src/common/model/delegate/freezed_widget_delegate.dart';
-import 'package:sidharth/src/common/widgets/scrollable/notifiable_list_view_builder.dart';
+import 'package:sidharth/src/common/widgets/freezable_list_view/notifiable_list_view_builder.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/widgets/scroll_progress_indicator_widget.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/widgets/slidable_title_widget.dart';
 import 'package:sidharth/src/modules/sections/section_1/section_1.dart';
@@ -45,7 +45,7 @@ class Dashboard extends StatelessWidget {
             childBuilder: FifthSection.new,
           ),
         ],
-        foregroundWidgetBuilder: (model, windowSize) {
+        foregroundWidgetBuilder: (windowSize, model) {
           return [
             SlidableTitleWidget(model: model, windowSize: windowSize),
             ScrollProgressIndicatorWidget(model: model),

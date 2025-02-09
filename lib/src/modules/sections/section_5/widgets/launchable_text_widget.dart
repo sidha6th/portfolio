@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sidharth/gen/fonts.gen.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:url_launcher/url_launcher_string.dart' deferred as launch;
 
 class LaunchableTextWidget extends StatelessWidget {
   const LaunchableTextWidget({
@@ -19,7 +19,13 @@ class LaunchableTextWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       mouseCursor: SystemMouseCursors.click,
-      onTap: () => launchUrlString(url),
+      onTap: () {
+        launch.loadLibrary().then(
+          (value) {
+            launch.launchUrlString(url);
+          },
+        );
+      },
       child: TextWidget(
         text,
         style: TextStyle(

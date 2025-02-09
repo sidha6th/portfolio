@@ -72,6 +72,7 @@ class _SlidableTitleWidgetState extends State<SlidableTitleWidget> {
                   return TextWidget(
                     KString.titles[index],
                     style: textStyle,
+                    softWrap: false,
                   );
                 },
               ),

@@ -5,20 +5,21 @@ import 'package:stacked/stacked.dart';
 
 class LoadingHandlerViewModel extends BaseViewModel {
   LoadingHandlerViewModel(
-    ScrollController this.scrollController, {
+    ScrollController this._scrollController, {
     required this.whenLoadingCompleted,
   })  : _progress = 0,
         _loadingStepCount = 0;
 
   double? _progress;
+  int? _loadingStepCount;
+  ScrollController? _scrollController;
 
   bool isLoading = true;
-  ScrollController? scrollController;
   final VoidCallback whenLoadingCompleted;
-  int? _loadingStepCount;
 
   int get loadingStepCount => _loadingStepCount ?? 0;
   double get progress => _progress ?? 0;
+
   void init() {
     _addScrollListener();
     WidgetsBinding.instance.addPostFrameCallback(
@@ -31,9 +32,9 @@ class LoadingHandlerViewModel extends BaseViewModel {
   }
 
   Future<void> _scroll([double? offset]) {
-    return scrollController!
+    return _scrollController!
         .animateTo(
-          offset ?? scrollController!.position.maxScrollExtent,
+          offset ?? _scrollController!.position.maxScrollExtent,
           duration: KDurations.s1,
           curve: Curves.slowMiddle,
         )
@@ -41,11 +42,11 @@ class LoadingHandlerViewModel extends BaseViewModel {
   }
 
   void _addScrollListener() {
-    scrollController!.addListener(_updateLoadingProgress);
+    _scrollController!.addListener(_updateLoadingProgress);
   }
 
   void _removeScrollListener() {
-    scrollController!.removeListener(_updateLoadingProgress);
+    _scrollController!.removeListener(_updateLoadingProgress);
   }
 
   void _incrementLoadingStepCount(_) {
@@ -53,10 +54,10 @@ class LoadingHandlerViewModel extends BaseViewModel {
   }
 
   void _updateLoadingProgress() {
+    final maxExtend = _scrollController!.position.maxScrollExtent;
     _progress = normalize(
-      value:
-          scrollController!.position.maxScrollExtent - scrollController!.offset,
-      end: scrollController!.position.maxScrollExtent,
+      value: maxExtend - _scrollController!.offset,
+      end: maxExtend,
     );
     notifyListeners();
   }
@@ -68,7 +69,7 @@ class LoadingHandlerViewModel extends BaseViewModel {
     _loadingStepCount = null;
     notifyListeners();
     _removeScrollListener();
-    scrollController = null;
+    _scrollController = null;
 
     dispose();
   }
