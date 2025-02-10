@@ -24,7 +24,7 @@ class MonthIndicatorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: Constants.kMonthIndicatorWidth,
+      width: Misc.kMonthIndicatorWidth,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5),
         child: Column(

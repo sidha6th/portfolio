@@ -22,13 +22,12 @@ class FirstSection extends StatefulWidget {
   }
 }
 
-class _FirstSectionState extends State<FirstSection>
-    with SingleTickerProviderStateMixin {
+class _FirstSectionState extends State<FirstSection> {
   final _maxScale = 1.1;
   final _imageSlideInFrom = 30.0;
   late var _minScale = _maxScale;
   late var _imageWidth = _calcImageWidth;
-  late var _portFolioTextWidget = _title;
+  late final _portFolioTextWidget = _title;
   final _scaleDuration = KDurations.ms300;
   late var _size = widget._metrics.windowSize;
   final curve = Curves.fastOutSlowIn;
@@ -62,7 +61,7 @@ class _FirstSectionState extends State<FirstSection>
               whenSlideAnimationEnd: _whenSlideAnimationDone,
             ),
             NameAndDesignation(metrics: widget._metrics),
-            EmptyBackgroundImage(
+            TransparentBackgroundImageWidget(
               scale: value,
               imageWidth: _imageWidth,
               clipBehavior: clipBehavior,
@@ -95,7 +94,6 @@ class _FirstSectionState extends State<FirstSection>
       );
 
   void _whenWindowResized(Size windowsSize) {
-    _portFolioTextWidget = _title;
     _imageWidth = _calcImageWidth;
     _size = windowsSize;
   }

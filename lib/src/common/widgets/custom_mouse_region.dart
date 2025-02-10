@@ -15,7 +15,7 @@ class CustomMouseRegion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (Constants.isMobile) {
+    if (Misc.isMobile) {
       return GestureDetector(
         onLongPressUp: () => onExit(null),
         onLongPressDown: onEnter,

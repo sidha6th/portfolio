@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:sidharth/gen/fonts.gen.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
-import 'package:sidharth/src/common/extensions/build_context.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
 
 class BlueGradientTextBoxWidget extends StatelessWidget {
   const BlueGradientTextBoxWidget(
     this.text, {
+    required this.screenSize,
     super.key,
   });
 
   final String text;
+  final Size screenSize;
 
   @override
   Widget build(BuildContext context) {
-    final width = context.screenWidth;
+    final width = screenSize.width;
     return DecoratedBox(
       decoration: BoxDecoration(
         gradient: const LinearGradient(

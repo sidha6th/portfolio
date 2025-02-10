@@ -47,17 +47,18 @@ class NotifiableLisViewBuilder extends StatelessWidget {
                 return Stack(
                   children: [
                     SingleChildScrollView(
+                      primary: false,
                       padding: padding,
                       physics: physics,
                       clipBehavior: Clip.none,
                       restorationId: restorationId,
                       controller: scrollObserver.scrollController,
                       child: ViewModelBuilder.reactive(
-                        disposeViewModel: false,
                         viewModelBuilder: () => loadingController,
                         builder: (context, loadingController, child) {
                           return Column(
                             children: List.generate(
+                              growable: false,
                               delegates.length,
                               (index) => ChildWrapper(
                                 index: index,

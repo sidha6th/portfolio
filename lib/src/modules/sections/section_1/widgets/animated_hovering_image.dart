@@ -4,8 +4,8 @@ import 'package:sidharth/gen/assets.gen.dart';
 import 'package:sidharth/src/common/constants/durations.dart';
 import 'package:sidharth/src/common/widgets/custom_mouse_region.dart';
 
-class EmptyBackgroundImage extends StatefulWidget {
-  const EmptyBackgroundImage({
+class TransparentBackgroundImageWidget extends StatefulWidget {
+  const TransparentBackgroundImageWidget({
     required this.scale,
     required this.imageWidth,
     required this.clipBehavior,
@@ -21,10 +21,12 @@ class EmptyBackgroundImage extends StatefulWidget {
   final Duration opacityAnimationDuration;
 
   @override
-  State<EmptyBackgroundImage> createState() => _EmptyBackgroundImageState();
+  State<TransparentBackgroundImageWidget> createState() =>
+      _TransparentBackgroundImageWidgetState();
 }
 
-class _EmptyBackgroundImageState extends State<EmptyBackgroundImage> {
+class _TransparentBackgroundImageWidgetState
+    extends State<TransparentBackgroundImageWidget> {
   bool visible = true;
   bool opacityAnimationDoneOnce = false;
   late final image = Assets.images.png.image.image(

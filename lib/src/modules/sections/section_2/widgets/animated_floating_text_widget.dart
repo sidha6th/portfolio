@@ -1,5 +1,6 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:sidharth/src/common/constants/durations.dart';
 import 'package:sidharth/src/common/model/freezed_metrics.dart';
 import 'package:sidharth/src/modules/sections/section_2/widgets/blue_gradient_text_box_widget.dart';
 
@@ -34,39 +35,42 @@ class AnimatedFloatingTextWidget extends StatefulWidget {
 
 class _AnimatedFloatingTextWidgetState
     extends State<AnimatedFloatingTextWidget> {
-  late var size = widget.metrics.windowSize;
-  late var child = BlueGradientTextBoxWidget(widget.text);
+  late var _size = widget.metrics.windowSize;
+  late var _child = BlueGradientTextBoxWidget(widget.text, screenSize: _size);
+
   @override
   void didUpdateWidget(covariant AnimatedFloatingTextWidget oldWidget) {
-    widget.metrics.whenWindowResized(
-      size,
-      (windowsSize) {
-        size = windowsSize;
-        child = BlueGradientTextBoxWidget(widget.text);
-      },
-    );
+    widget.metrics.whenWindowResized(_size, _whenResized);
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
-    final offset =
-        Offset(widget.initialDx + widget.dx, widget.initialDy + widget.dy);
-    final turns = widget.initialAngle + widget.angle;
-    final curve = Curves.ease;
+    final offset = Offset(
+      (widget.initialDx + widget.dx),
+      (widget.initialDy + widget.dy),
+    );
 
-    return AnimatedSlide(
-      curve: curve,
-      offset: offset,
-      duration: KDurations.mi50,
-      child: AnimatedRotation(
-        turns: turns,
-        curve: curve,
+    final turns = (widget.initialAngle + widget.angle);
+
+    return FractionalTranslation(
+      translation: offset,
+      transformHitTests: false,
+      child: Transform.rotate(
+        angle: turns * pi,
+        transformHitTests: false,
         alignment: widget.alignment,
-        duration: KDurations.mi50,
         filterQuality: FilterQuality.none,
-        child: child,
+        child: _child,
       ),
+    );
+  }
+
+  void _whenResized(Size windowsSize) {
+    _size = windowsSize;
+    _child = BlueGradientTextBoxWidget(
+      widget.text,
+      screenSize: _size,
     );
   }
 }

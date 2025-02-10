@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:sidharth/src/common/constants/personal.dart';
 import 'package:sidharth/src/common/extensions/date_time.dart';
 
-class Constants {
-  const Constants._();
+class Misc {
+  const Misc._();
 
   static const kFreezedListHorizontalTotalPadding = 40.0;
   static const kMonthIndicatorWidth = 31.0;

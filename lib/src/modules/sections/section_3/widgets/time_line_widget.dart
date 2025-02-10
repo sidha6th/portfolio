@@ -45,7 +45,7 @@ class TimeLineWidget extends StatelessWidget {
             ),
             itemCount: leftMonthFillerCount +
                 rightMonthFillerCount +
-                Constants.monthsElapsedInCareer,
+                Misc.monthsElapsedInCareer,
             itemBuilder: (context, index) {
               final dateTime = DateTime(
                 careerStartDateTime.year,

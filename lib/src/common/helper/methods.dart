@@ -3,6 +3,6 @@ double normalize({
   required double end,
   double start = 0,
 }) {
-  if (start == end) return 0;
+  if (start == end || value < 0) return 0;
   return (value - start) / (end - start);
 }

@@ -19,9 +19,9 @@ class ThirdSection extends StatefulWidget {
   final FreezeMetrics _metrics;
 
   static double freezedHeight(Size screenSize) {
-    return (Constants.careerTimeLineWidth +
+    return (Misc.careerTimeLineWidth +
         (screenSize.height / 2) +
-        (screenSize.width.clamp(0, Constants.maxViewPortWidth) / 2));
+        (screenSize.width.clamp(0, Misc.maxViewPortWidth) / 2));
   }
 
   @override
@@ -34,13 +34,14 @@ class _ThirdSectionState extends State<ThirdSection> {
     color: AppColors.offWhite,
   );
 
+  final _careerCardExtend = 100.0;
   late final _now = DateTime.now();
   late var _size = widget._metrics.windowSize;
   late var _currentDate = KPersonal.careerStartDate;
   late final _timeLineController = ScrollController();
   late final _listWheelController = ScrollController();
-  late final _halfOfMonthIndicatorWidth = Constants.kMonthIndicatorWidth / 2;
-  final _careerCardExtend = 100.0;
+  late var halfOfScreenHeight = widget._metrics.windowHeight / 2;
+  late final _halfOfMonthIndicatorWidth = Misc.kMonthIndicatorWidth / 2;
   final _careerStartDateTime = KPersonal.careerStartDate;
 
   double _leftSpacing = 0;
@@ -71,7 +72,7 @@ class _ThirdSectionState extends State<ThirdSection> {
 
     if (!_enteredIntoCareerTimeLine) return;
 
-    final indicatorPos = (focusPoint / Constants.kMonthIndicatorWidth);
+    final indicatorPos = (focusPoint / Misc.kMonthIndicatorWidth);
     _currentDate = _datetime(indicatorPos);
     _animateCareerCard();
   }
@@ -146,25 +147,26 @@ class _ThirdSectionState extends State<ThirdSection> {
 
   void _updateWidth(Size size) {
     _size = size;
-    _clampedWindowWidth = size.width.clamp(0.0, Constants.maxViewPortWidth);
+    _clampedWindowWidth = size.width.clamp(0.0, Misc.maxViewPortWidth);
     _halfOfWindowWidth = _clampedWindowWidth / 2;
+    halfOfScreenHeight = widget._metrics.windowHeight / 2;
     _calcLeftFillerCount();
     _calcRightFillerCount();
   }
 
   Future<void> _calcLeftFillerCount() async {
-    final countAsDouble = _clampedWindowWidth / Constants.kMonthIndicatorWidth;
+    final countAsDouble = _clampedWindowWidth / Misc.kMonthIndicatorWidth;
     _leftMonthFillerCount = countAsDouble.toInt();
     _leftSpacing = (_clampedWindowWidth -
-            (_leftMonthFillerCount * Constants.kMonthIndicatorWidth)) +
+            (_leftMonthFillerCount * Misc.kMonthIndicatorWidth)) +
         (countAsDouble - _leftMonthFillerCount);
   }
 
   Future<void> _calcRightFillerCount() async {
-    final countAsDouble = _halfOfWindowWidth / Constants.kMonthIndicatorWidth;
+    final countAsDouble = _halfOfWindowWidth / Misc.kMonthIndicatorWidth;
     _rightMonthFillerCount = countAsDouble.toInt();
     _rightSpacing = (_halfOfWindowWidth -
-            (_rightMonthFillerCount * Constants.kMonthIndicatorWidth)) +
+            (_rightMonthFillerCount * Misc.kMonthIndicatorWidth)) +
         (countAsDouble - _rightMonthFillerCount);
   }
 
@@ -177,7 +179,7 @@ class _ThirdSectionState extends State<ThirdSection> {
 
   Future<void> _scroll() async {
     _timeLineController.jumpTo(
-      (widget._metrics.bottomDy - _halfOfWindowWidth).clamp(
+      (widget._metrics.bottomDy - halfOfScreenHeight).clamp(
         0,
         _timeLineController.position.maxScrollExtent,
       ),

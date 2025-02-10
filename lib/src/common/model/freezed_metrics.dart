@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 @immutable
-class FreezeMetrics {
+final class FreezeMetrics {
   const FreezeMetrics({
     required this.topDy,
     required this.bottomDy,

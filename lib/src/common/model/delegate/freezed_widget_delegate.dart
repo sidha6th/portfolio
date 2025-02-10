@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sidharth/src/common/model/freezed_metrics.dart';
 
 @immutable
-class FreezedWidgetDelegate {
+final class FreezedWidgetDelegate {
   const FreezedWidgetDelegate({
     required this.freezedScrollHeight,
     required this.childBuilder,

@@ -1,3 +1,6 @@
+import 'package:flutter/widgets.dart';
+
+@immutable
 final class ExperienceDetails {
   const ExperienceDetails({
     required this.org,
@@ -36,4 +39,24 @@ final class ExperienceDetails {
   final DateTime begin;
   final DateTime? end;
   final bool isPresent;
+
+  @override
+  bool operator ==(covariant ExperienceDetails other) {
+    if (identical(this, other)) return true;
+
+    return other.org == org &&
+        other.designation == designation &&
+        other.begin == begin &&
+        other.end == end &&
+        other.isPresent == isPresent;
+  }
+
+  @override
+  int get hashCode {
+    return org.hashCode ^
+        designation.hashCode ^
+        begin.hashCode ^
+        end.hashCode ^
+        isPresent.hashCode;
+  }
 }
