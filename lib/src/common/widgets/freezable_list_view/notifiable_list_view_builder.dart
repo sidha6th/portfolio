@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:sidharth/gen/assets.gen.dart';
 import 'package:sidharth/src/common/model/delegate/freezed_widget_delegate.dart';
 import 'package:sidharth/src/common/widgets/box/loading_indicator.dart';
 import 'package:sidharth/src/common/widgets/box/under_development_indicator.dart';
@@ -39,7 +42,8 @@ class NotifiableLisViewBuilder extends StatelessWidget {
             scrollObserver.scrollController,
             whenLoadingCompleted: scrollObserver.init,
           ),
-          onViewModelReady: (loadingController) => loadingController.init(),
+          onViewModelReady: (loadingController) =>
+              loadingController.init(() => _precacheImages(context)),
           builder: (context, loadingController, child) {
             return LayoutBuilder(
               builder: (context, constraints) {
@@ -60,12 +64,14 @@ class NotifiableLisViewBuilder extends StatelessWidget {
                             children: List.generate(
                               growable: false,
                               delegates.length,
-                              (index) => ChildWrapper(
-                                index: index,
-                                size: windowSize,
-                                delegates: delegates,
-                                model: scrollObserver,
-                                hasInitialized: !loadingController.isLoading,
+                              (index) => RepaintBoundary(
+                                child: ChildWrapper(
+                                  index: index,
+                                  size: windowSize,
+                                  delegates: delegates,
+                                  model: scrollObserver,
+                                  hasInitialized: !loadingController.isLoading,
+                                ),
                               ),
                             ),
                           );
@@ -89,5 +95,13 @@ class NotifiableLisViewBuilder extends StatelessWidget {
         );
       },
     );
+  }
+
+  void _precacheImages(BuildContext context) {
+    Future.wait([
+      precacheImage(Assets.images.jpeg.image.provider(), context),
+      for (final png in Assets.images.png.values)
+        precacheImage(png.provider(), context),
+    ]);
   }
 }

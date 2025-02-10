@@ -20,7 +20,8 @@ class LoadingHandlerViewModel extends BaseViewModel {
   int get loadingStepCount => _loadingStepCount ?? 0;
   double get progress => _progress ?? 0;
 
-  void init() {
+  void init([VoidCallback? task]) {
+    task?.call();
     _addScrollListener();
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) async {
