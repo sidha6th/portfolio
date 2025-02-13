@@ -1,16 +1,19 @@
-# sidharth
 
-A new Flutter project.
+🚀 **Personal Portfolio** built with **Flutter Web**, showcasing my skills, projects, and experience.
 
-## Getting Started
+## 🌐 Live Demo
+Check it out here: [sidha6th.web.app](https://sidha6th.web.app/)
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+## 📌 Future Improvements
+- **Dark Mode Support**
+- **Projects Section**
+- **Blog Section**
+- **More Performance Optimizations**
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 📬 Contact
+Feel free to reach out:
+- 💼 LinkedIn: [sidharth](https://www.linkedin.com/in/sidharth-r-9889a3219/)
+- 📧 Email: sidharth.rajendran.r@gmail.com
+---
+💡 *Open to feedback & suggestions!*
