@@ -6,7 +6,7 @@ Check it out here: [sidha6th.web.app](https://sidha6th.web.app/)
 
 
 ## 📌 Future Improvements
-- **Dark Mode Support**
+- **Light Mode Support**
 - **Projects Section**
 - **Blog Section**
 - **More Performance Optimizations**

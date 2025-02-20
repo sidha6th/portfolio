@@ -9,7 +9,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  intl: ^0.20.2
   stacked: ^3.4.4
   animate_do: ^3.3.4
   url_launcher: ^6.3.1

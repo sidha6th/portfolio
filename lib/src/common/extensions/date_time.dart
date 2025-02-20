@@ -1,4 +1,4 @@
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 
 extension ExtensionOnDateTime on DateTime {
   int monthDifference([DateTime? endDate]) {
@@ -8,7 +8,4 @@ extension ExtensionOnDateTime on DateTime {
 
     return ((yDiff * 12) + mDiff) + 1;
   }
-
-  String format([String? newPattern, String? locale]) =>
-      DateFormat(newPattern, locale).format(this);
 }

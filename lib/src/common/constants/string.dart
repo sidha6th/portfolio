@@ -14,6 +14,18 @@ class KString {
   static const underDevelopment = 'Under development';
   static const titles = ['', '', 'Career Journey', 'Skills', ''];
 
-  // Date time format
-  static const careerCardDateFormat = 'MMM-yyyy';
+  static const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
 }
