@@ -29,40 +29,53 @@ class _TransparentBackgroundImageWidgetState
     extends State<TransparentBackgroundImageWidget> {
   bool visible = true;
   bool opacityAnimationDoneOnce = false;
-  late final image = Assets.images.png.image.image(
-    fit: BoxFit.cover,
-    colorBlendMode: BlendMode.darken,
-    filterQuality: FilterQuality.none,
+
+  late final image = SizedBox(
+    width: widget.imageWidth,
+    child: Assets.images.png.image.image(
+      fit: BoxFit.cover,
+      colorBlendMode: BlendMode.darken,
+      filterQuality: FilterQuality.none,
+    ),
   );
+
+  @override
+  void didUpdateWidget(covariant TransparentBackgroundImageWidget oldWidget) {
+    if (widget.scale > 1) {
+      child = ClipRect(
+        clipBehavior: widget.clipBehavior,
+        child: SlideInDown(
+          from: widget.imageSlideInFrom,
+          onFinish: _whenSlideAnimationFinished,
+          child: Transform.scale(
+            scale: widget.scale,
+            alignment: Alignment.topCenter,
+            filterQuality: FilterQuality.none,
+            child: image,
+          ),
+        ),
+      );
+    } else if (child != image) {
+      child = image;
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  late Widget child = image;
 
   @override
   Widget build(BuildContext context) {
     return CustomMouseRegion(
       onEnter: _onEnter,
       onExit: _onExit,
-      child: ClipRect(
-        clipBehavior: widget.clipBehavior,
-        child: AnimatedOpacity(
-          opacity: visible ? 1 : 0,
-          curve: opacityAnimationDoneOnce
-              ? (visible ? Curves.bounceOut : Curves.bounceIn)
-              : Curves.ease,
-          onEnd: _whenAnimatedOpacityFinished,
-          duration: widget.opacityAnimationDuration,
-          child: SlideInDown(
-            from: widget.imageSlideInFrom,
-            onFinish: _whenSlideAnimationFinished,
-            child: Transform.scale(
-              scale: widget.scale,
-              alignment: Alignment.topCenter,
-              filterQuality: FilterQuality.none,
-              child: SizedBox(
-                width: widget.imageWidth,
-                child: image,
-              ),
-            ),
-          ),
-        ),
+      child: AnimatedOpacity(
+        opacity: visible ? 1 : 0,
+        curve: opacityAnimationDoneOnce
+            ? (visible ? Curves.bounceOut : Curves.bounceIn)
+            : Curves.ease,
+        onEnd: _whenAnimatedOpacityFinished,
+        duration: widget.opacityAnimationDuration,
+        child: child,
       ),
     );
   }

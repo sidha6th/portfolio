@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sidharth/gen/assets.gen.dart';
+import 'package:sidharth/src/common/constants/colors.dart';
 import 'package:sidharth/src/common/constants/durations.dart';
 import 'package:sidharth/src/common/model/freezed_metrics.dart';
 import 'package:sidharth/src/common/widgets/box/colored_sided_box.dart';
@@ -59,7 +60,7 @@ class _SlidingSkillCardState extends State<SlidingSkillCard> {
           builder: (context, value, child) {
             return ColorFiltered(
               colorFilter: ColorFilter.mode(
-                Colors.grey.withAlpha(value.toInt()),
+                AppColors.grey.withAlpha(value.toInt()),
                 BlendMode.color,
               ),
               child: child,

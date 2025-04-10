@@ -48,7 +48,7 @@ class ScrollProgressIndicatorWidget extends StatelessWidget {
                   width: 100,
                   child: LinearProgressIndicator(
                     value: model.normalizedCurrentSectionScrolledOffset,
-                    backgroundColor: Colors.grey,
+                    backgroundColor: AppColors.grey,
                     minHeight: 0.5,
                     color: AppColors.offWhite,
                     borderRadius: BorderRadius.circular(10),

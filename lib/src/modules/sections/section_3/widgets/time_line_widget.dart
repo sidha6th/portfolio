@@ -63,7 +63,7 @@ class TimeLineWidget extends StatelessWidget {
                 height: 50,
                 dateTime.month,
                 indicate: KPersonal.milestoneDates.contains(dateTime),
-                color: isInCareerTimeLine ? AppColors.white : Colors.grey,
+                color: isInCareerTimeLine ? AppColors.white : AppColors.grey,
               );
             },
           ),

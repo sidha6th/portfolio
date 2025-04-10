@@ -5,13 +5,13 @@ class ShadowGradient extends StatelessWidget {
   const ShadowGradient.start({
     required this.height,
     required this.width,
-    this.colors = const [AppColors.black, Colors.transparent],
+    this.colors = AppColors.shadow,
     super.key,
   }) : isEnd = false;
   const ShadowGradient.end({
     required this.height,
     required this.width,
-    this.colors = const [Colors.transparent, AppColors.black],
+    this.colors = AppColors.shadowInverse,
     super.key,
   }) : isEnd = true;
 
@@ -28,7 +28,7 @@ class ShadowGradient extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: colors,
-          stops: isEnd ? [0, 0.8] : [0.2, 1],
+          stops: isEnd ? AppColors.inverseShadowStops : AppColors.shadowStops,
         ),
       ),
       child: SizedBox(

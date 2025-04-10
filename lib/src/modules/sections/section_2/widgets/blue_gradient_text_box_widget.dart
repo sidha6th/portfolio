@@ -41,7 +41,7 @@ class BlueGradientTextBoxWidget extends StatelessWidget {
         child: TextWidget(
           text,
           style: TextStyle(
-            color: Colors.white,
+            color: AppColors.white,
             fontFamily: FontFamily.elgocThin,
             fontSize: (width * 0.02).clamp(0, 15),
             fontWeight: FontWeight.bold,
@@ -50,13 +50,13 @@ class BlueGradientTextBoxWidget extends StatelessWidget {
                 blurRadius: 10.0,
                 spreadRadius: 0.2,
                 offset: Offset(-1, 1),
-                color: Colors.white,
+                color: AppColors.white,
               ),
               const BoxShadow(
                 blurRadius: 10.0,
                 spreadRadius: 0.2,
                 offset: Offset(1, -1),
-                color: Colors.white,
+                color: AppColors.white,
               ),
             ],
           ),

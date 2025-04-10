@@ -5,17 +5,17 @@ class TimeLineShadowWidget extends StatelessWidget {
   const TimeLineShadowWidget.start({
     required this.height,
     required this.width,
-    this.stops = const [0.5, 1],
+    this.colors = AppColors.shadow,
+    this.stops = AppColors.shadowStops,
     this.alignment = Alignment.centerLeft,
-    this.colors = const [AppColors.black, Colors.transparent],
     super.key,
   });
   const TimeLineShadowWidget.end({
     required this.height,
     required this.width,
-    this.stops = const [0, 0.5],
+    this.colors = AppColors.shadowInverse,
     this.alignment = Alignment.centerRight,
-    this.colors = const [Colors.transparent, AppColors.black],
+    this.stops = AppColors.inverseShadowStops,
     super.key,
   });
 

@@ -23,18 +23,13 @@ class MainImageWidget extends StatefulWidget {
 }
 
 class _MainImageWidgetState extends State<MainImageWidget> {
-  late final image = Assets.images.jpeg.image.image(
-    fit: BoxFit.fill,
-    colorBlendMode: BlendMode.darken,
-    filterQuality: FilterQuality.none,
-  );
-
   @override
-  Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: ClipRect(
+  void didUpdateWidget(covariant MainImageWidget oldWidget) {
+    if (widget.scale > 1) {
+      child = ClipRect(
         clipBehavior: widget.clipBehavior,
         child: SlideInDown(
+          animate: widget.scale > 1,
           from: widget.imageSlideInFrom,
           onFinish: widget.whenSlideAnimationEnd,
           child: Transform.scale(
@@ -42,13 +37,30 @@ class _MainImageWidgetState extends State<MainImageWidget> {
             transformHitTests: false,
             alignment: Alignment.topCenter,
             filterQuality: FilterQuality.none,
-            child: SizedBox(
-              width: widget.imageWidth,
-              child: image,
-            ),
+            child: image,
           ),
         ),
-      ),
-    );
+      );
+    } else if (child != image) {
+      child = image;
+    }
+
+    super.didUpdateWidget(oldWidget);
+  }
+
+  late final image = SizedBox(
+    width: widget.imageWidth,
+    child: Assets.images.jpeg.image.image(
+      fit: BoxFit.fill,
+      colorBlendMode: BlendMode.darken,
+      filterQuality: FilterQuality.none,
+    ),
+  );
+
+  late Widget child = image;
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(child: child);
   }
 }

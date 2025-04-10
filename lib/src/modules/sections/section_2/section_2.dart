@@ -80,7 +80,7 @@ class _SecondSectionState extends State<SecondSection> {
                       height: 2,
                       shadows: [
                         const Shadow(
-                          color: Colors.cyan,
+                          color: AppColors.cyan,
                           blurRadius: 0.3,
                           offset: Offset(-2, 2),
                         ),
