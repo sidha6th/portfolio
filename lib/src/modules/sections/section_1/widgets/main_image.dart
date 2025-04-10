@@ -6,14 +6,12 @@ class MainImageWidget extends StatefulWidget {
   const MainImageWidget({
     required this.scale,
     required this.imageWidth,
-    required this.clipBehavior,
     required this.imageSlideInFrom,
     required this.whenSlideAnimationEnd,
     super.key,
   });
 
   final double scale;
-  final Clip clipBehavior;
   final double imageWidth;
   final double imageSlideInFrom;
   final void Function(AnimateDoDirection)? whenSlideAnimationEnd;
@@ -27,7 +25,6 @@ class _MainImageWidgetState extends State<MainImageWidget> {
   void didUpdateWidget(covariant MainImageWidget oldWidget) {
     if (widget.scale > 1) {
       child = ClipRect(
-        clipBehavior: widget.clipBehavior,
         child: SlideInDown(
           animate: widget.scale > 1,
           from: widget.imageSlideInFrom,
@@ -51,7 +48,7 @@ class _MainImageWidgetState extends State<MainImageWidget> {
   late final image = SizedBox(
     width: widget.imageWidth,
     child: Assets.images.jpeg.image.image(
-      fit: BoxFit.fill,
+      fit: BoxFit.cover,
       colorBlendMode: BlendMode.darken,
       filterQuality: FilterQuality.none,
     ),

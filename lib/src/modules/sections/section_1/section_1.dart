@@ -48,15 +48,12 @@ class _FirstSectionState extends State<FirstSection> {
       curve: Curves.fastOutSlowIn,
       duration: _scaleDuration,
       builder: (context, value, child) {
-        final animationCompleted = value <= 1;
-        final clipBehavior = animationCompleted ? Clip.none : Clip.hardEdge;
         return Stack(
           alignment: Alignment.center,
           children: [
             MainImageWidget(
               scale: value,
               imageWidth: _imageWidth,
-              clipBehavior: clipBehavior,
               imageSlideInFrom: _imageSlideInFrom,
               whenSlideAnimationEnd: _whenSlideAnimationDone,
             ),
@@ -64,7 +61,6 @@ class _FirstSectionState extends State<FirstSection> {
             TransparentBackgroundImageWidget(
               scale: value,
               imageWidth: _imageWidth,
-              clipBehavior: clipBehavior,
               imageSlideInFrom: _imageSlideInFrom,
               opacityAnimationDuration: KDurations.ms400,
             ),

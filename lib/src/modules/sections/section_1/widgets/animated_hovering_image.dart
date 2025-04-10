@@ -8,7 +8,6 @@ class TransparentBackgroundImageWidget extends StatefulWidget {
   const TransparentBackgroundImageWidget({
     required this.scale,
     required this.imageWidth,
-    required this.clipBehavior,
     required this.imageSlideInFrom,
     required this.opacityAnimationDuration,
     super.key,
@@ -16,7 +15,6 @@ class TransparentBackgroundImageWidget extends StatefulWidget {
 
   final double scale;
   final double imageWidth;
-  final Clip clipBehavior;
   final double imageSlideInFrom;
   final Duration opacityAnimationDuration;
 
@@ -43,7 +41,6 @@ class _TransparentBackgroundImageWidgetState
   void didUpdateWidget(covariant TransparentBackgroundImageWidget oldWidget) {
     if (widget.scale > 1) {
       child = ClipRect(
-        clipBehavior: widget.clipBehavior,
         child: SlideInDown(
           from: widget.imageSlideInFrom,
           onFinish: _whenSlideAnimationFinished,
