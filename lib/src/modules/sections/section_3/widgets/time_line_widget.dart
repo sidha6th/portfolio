@@ -36,13 +36,10 @@ class TimeLineWidget extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            scrollDirection: Axis.horizontal,
             controller: controller,
-            padding: EdgeInsets.only(
-              left: leftSpacing,
-              right: rightSpacing,
-            ),
+            scrollDirection: Axis.horizontal,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.only(left: leftSpacing, right: rightSpacing),
             itemCount: leftMonthFillerCount +
                 rightMonthFillerCount +
                 Misc.monthsElapsedInCareer,
@@ -62,7 +59,7 @@ class TimeLineWidget extends StatelessWidget {
               return MonthIndicatorWidget(
                 height: 50,
                 dateTime.month,
-                indicate: KPersonal.milestoneDates.contains(dateTime),
+                indicate: KPersonal.milestoneStartDates.contains(dateTime),
                 color: isInCareerTimeLine ? AppColors.white : AppColors.grey,
               );
             },

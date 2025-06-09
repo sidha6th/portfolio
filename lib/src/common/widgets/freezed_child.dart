@@ -58,10 +58,9 @@ class _FreezedChildState extends State<FreezedChild> {
     final child = _delegate.childBuilder(_metrics);
     if (!_delegate.shouldFreeze) return child;
 
-    final offset = Offset(0, _metrics.freezedDy);
     return Transform.translate(
       key: _key,
-      offset: offset,
+      offset: Offset(0, _metrics.freezedDy),
       transformHitTests: _delegate.transformHitTests,
       child: child,
     );

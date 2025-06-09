@@ -21,6 +21,8 @@ class MainImageWidget extends StatefulWidget {
 }
 
 class _MainImageWidgetState extends State<MainImageWidget> {
+  late Widget child = image();
+
   @override
   void didUpdateWidget(covariant MainImageWidget oldWidget) {
     if (widget.scale > 1) {
@@ -33,31 +35,26 @@ class _MainImageWidgetState extends State<MainImageWidget> {
             scale: widget.scale,
             transformHitTests: false,
             alignment: Alignment.topCenter,
-            filterQuality: FilterQuality.none,
-            child: image,
+            filterQuality: FilterQuality.low,
+            child: image(),
           ),
         ),
       );
-    } else if (child != image) {
-      child = image;
+    } else if (oldWidget.imageWidth != widget.imageWidth) {
+      child = image();
     }
 
     super.didUpdateWidget(oldWidget);
   }
 
-  late final image = SizedBox(
-    width: widget.imageWidth,
-    child: Assets.images.jpeg.image.image(
-      fit: BoxFit.cover,
-      colorBlendMode: BlendMode.darken,
-      filterQuality: FilterQuality.none,
-    ),
-  );
-
-  late Widget child = image;
-
   @override
-  Widget build(BuildContext context) {
-    return IgnorePointer(child: child);
-  }
+  Widget build(BuildContext context) => IgnorePointer(child: child);
+
+  SizedBox image() => SizedBox(
+        width: widget.imageWidth,
+        child: Assets.images.jpeg.image.image(
+          fit: BoxFit.cover,
+          colorBlendMode: BlendMode.darken,
+        ),
+      );
 }

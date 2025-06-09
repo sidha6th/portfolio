@@ -50,10 +50,7 @@ class _SlidingSkillCardState extends State<SlidingSkillCard> {
             child: Padding(
               padding: widget.iconPadding,
               child: Center(
-                child: widget.asset.image(
-                  width: widget.width,
-                  filterQuality: FilterQuality.none,
-                ),
+                child: widget.asset.image(width: widget.width),
               ),
             ),
           ),

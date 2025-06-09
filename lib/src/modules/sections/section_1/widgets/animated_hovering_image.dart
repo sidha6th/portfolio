@@ -26,16 +26,8 @@ class TransparentBackgroundImageWidget extends StatefulWidget {
 class _TransparentBackgroundImageWidgetState
     extends State<TransparentBackgroundImageWidget> {
   bool visible = true;
+  late Widget child = image();
   bool opacityAnimationDoneOnce = false;
-
-  late final image = SizedBox(
-    width: widget.imageWidth,
-    child: Assets.images.png.image.image(
-      fit: BoxFit.cover,
-      colorBlendMode: BlendMode.darken,
-      filterQuality: FilterQuality.none,
-    ),
-  );
 
   @override
   void didUpdateWidget(covariant TransparentBackgroundImageWidget oldWidget) {
@@ -47,18 +39,16 @@ class _TransparentBackgroundImageWidgetState
           child: Transform.scale(
             scale: widget.scale,
             alignment: Alignment.topCenter,
-            filterQuality: FilterQuality.none,
-            child: image,
+            filterQuality: FilterQuality.low,
+            child: image(),
           ),
         ),
       );
-    } else if (child != image) {
-      child = image;
+    } else if (oldWidget.imageWidth != widget.imageWidth) {
+      child = image();
     }
     super.didUpdateWidget(oldWidget);
   }
-
-  late Widget child = image;
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +66,14 @@ class _TransparentBackgroundImageWidgetState
       ),
     );
   }
+
+  SizedBox image() => SizedBox(
+        width: widget.imageWidth,
+        child: Assets.images.png.image.image(
+          fit: BoxFit.cover,
+          colorBlendMode: BlendMode.darken,
+        ),
+      );
 
   void _onEnter(_) {
     if (visible) return;

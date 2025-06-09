@@ -19,7 +19,7 @@ class ThirdSection extends StatefulWidget {
   final FreezeMetrics _metrics;
 
   static double freezedHeight(Size screenSize) {
-    return (Misc.careerTimeLineWidth +
+    return (Misc.careerTimeLineStickHeight +
         (screenSize.height / 2) +
         (screenSize.width.clamp(0, Misc.maxViewPortWidth) / 2));
   }
@@ -40,9 +40,9 @@ class _ThirdSectionState extends State<ThirdSection> {
   late var _currentDate = KPersonal.careerStartDate;
   late final _timeLineController = ScrollController();
   late final _listWheelController = ScrollController();
+  final _careerStartDateTime = KPersonal.careerStartDate;
   late var halfOfScreenHeight = widget._metrics.windowHeight / 2;
   late final _halfOfMonthIndicatorWidth = Misc.kMonthIndicatorWidth / 2;
-  final _careerStartDateTime = KPersonal.careerStartDate;
 
   double _leftSpacing = 0;
   double _rightSpacing = 0;
@@ -145,13 +145,12 @@ class _ThirdSectionState extends State<ThirdSection> {
     );
   }
 
-  void _updateWidth(Size size) {
+  Future<void> _updateWidth(Size size) async {
     _size = size;
     _clampedWindowWidth = size.width.clamp(0.0, Misc.maxViewPortWidth);
     _halfOfWindowWidth = _clampedWindowWidth / 2;
     halfOfScreenHeight = widget._metrics.windowHeight / 2;
-    _calcLeftFillerCount();
-    _calcRightFillerCount();
+    unawaited(Future.any([_calcLeftFillerCount(), _calcRightFillerCount()]));
   }
 
   Future<void> _calcLeftFillerCount() async {

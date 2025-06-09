@@ -60,7 +60,7 @@ class _AnimatedFloatingTextWidgetState
         angle: turns * pi,
         transformHitTests: false,
         alignment: widget.alignment,
-        filterQuality: FilterQuality.none,
+        filterQuality: FilterQuality.low,
         child: _child,
       ),
     );

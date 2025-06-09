@@ -22,17 +22,14 @@ class FullScreenLoadingIndicator extends StatelessWidget {
       builder: (context, loadingHandler, child) {
         if (!loadingHandler.isLoading) return const SizedBox.shrink();
 
-        return MouseRegion(
-          cursor: SystemMouseCursors.wait,
-          child: ColoredSizedBox(
-            color: AppColors.black,
-            width: size.width,
-            height: size.height,
-            child: Center(
-              child: CircularProgressIndicator(
-                color: AppColors.offWhite,
-                value: loadingHandler.progress,
-              ),
+        return ColoredSizedBox(
+          color: AppColors.black,
+          width: size.width,
+          height: size.height,
+          child: Center(
+            child: CircularProgressIndicator(
+              color: AppColors.offWhite,
+              value: loadingHandler.progress,
             ),
           ),
         );

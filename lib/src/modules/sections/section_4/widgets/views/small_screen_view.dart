@@ -32,6 +32,7 @@ class SkillsSmallScreenView extends StatelessWidget {
           width: metrics.windowWidth,
           height: metrics.windowHeight,
           child: Stack(
+            clipBehavior: Clip.none,
             alignment: Alignment.bottomRight,
             children: [
               Padding(

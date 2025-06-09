@@ -107,20 +107,22 @@ class _FifthSectionState extends State<FifthSection> {
                       child: Stack(
                         fit: StackFit.expand,
                         children: [
-                          ListView(
+                          SingleChildScrollView(
                             controller: scrollController,
                             padding: EdgeInsets.only(
                               top: widget._metrics.windowHeight * 0.3,
                             ),
                             physics: const NeverScrollableScrollPhysics(),
-                            children: [
-                              ...socialMediaTextWidgets,
-                              IgnorePointer(
-                                child: SizedBox(
-                                  height: widget._metrics.windowHeight * 0.2,
+                            child: Column(
+                              children: [
+                                ...socialMediaTextWidgets,
+                                IgnorePointer(
+                                  child: SizedBox(
+                                    height: widget._metrics.windowHeight * 0.2,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                           if (scrollController.hasClients)
                             Positioned(

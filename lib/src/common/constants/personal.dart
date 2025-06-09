@@ -8,11 +8,11 @@ class KPersonal {
   static const designation = 'Software engineer';
   static const mailId = 'sidharth.rajendran.r@gmail.com';
   static const introduction =
-      'Hi, I’m Sidharth, a Flutter developer with 3+ years of experience crafting seamless, high-performing cross-platform apps. Passionate about solving complex problems, building intuitive UIs, and pushing the limits of app performance. Let’s create something amazing together!';
+      'Hi, I’m Sidharth — a Flutter and native Android developer with 3+ years of experience crafting fast, intuitive, and high-performance mobile apps. I thrive on solving tough problems, designing smooth user experiences, and pushing the limits of what apps can do. \nLet’s build something awesome together!';
   static const skillsDescription =
       'Every project, every challenge, and every solution—these are the tools that have shaped my journey as a developer.';
   static final careerStartDate = DateTime(2021, 11);
-  static final milestoneDates = {
+  static final milestoneStartDates = {
     DateTime(2021, 11),
     DateTime(2022, 8),
     DateTime(2023, 8),
@@ -59,8 +59,7 @@ class KPersonal {
     ),
     Social(
       label: 'Email',
-      urlAsString: Uri(scheme: 'mailto', path: 'sidharth.rajendran.r@gmail.com')
-          .toString(),
+      urlAsString: Uri(scheme: 'mailto', path: mailId).toString(),
     ),
   ];
 

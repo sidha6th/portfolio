@@ -51,7 +51,6 @@ class NotifiableLisViewBuilder extends StatelessWidget {
                 return Stack(
                   children: [
                     SingleChildScrollView(
-                      primary: false,
                       padding: padding,
                       physics: physics,
                       clipBehavior: Clip.none,

@@ -60,8 +60,8 @@ class _NameAndDesignationState extends State<NameAndDesignation> {
             child: TextWidget(
               KPersonal.designation,
               style: TextStyle(
-                fontSize: designationFontSize,
                 color: AppColors.white,
+                fontSize: designationFontSize,
                 fontFamily: FontFamily.cindieMonoD,
               ),
               textAlign: TextAlign.end,

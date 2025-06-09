@@ -31,15 +31,20 @@ class _ChildWrapperState extends State<ChildWrapper> {
   late var scrollFreezeHeight = _delegate.freezedScrollHeight(widget.size);
   late var pastScrolledHeight = _calcPastViewPortHeight();
 
+  late Widget child = createChildWidget();
+
   @override
   void didUpdateWidget(covariant ChildWrapper oldWidget) {
     super.didUpdateWidget(oldWidget);
     scrollFreezeHeight = _delegate.freezedScrollHeight(widget.size);
     pastScrolledHeight = _calcPastViewPortHeight();
+    child = createChildWidget();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => child;
+
+  Widget createChildWidget() {
     return SizedBox(
       width: widget.size.width,
       height: scrollFreezeHeight,

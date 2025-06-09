@@ -26,11 +26,11 @@ class _FirstSectionState extends State<FirstSection> {
   final _maxScale = 1.1;
   final _imageSlideInFrom = 30.0;
   late var _minScale = _maxScale;
-  late var _imageWidth = _calcImageWidth;
-  late final _portFolioTextWidget = _title;
-  final _scaleDuration = KDurations.ms300;
-  late var _size = widget._metrics.windowSize;
   final curve = Curves.fastOutSlowIn;
+  late var _imageWidth = _calcImageWidth;
+  final _scaleDuration = KDurations.ms300;
+  late final _portFolioTextWidget = _title;
+  late var _size = widget._metrics.windowSize;
 
   @override
   void didUpdateWidget(covariant FirstSection oldWidget) {
@@ -41,12 +41,9 @@ class _FirstSectionState extends State<FirstSection> {
   @override
   Widget build(BuildContext context) {
     return TweenAnimationBuilder(
-      tween: Tween<double>(
-        begin: _maxScale,
-        end: _minScale,
-      ),
-      curve: Curves.fastOutSlowIn,
       duration: _scaleDuration,
+      curve: Curves.fastOutSlowIn,
+      tween: Tween<double>(begin: _maxScale, end: _minScale),
       builder: (context, value, child) {
         return Stack(
           alignment: Alignment.center,
