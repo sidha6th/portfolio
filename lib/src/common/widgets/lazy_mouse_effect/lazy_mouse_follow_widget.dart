@@ -18,26 +18,40 @@ class MouseFollowEffect extends StatefulWidget {
 class _MouseFollowEffectState extends State<MouseFollowEffect>
     with SingleTickerProviderStateMixin {
   final diameter = 20.0;
+  Offset? mousePosition;
   final innerDotDiameter = 9.0;
-  Offset mousePosition = Offset.zero;
-  late final halfDiameter = diameter / 2;
+  late final innerDotSpeed = 0.4;
+  late final outerCircleSpeed = 0.08;
   late final Ticker _ticker = Ticker(_tick);
+  late final halfOuterCircleDiameter = diameter / 2;
   late final halfInnerDotDiameter = innerDotDiameter / 2;
   late final _mouseEventNotifer = ValueNotifier(const MouseLazyEffectState());
 
   Future<void> _tick(_) async {
-    const double lerpSpeed = 0.08;
-    const double innerDotlerpSpeed = 0.4;
-    final outerCirlceOffset =
-        _mouseEventNotifer.value.outerCircleOffset ?? Offset.zero;
-    final outerDx =
-        lerpDouble(outerCirlceOffset.dx, mousePosition.dx, lerpSpeed)!;
-    final outerDy =
-        lerpDouble(outerCirlceOffset.dy, mousePosition.dy, lerpSpeed)!;
-    final innerDx =
-        lerpDouble(outerCirlceOffset.dx, mousePosition.dx, innerDotlerpSpeed)!;
-    final innerDy =
-        lerpDouble(outerCirlceOffset.dy, mousePosition.dy, innerDotlerpSpeed)!;
+    if (mousePosition == null) return _ticker.stop();
+
+    final outerCirlceOffset = _mouseEventNotifer.value.outerCircleOffset;
+    final outerDx = lerpDouble(
+      outerCirlceOffset.dx,
+      mousePosition!.dx,
+      outerCircleSpeed,
+    )!;
+    final outerDy = lerpDouble(
+      outerCirlceOffset.dy,
+      mousePosition!.dy,
+      outerCircleSpeed,
+    )!;
+    final innerDx = lerpDouble(
+      outerCirlceOffset.dx,
+      mousePosition!.dx,
+      innerDotSpeed,
+    )!;
+    final innerDy = lerpDouble(
+      outerCirlceOffset.dy,
+      mousePosition!.dy,
+      innerDotSpeed,
+    )!;
+
     _mouseEventNotifer.value = _mouseEventNotifer.value.onMove(
       outerOffset: Offset(outerDx, outerDy),
       innerOffset: Offset(innerDx, innerDy),
@@ -54,10 +68,10 @@ class _MouseFollowEffectState extends State<MouseFollowEffect>
 
   Future<void> _startTicker(Offset offset) async {
     mousePosition = offset;
+    if (!_ticker.isActive) unawaited(_ticker.start());
     if (!_mouseEventNotifer.value.visible) {
       _mouseEventNotifer.value = _mouseEventNotifer.value.toggleVisiblity(true);
     }
-    if (!_ticker.isActive) unawaited(_ticker.start());
   }
 
   void _hideCurser() {
@@ -108,21 +122,22 @@ class _MouseFollowEffectState extends State<MouseFollowEffect>
                   TweenAnimationBuilder(
                     curve:
                         state.visible ? Curves.easeOutBack : Curves.elasticIn,
-                    duration: state.outerCircleOffset == null
+                    duration: mousePosition == null
                         ? Duration.zero
                         : Duration(milliseconds: state.visible ? 200 : 600),
                     tween: Tween<double>(
                       begin: state.visible ? 0 : 1,
                       end: state.visible ? 1 : 0,
                     ),
+                    onEnd: () {
+                      if (!state.visible) _ticker.stop();
+                    },
                     builder: (context, value, child) {
-                      final top =
-                          (state.outerCircleOffset?.dy ?? 0) - halfDiameter;
-                      final left =
-                          (state.outerCircleOffset?.dx ?? 0) - halfDiameter;
                       return Positioned(
-                        top: top,
-                        left: left,
+                        top: state.outerCircleOffset.dy -
+                            halfOuterCircleDiameter,
+                        left: state.outerCircleOffset.dx -
+                            halfOuterCircleDiameter,
                         child: IgnorePointer(
                           child: Transform.scale(
                             scale: value,
@@ -134,8 +149,8 @@ class _MouseFollowEffectState extends State<MouseFollowEffect>
                   ),
                   if (state.visible)
                     Positioned(
-                      top: state.innerEffectOffset.dy - halfInnerDotDiameter,
-                      left: state.innerEffectOffset.dx - halfInnerDotDiameter,
+                      top: state.innerDotOffset.dy - halfInnerDotDiameter,
+                      left: state.innerDotOffset.dx - halfInnerDotDiameter,
                       child: IgnorePointer(
                         child: Container(
                           width: innerDotDiameter,

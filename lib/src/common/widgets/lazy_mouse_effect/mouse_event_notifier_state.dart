@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class MouseLazyEffectState {
   const MouseLazyEffectState({
     this.visible = false,
-    this.outerCircleOffset,
-    this.innerEffectOffset = Offset.zero,
+    this.innerDotOffset = Offset.zero,
+    this.outerCircleOffset = Offset.zero,
   });
 
   final bool visible;
-  final Offset innerEffectOffset;
-  final Offset? outerCircleOffset;
+  final Offset innerDotOffset;
+  final Offset outerCircleOffset;
 
   MouseLazyEffectState onMove({
     required Offset innerOffset,
@@ -32,8 +32,8 @@ class MouseLazyEffectState {
   }) {
     return MouseLazyEffectState(
       visible: visible ?? this.visible,
-      innerEffectOffset: innerEffectOffset ?? this.innerEffectOffset,
-      outerCircleOffset: outerEffectOffset ?? this.outerCircleOffset,
+      innerDotOffset: innerEffectOffset ?? innerDotOffset,
+      outerCircleOffset: outerEffectOffset ?? outerCircleOffset,
     );
   }
 
@@ -42,13 +42,11 @@ class MouseLazyEffectState {
     if (identical(this, other)) return true;
 
     return other.visible == visible &&
-        other.innerEffectOffset == innerEffectOffset &&
+        other.innerDotOffset == innerDotOffset &&
         other.outerCircleOffset == outerCircleOffset;
   }
 
   @override
   int get hashCode =>
-      visible.hashCode ^
-      innerEffectOffset.hashCode ^
-      outerCircleOffset.hashCode;
+      visible.hashCode ^ innerDotOffset.hashCode ^ outerCircleOffset.hashCode;
 }
