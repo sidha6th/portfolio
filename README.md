@@ -2,7 +2,7 @@
 🚀 **Personal Portfolio** built with **Flutter Web**, showcasing my skills, projects, and experience.
 
 ## 🌐 Live Demo
-Check it out here: [sidha6th.web.app](https://sidha6th.web.app/readme/)
+Check it out here: [sidha6th.web.app](https://sidha6th.web.app/readme)
 
 
 ## 📌 Future Improvements
