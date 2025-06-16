@@ -48,3 +48,6 @@ firebase.json
 
 #custom
 /macos
+
+#env
+/assets/env.json

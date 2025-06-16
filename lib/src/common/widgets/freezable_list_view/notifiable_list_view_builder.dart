@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart' show compute;
 import 'package:flutter/material.dart';
 import 'package:sidharth/gen/assets.gen.dart';
+import 'package:sidharth/src/common/helper/visitor_info_logger.dart';
 import 'package:sidharth/src/common/model/delegate/freezed_widget_delegate.dart';
 import 'package:sidharth/src/common/widgets/box/loading_indicator.dart';
 import 'package:sidharth/src/common/widgets/box/under_development_indicator.dart';
@@ -40,7 +42,7 @@ class NotifiableLisViewBuilder extends StatelessWidget {
         return ViewModelBuilder.nonReactive(
           viewModelBuilder: () => LoadingHandlerViewModel(
             scrollObserver.scrollController,
-            whenLoadingCompleted: scrollObserver.init,
+            whenLoadingCompleted: () => _whenLoadingCompleted(scrollObserver),
           ),
           onViewModelReady: (loadingController) =>
               loadingController.init(() => _precacheImages(context)),
@@ -102,5 +104,12 @@ class NotifiableLisViewBuilder extends StatelessWidget {
       for (final png in Assets.images.png.values)
         precacheImage(png.provider(), context),
     ]);
+  }
+
+  Future<void> _whenLoadingCompleted(
+    ScrollObservingViewModel scrollObserver,
+  ) async {
+    scrollObserver.init();
+    await compute((service) => service.logInfo(), const VisitorInfoLogger());
   }
 }
