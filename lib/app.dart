@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'
+    show MaterialApp, StatelessWidget, Widget, BuildContext;
 import 'package:sidharth/src/core/theme/theme.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/dashboard.dart';
 

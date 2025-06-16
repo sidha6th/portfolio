@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' show PointerHoverEvent;
 import 'package:flutter_svg/svg.dart' show SvgPicture;
 import 'package:sidharth/gen/assets.gen.dart';
 import 'package:sidharth/gen/fonts.gen.dart';
