@@ -5,6 +5,7 @@ import 'package:sidharth/src/common/widgets/freezable_list_view/notifiable_list_
 import 'package:sidharth/src/common/widgets/lazy_mouse_effect/lazy_mouse_follow_widget.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/widgets/scroll_progress_indicator_widget.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/widgets/slidable_title_widget.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/widgets/version_indicator.dart';
 import 'package:sidharth/src/modules/sections/section_1/section_1.dart';
 import 'package:sidharth/src/modules/sections/section_2/section_2.dart';
 import 'package:sidharth/src/modules/sections/section_3/section_3.dart';
@@ -49,6 +50,7 @@ class Dashboard extends StatelessWidget {
           ],
           foregroundWidgetBuilder: (windowSize, model) {
             return [
+              const VersionIndicator(),
               SlidableTitleWidget(model: model, windowSize: windowSize),
               ScrollProgressIndicatorWidget(model: model),
             ];

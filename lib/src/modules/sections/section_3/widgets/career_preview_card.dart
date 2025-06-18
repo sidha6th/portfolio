@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
 import 'package:sidharth/src/common/model/freezed_metrics.dart';
 
-class CareerPreviewCard extends StatelessWidget {
+class CareerPreviewCard extends StatefulWidget {
   const CareerPreviewCard({
     required this.metrics,
     required this.child,
@@ -14,25 +14,35 @@ class CareerPreviewCard extends StatelessWidget {
   final FreezeMetrics metrics;
   final Widget child;
   final double height;
+
+  @override
+  State<CareerPreviewCard> createState() => _CareerPreviewCardState();
+}
+
+class _CareerPreviewCardState extends State<CareerPreviewCard> {
+  late final _painter = _CornerBorderPainter();
+  late final _options = const RectDottedBorderOptions(
+    color: AppColors.offWhite,
+    dashPattern: [2, 3],
+  );
+
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: CornerBorderPainter(),
-      isComplex: true,
+      painter: _painter,
       child: DottedBorder(
-        color: AppColors.offWhite,
-        dashPattern: [2, 3],
+        options: _options,
         child: SizedBox(
-          width: (metrics.windowWidth * 0.3).clamp(200, 300),
-          height: height,
-          child: child,
+          width: (widget.metrics.windowWidth * 0.3).clamp(200, 300),
+          height: widget.height,
+          child: widget.child,
         ),
       ),
     );
   }
 }
 
-class CornerBorderPainter extends CustomPainter {
+class _CornerBorderPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
@@ -67,5 +77,5 @@ class CornerBorderPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(_) => false;
 }

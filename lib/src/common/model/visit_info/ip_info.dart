@@ -11,16 +11,15 @@ class IpDetails {
     this.error,
   });
 
-  IpDetails.error({
-    this.error,
-  })  : ip = null,
-        city = null,
-        region = null,
-        country = null,
-        loc = null,
-        org = null,
-        postal = null,
-        timezone = null;
+  IpDetails.error({this.error})
+    : ip = null,
+      city = null,
+      region = null,
+      country = null,
+      loc = null,
+      org = null,
+      postal = null,
+      timezone = null;
 
   factory IpDetails.fromIpInfo(Object json) {
     json = json as Map<String, dynamic>;

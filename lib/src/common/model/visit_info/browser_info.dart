@@ -1,69 +1,65 @@
-import 'dart:html' as html show window, document;
-
 import 'package:sidharth/src/common/extensions/string_extension.dart';
+import 'package:web/web.dart' as web show window, document;
 
 class BrowserInfo {
   BrowserInfo({
-    required this.pageInfo,
-    required this.screenInfo,
-    required this.perfomanceInfo,
-    this.product,
-    this.lang,
-    this.agent,
-    this.vendor,
-    this.platform,
-  });
+    String? product,
+    String? lang,
+    String? agent,
+    String? vendor,
+    String? platform,
+  }) : _pageInfo = _PageInfo.create(),
+       _screenInfo = _ScreenInfo.create(),
+       _perfomanceInfo = _PerformanceInfo.create(),
+       _platform = platform,
+       _product = product,
+       _vendor = vendor,
+       _agent = agent,
+       _lang = lang;
 
-  factory BrowserInfo.fromHtml() {
-    final navigator = html.window.navigator;
-
+  factory BrowserInfo.create() {
+    final navigator = web.window.navigator;
     return BrowserInfo(
       vendor: navigator.vendor,
       lang: navigator.language,
       product: navigator.product,
       agent: navigator.userAgent,
       platform: navigator.platform,
-      pageInfo: PageInfo.fromHtml(),
-      screenInfo: ScreenInfo.fromHtml(),
-      perfomanceInfo: PerformanceInfo.fromHtml(),
     );
   }
 
-  final String? lang;
-  final String? product;
-  final String? agent;
-  final String? vendor;
-  final String? platform;
-  final PageInfo pageInfo;
-  final ScreenInfo screenInfo;
-  final PerformanceInfo perfomanceInfo;
+  final String? _lang;
+  final String? _agent;
+  final String? _vendor;
+  final String? _product;
+  final String? _platform;
+  final _PageInfo _pageInfo;
+  final _ScreenInfo _screenInfo;
+  final _PerformanceInfo _perfomanceInfo;
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
-      if (lang.hasData) 'lang': lang,
-      if (agent.hasData) 'agent': agent,
-      if (vendor.hasData) 'vendor': vendor,
-      if (platform.hasData) 'platform': platform,
-      'pageInfo': pageInfo.toJson(),
-      'screenInfo': screenInfo.toJson(),
-      'perfomanceInfo': perfomanceInfo.toJson(),
+      if (_lang.hasData) 'lang': _lang,
+      if (_agent.hasData) 'agent': _agent,
+      if (_vendor.hasData) 'vendor': _vendor,
+      if (_product.hasData) 'product': _product,
+      if (_platform.hasData) 'platform': _platform,
+      'pageInfo': _pageInfo.toJson(),
+      'screenInfo': _screenInfo.toJson(),
+      'perfomanceInfo': _perfomanceInfo.toJson(),
     };
   }
 }
 
-class ScreenInfo {
-  ScreenInfo({
-    this.innerSize,
-    this.outerSize,
-    this.devicePixelRatio,
-  });
+class _ScreenInfo {
+  _ScreenInfo({this.innerSize, this.outerSize, this.devicePixelRatio});
 
-  factory ScreenInfo.fromHtml() {
-    final window = html.window;
-    return ScreenInfo(
+  factory _ScreenInfo.create() {
+    final window = web.window;
+    return _ScreenInfo(
       devicePixelRatio: window.devicePixelRatio,
       innerSize: '${window.innerWidth}/${window.innerHeight}',
-      outerSize: '${window.screen?.width}/${window.screen?.height}',
+      outerSize: '${window.screen.width}/${window.screen.height}',
     );
   }
 
@@ -80,47 +76,40 @@ class ScreenInfo {
   }
 }
 
-class PerformanceInfo {
-  factory PerformanceInfo.fromHtml() {
-    final performance = html.window.performance;
-    final loadTime = performance.timing.loadEventEnd.toInt() -
+class _PerformanceInfo {
+  factory _PerformanceInfo.create() {
+    final performance = web.window.performance;
+    final loadTime =
+        performance.timing.loadEventEnd.toInt() -
         performance.timing.navigationStart.toInt();
 
-    return PerformanceInfo(
-      loadTimeMS: loadTime,
-    );
+    return _PerformanceInfo(loadTimeMS: loadTime);
   }
-  PerformanceInfo({
-    required this.loadTimeMS,
-  });
+  _PerformanceInfo({required this.loadTimeMS});
 
   final int? loadTimeMS;
 
   Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      if (loadTimeMS != null) 'loadTimeMS': loadTimeMS,
-    };
+    return <String, dynamic>{if (loadTimeMS != null) 'loadTimeMS': loadTimeMS};
   }
 }
 
-class PageInfo {
-  PageInfo({
+class _PageInfo {
+  _PageInfo({
     required this.path,
     required this.from,
     required this.referrer,
     required this.currentUrl,
   });
 
-  factory PageInfo.fromHtml() {
-    return PageInfo(
-      referrer: html.document.referrer,
-      path: html.window.location.pathname,
-      currentUrl: html.window.location.href,
-      from: html.window.location.pathname?.split('/').firstWhere(
-                (element) => element.trim().isNotEmpty,
-                orElse: () => '',
-              ) ??
-          '',
+  factory _PageInfo.create() {
+    return _PageInfo(
+      referrer: web.document.referrer,
+      path: web.window.location.pathname,
+      currentUrl: web.window.location.href,
+      from: web.window.location.pathname
+          .split('/')
+          .firstWhere((element) => element.trim().isNotEmpty, orElse: () => ''),
     );
   }
 

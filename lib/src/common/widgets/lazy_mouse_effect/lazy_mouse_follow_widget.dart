@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
+import 'package:sidharth/src/common/constants/constants.dart';
 import 'package:sidharth/src/common/widgets/lazy_mouse_effect/mouse_event_notifier_state.dart';
 
 class MouseFollowEffect extends StatefulWidget {
@@ -80,6 +81,8 @@ class _MouseFollowEffectState extends State<MouseFollowEffect>
 
   @override
   Widget build(BuildContext context) {
+    if (Misc.isMobile) return widget.child;
+
     return MouseRegion(
       cursor: SystemMouseCursors.none,
       onExit: (event) => _hideCurser(),
@@ -106,11 +109,7 @@ class _MouseFollowEffectState extends State<MouseFollowEffect>
                 backgroundBlendMode: BlendMode.difference,
                 border: Border.all(color: AppColors.white),
                 gradient: const RadialGradient(
-                  colors: [
-                    AppColors.white,
-                    AppColors.black,
-                    AppColors.white,
-                  ],
+                  colors: [AppColors.white, AppColors.black, AppColors.white],
                 ),
               ),
             ),
@@ -120,8 +119,9 @@ class _MouseFollowEffectState extends State<MouseFollowEffect>
                 clipBehavior: Clip.none,
                 children: [
                   TweenAnimationBuilder(
-                    curve:
-                        state.visible ? Curves.easeOutBack : Curves.elasticIn,
+                    curve: state.visible
+                        ? Curves.easeOutBack
+                        : Curves.elasticIn,
                     duration: mousePosition == null
                         ? Duration.zero
                         : Duration(milliseconds: state.visible ? 200 : 600),
@@ -134,9 +134,11 @@ class _MouseFollowEffectState extends State<MouseFollowEffect>
                     },
                     builder: (context, value, child) {
                       return Positioned(
-                        top: state.outerCircleOffset.dy -
+                        top:
+                            state.outerCircleOffset.dy -
                             halfOuterCircleDiameter,
-                        left: state.outerCircleOffset.dx -
+                        left:
+                            state.outerCircleOffset.dx -
                             halfOuterCircleDiameter,
                         child: IgnorePointer(
                           child: Transform.scale(
