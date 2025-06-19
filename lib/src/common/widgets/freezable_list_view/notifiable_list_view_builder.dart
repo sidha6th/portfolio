@@ -1,19 +1,18 @@
-import 'dart:async';
-
-import 'package:flutter/foundation.dart' show compute;
 import 'package:flutter/material.dart';
-import 'package:sidharth/gen/assets.gen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' show BlocBuilder;
+import 'package:sidharth/src/common/extensions/build_context_extension.dart';
 import 'package:sidharth/src/common/helper/visitor_info_logger.dart';
 import 'package:sidharth/src/common/model/delegate/freezed_widget_delegate.dart';
 import 'package:sidharth/src/common/widgets/box/loading_indicator.dart';
 import 'package:sidharth/src/common/widgets/box/under_development_indicator.dart';
 import 'package:sidharth/src/common/widgets/freezable_list_view/child_wrapper.dart';
 import 'package:sidharth/src/common/widgets/text/loading_info_text.dart';
-import 'package:sidharth/src/modules/dashboard/presentation/view_model/loading_handler_view_model.dart';
-import 'package:sidharth/src/modules/dashboard/presentation/view_model/scroll_observing_view_model.dart';
-import 'package:stacked/stacked.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/blocs/loading_handler/loading_handler_bloc.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/blocs/loading_handler/loading_handler_event.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/blocs/loading_handler/loading_handler_state.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/blocs/scroll_observer/scroll_observer_event.dart';
 
-class NotifiableLisViewBuilder extends StatelessWidget {
+class NotifiableLisViewBuilder extends StatefulWidget {
   const NotifiableLisViewBuilder({
     super.key,
     this.delegates = const [],
@@ -28,88 +27,83 @@ class NotifiableLisViewBuilder extends StatelessWidget {
   final String restorationId;
   final ScrollPhysics physics;
   final bool isUnderDevelopment;
-  final List<Widget> Function(
-    Size windowSize,
-    ScrollObservingViewModel model,
-  )? foregroundWidgetBuilder;
   final List<FreezedWidgetDelegate> delegates;
+  final List<Widget> Function(Size windowSize)? foregroundWidgetBuilder;
 
   @override
-  Widget build(BuildContext context) {
-    return ViewModelBuilder.nonReactive(
-      viewModelBuilder: ScrollObservingViewModel.new,
-      builder: (context, scrollObserver, child) {
-        return ViewModelBuilder.nonReactive(
-          viewModelBuilder: () => LoadingHandlerViewModel(
-            scrollObserver.scrollController,
-            whenLoadingCompleted: () => _whenLoadingCompleted(scrollObserver),
-          ),
-          onViewModelReady: (loadingController) =>
-              loadingController.init(() => _precacheImages(context)),
-          builder: (context, loadingController, child) {
-            return LayoutBuilder(
-              builder: (context, constraints) {
-                final windowSize = constraints.biggest;
-                return Stack(
-                  children: [
-                    SingleChildScrollView(
-                      padding: padding,
-                      physics: physics,
-                      clipBehavior: Clip.none,
-                      restorationId: restorationId,
-                      controller: scrollObserver.scrollController,
-                      child: ViewModelBuilder.reactive(
-                        viewModelBuilder: () => loadingController,
-                        builder: (context, loadingController, child) {
-                          return Column(
-                            children: List.generate(
-                              growable: false,
-                              delegates.length,
-                              (index) => RepaintBoundary(
-                                child: ChildWrapper(
-                                  index: index,
-                                  size: windowSize,
-                                  delegates: delegates,
-                                  model: scrollObserver,
-                                  hasInitialized: !loadingController.isLoading,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
+  State<NotifiableLisViewBuilder> createState() =>
+      _NotifiableLisViewBuilderState();
+}
+
+class _NotifiableLisViewBuilderState extends State<NotifiableLisViewBuilder> {
+  late final scrollController = ScrollController();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) => _startPageLoading(context),
+    );
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext _) {
+    return LayoutBuilder(
+      builder: (_, constraints) {
+        final windowSize = constraints.biggest;
+        return Stack(
+          children: [
+            SingleChildScrollView(
+              padding: widget.padding,
+              physics: widget.physics,
+              clipBehavior: Clip.none,
+              controller: scrollController,
+              restorationId: widget.restorationId,
+              child: BlocBuilder<LoadingHandlerBloc, LoadingHandlerState>(
+                buildWhen: (previous, current) =>
+                    previous != current && !current.isLoading,
+                builder: (_, loadingState) {
+                  return Column(
+                    children: List.generate(
+                      growable: false,
+                      widget.delegates.length,
+                      (index) => ChildWrapper(
+                        index: index,
+                        size: windowSize,
+                        delegates: widget.delegates,
+                        hasInitialized: !loadingState.isLoading,
                       ),
                     ),
-                    if (isUnderDevelopment)
-                      UnderDevelopmentIndicator(size: windowSize),
-                    if (foregroundWidgetBuilder != null)
-                      ...foregroundWidgetBuilder!(windowSize, scrollObserver),
-                    FullScreenLoadingIndicator(
-                      size: windowSize,
-                      loadingController: loadingController,
-                    ),
-                    LoadingInfoTextWidget(model: loadingController),
-                  ],
-                );
-              },
-            );
-          },
+                  );
+                },
+              ),
+            ),
+            if (widget.isUnderDevelopment)
+              UnderDevelopmentIndicator(size: windowSize),
+            if (widget.foregroundWidgetBuilder != null)
+              ...widget.foregroundWidgetBuilder!(windowSize),
+            FullScreenLoadingIndicator(size: windowSize),
+            const LoadingInfoTextWidget(),
+          ],
         );
       },
     );
   }
 
-  void _precacheImages(BuildContext context) {
-    Future.wait([
-      precacheImage(Assets.images.jpeg.image.provider(), context),
-      for (final png in Assets.images.png.values)
-        precacheImage(png.provider(), context),
-    ]);
+  void _whenLoadingCompleted() {
+    final bloc = context.scrollObsBloc;
+    scrollController.addListener(() {
+      bloc.add(UpdateScrollMetrics(scrollController.offset));
+    });
   }
 
-  Future<void> _whenLoadingCompleted(
-    ScrollObservingViewModel scrollObserver,
-  ) async {
-    scrollObserver.init();
-    await compute((service) => service.logInfo(), const VisitorInfoLogger());
+  void _startPageLoading(BuildContext context) {
+    context.loadingHandlerBloc.add(
+      StartLoadPage(
+        scrollController,
+        onFinish: _whenLoadingCompleted,
+        onStart: () => const VisitorInfoLogger().logInfo(),
+      ),
+    );
   }
 }

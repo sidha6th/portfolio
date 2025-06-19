@@ -1,44 +1,41 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' show BlocBuilder;
 import 'package:sidharth/src/common/constants/colors.dart';
 import 'package:sidharth/src/common/constants/durations.dart';
 import 'package:sidharth/src/common/widgets/animated/fade_slide_in.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
-import 'package:sidharth/src/modules/dashboard/presentation/view_model/scroll_observing_view_model.dart';
-import 'package:stacked/stacked.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/blocs/scroll_observer/scroll_observer_bloc.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/blocs/scroll_observer/scroll_observer_state.dart';
 
 class ScrollProgressIndicatorWidget extends StatelessWidget {
-  const ScrollProgressIndicatorWidget({
-    required this.model,
-    super.key,
-  });
-
-  final ScrollObservingViewModel model;
+  const ScrollProgressIndicatorWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Positioned(
       bottom: 30,
       left: 20,
-      child: ViewModelBuilder.reactive(
-        viewModelBuilder: () => model,
-        disposeViewModel: false,
-        builder: (context, model, child) {
-          final shouldRemove = (model.index > 3) ||
-              (model.index >= 3 &&
-                  model.normalizedCurrentSectionScrolledOffset > 0.8);
+      child: BlocBuilder<ScrollObserverBloc, ScrollObserverState>(
+        buildWhen: (prev, curr) {
+          return prev.index != curr.index ||
+              prev.normalizedCurrentSectionScrolledOffset !=
+                  curr.normalizedCurrentSectionScrolledOffset;
+        },
+        builder: (context, state) {
+          final shouldRemove =
+              (state.index > 3) ||
+              (state.index >= 3 &&
+                  state.normalizedCurrentSectionScrolledOffset > 0.8);
           return FadeSlideIn(
-            offset: Offset(
-              0,
-              shouldRemove ? -1 : 0,
-            ),
+            offset: Offset(0, shouldRemove ? -1 : 0),
             opacity: shouldRemove ? 0 : 1,
             duration: KDurations.ms300,
             child: Row(
               spacing: 5,
               children: [
                 AnimatedFlipCounter(
-                  value: model.index + 1,
+                  value: state.index + 1,
                   textStyle: const TextStyle(
                     color: AppColors.offWhite,
                     fontSize: 15,
@@ -47,7 +44,7 @@ class ScrollProgressIndicatorWidget extends StatelessWidget {
                 SizedBox(
                   width: 100,
                   child: LinearProgressIndicator(
-                    value: model.normalizedCurrentSectionScrolledOffset,
+                    value: state.normalizedCurrentSectionScrolledOffset,
                     backgroundColor: AppColors.grey,
                     minHeight: 0.5,
                     color: AppColors.offWhite,

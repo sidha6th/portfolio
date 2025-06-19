@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:sidharth/src/common/extensions/date_time.dart';
+import 'package:sidharth/src/common/extensions/date_time_extension.dart';
 import 'package:sidharth/src/common/model/visit_info/browser_info.dart';
 import 'package:sidharth/src/common/model/visit_info/ip_info.dart';
 

@@ -48,11 +48,11 @@ class Dashboard extends StatelessWidget {
               childBuilder: FifthSection.new,
             ),
           ],
-          foregroundWidgetBuilder: (windowSize, model) {
+          foregroundWidgetBuilder: (windowSize) {
             return [
               const VersionIndicator(),
-              SlidableTitleWidget(model: model, windowSize: windowSize),
-              ScrollProgressIndicatorWidget(model: model),
+              SlidableTitleWidget(windowSize: windowSize),
+              const ScrollProgressIndicatorWidget(),
             ];
           },
         ),

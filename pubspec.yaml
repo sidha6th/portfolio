@@ -1,7 +1,7 @@
 name: sidharth
 description: "Personal Portfolio built with Flutter Web"
 publish_to: "none"
-version: 0.4.38
+version: 0.5.40
 
 environment:
   sdk: ^3.8.1
@@ -9,7 +9,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  stacked: ^3.4.4
   animate_do: ^4.2.0
   url_launcher: ^6.3.1
   flutter_svg: ^2.1.0
@@ -17,6 +16,7 @@ dependencies:
   http: ^1.4.0
   web: ^1.1.1
   animated_flip_counter: ^0.3.4
+  flutter_bloc: ^9.1.1
 
 dev_dependencies:
   flutter_test:

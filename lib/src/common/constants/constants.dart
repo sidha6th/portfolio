@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:sidharth/src/common/constants/personal.dart';
-import 'package:sidharth/src/common/extensions/date_time.dart';
+import 'package:sidharth/src/common/extensions/date_time_extension.dart';
 
 class Misc {
   const Misc._();

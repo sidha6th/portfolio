@@ -1,26 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
 import 'package:sidharth/src/common/widgets/box/colored_sided_box.dart';
-import 'package:sidharth/src/modules/dashboard/presentation/view_model/loading_handler_view_model.dart';
-import 'package:stacked/stacked.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/blocs/loading_handler/loading_handler_bloc.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/blocs/loading_handler/loading_handler_state.dart';
 
 class FullScreenLoadingIndicator extends StatelessWidget {
-  const FullScreenLoadingIndicator({
-    required this.size,
-    required this.loadingController,
-    super.key,
-  });
+  const FullScreenLoadingIndicator({required this.size, super.key});
 
   final Size size;
-  final LoadingHandlerViewModel loadingController;
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder.reactive(
-      disposeViewModel: false,
-      viewModelBuilder: () => loadingController,
-      builder: (context, loadingHandler, child) {
-        if (!loadingHandler.isLoading) return const SizedBox.shrink();
+    return BlocBuilder<LoadingHandlerBloc, LoadingHandlerState>(
+      builder: (context, loadingState) {
+        if (!loadingState.isLoading) return const SizedBox.shrink();
 
         return ColoredSizedBox(
           color: AppColors.black,
@@ -29,7 +23,7 @@ class FullScreenLoadingIndicator extends StatelessWidget {
           child: Center(
             child: CircularProgressIndicator(
               color: AppColors.offWhite,
-              value: loadingHandler.progress,
+              value: loadingState.progress,
             ),
           ),
         );
