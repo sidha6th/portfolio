@@ -2,34 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:sidharth/src/common/helper/methods.dart';
 import 'package:sidharth/src/common/model/delegate/freezed_widget_delegate.dart';
 import 'package:sidharth/src/common/model/freezed_metrics.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/blocs/scroll_observer/scroll_observer_event.dart';
 
 class FreezedChild extends StatefulWidget {
   const FreezedChild({
     required this.index,
     required this.delegates,
     required this.screenSize,
+    required this.scrollPosition,
+    required this.hasInitialized,
     required this.currentDelegate,
     required this.scrollFreezeHeight,
     required this.pastScrolledHeight,
     required this.setFocusedDelegate,
-    required this.hasInitialized,
-    this.scrollMetrics,
     super.key,
   });
 
   final int index;
   final Size screenSize;
+  final bool hasInitialized;
+  final double scrollPosition;
   final double scrollFreezeHeight;
   final double pastScrolledHeight;
-  final ScrollMetrics? scrollMetrics;
   final FreezedWidgetDelegate currentDelegate;
   final List<FreezedWidgetDelegate> delegates;
-  final bool hasInitialized;
-  final void Function(
-    int index,
-    FreezedWidgetDelegate delegate,
-    double normalizedValue,
-  ) setFocusedDelegate;
+  final void Function(SetCurrentDelegate) setFocusedDelegate;
 
   @override
   State<StatefulWidget> createState() => _FreezedChildState();
@@ -47,7 +44,7 @@ class _FreezedChildState extends State<FreezedChild> {
 
   @override
   void didUpdateWidget(covariant FreezedChild oldWidget) {
-    final offset = widget.scrollMetrics?.pixels ?? 0;
+    final offset = widget.scrollPosition;
     if (offset > widget.pastScrolledHeight) return;
     _getMetrics(offset).then((_) => _setGlobalState());
     super.didUpdateWidget(oldWidget);
@@ -59,17 +56,19 @@ class _FreezedChildState extends State<FreezedChild> {
     if (!_delegate.shouldFreeze) return child;
 
     return Transform.translate(
-      key: _key,
-      offset: Offset(0, _metrics.freezedDy),
       transformHitTests: _delegate.transformHitTests,
+      offset: Offset(0, _metrics.freezedDy),
+      key: _key,
       child: child,
     );
   }
 
   Future<void> _getMetrics(double offset) async {
     if (widget.index == 0) {
-      final max = (_scrollFreezeHeight - widget.screenSize.height)
-          .clamp(0.0, _scrollFreezeHeight);
+      final max = (_scrollFreezeHeight - widget.screenSize.height).clamp(
+        0.0,
+        _scrollFreezeHeight,
+      );
       final dy = _delegate.shouldFreeze ? offset.clamp(0.0, max) : 0.0;
       _metrics = FreezeMetrics(
         freezedDy: dy,
@@ -86,8 +85,10 @@ class _FreezedChildState extends State<FreezedChild> {
     final pastScrolledHeight = widget.pastScrolledHeight;
     final pastScrollableHeight = pastScrolledHeight - _scrollFreezeHeight;
     final origin = (offset + widget.screenSize.height) - pastScrollableHeight;
-    final max = (pastScrolledHeight - widget.screenSize.height)
-        .clamp(0, double.infinity);
+    final max = (pastScrolledHeight - widget.screenSize.height).clamp(
+      0,
+      double.infinity,
+    );
     final clampedOffset = offset.clamp(0, max);
     final freezedDy = _calcDy(clampedOffset, pastScrollableHeight, max);
 
@@ -112,9 +113,17 @@ class _FreezedChildState extends State<FreezedChild> {
 
   void _setGlobalState() {
     if (_metrics.topDy > 0 && _metrics.topDy <= _scrollFreezeHeight) {
-      final normalizedValue =
-          normalize(value: _metrics.topDy, end: _scrollFreezeHeight);
-      widget.setFocusedDelegate(widget.index, _delegate, normalizedValue);
+      final normalizedValue = normalize(
+        value: _metrics.topDy,
+        end: _scrollFreezeHeight,
+      );
+      widget.setFocusedDelegate(
+        SetCurrentDelegate(
+          index: widget.index,
+          delegate: _delegate,
+          lerp: normalizedValue,
+        ),
+      );
     }
   }
 }

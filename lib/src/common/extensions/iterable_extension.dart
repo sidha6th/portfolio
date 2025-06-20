@@ -9,4 +9,19 @@ extension ExtensionOnIterable<T> on Iterable<T> {
     }
     return finalResult;
   }
+
+  T? get safeFirst {
+    if (isEmpty) return null;
+    return first;
+  }
+
+  T? safeElementAt(int index) {
+    if (isEmpty) return null;
+    return elementAt(index);
+  }
+
+  T? get safeLast {
+    if (isEmpty) return null;
+    return last;
+  }
 }

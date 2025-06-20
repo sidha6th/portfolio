@@ -1,31 +1,31 @@
 name: sidharth
 description: "Personal Portfolio built with Flutter Web"
 publish_to: "none"
-version: 1.0.0+1
+version: 0.6.0
 
 environment:
-  sdk: ^3.6.0
+  sdk: ^3.8.1
 
 dependencies:
   flutter:
     sdk: flutter
-  stacked: ^3.4.4
-  animate_do: ^3.3.4
+  animate_do: ^4.2.0
   url_launcher: ^6.3.1
-  flutter_svg: ^2.0.17
-  dotted_border: ^2.1.0
+  flutter_svg: ^2.1.0
+  dotted_border: ^3.0.1
   http: ^1.4.0
+  web: ^1.1.1
   animated_flip_counter: ^0.3.4
+  flutter_bloc: ^9.1.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 
 flutter:
   uses-material-design: true
   assets:
-    - assets/env.json
     - assets/images/jpeg/
     - assets/images/png/
     - assets/images/svg/

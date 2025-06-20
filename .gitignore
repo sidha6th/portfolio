@@ -39,9 +39,7 @@ app.*.map.json
 .fvm/
 
 #firebase
-firebase.json
 .firebase/
-.firebaserc
 
 #VScode
 .vscode
@@ -50,4 +48,4 @@ firebase.json
 /macos
 
 #env
-/assets/env.json
+/web/env.json

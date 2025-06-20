@@ -1,4 +1,4 @@
-import 'dart:math' as math;
+import 'dart:math' as math show max, min;
 
 import 'package:flutter/widgets.dart';
 

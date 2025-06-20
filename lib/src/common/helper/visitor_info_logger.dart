@@ -1,59 +1,59 @@
 import 'dart:convert' show jsonDecode, jsonEncode;
-import 'dart:developer' show log;
 
-import 'package:flutter/foundation.dart' show kDebugMode;
-import 'package:flutter/services.dart' show rootBundle;
+// import 'package:flutter/foundation.dart' show kReleaseMode;
 import 'package:http/http.dart' as http show get, post;
+import 'package:sidharth/src/common/model/env_config.dart';
+import 'package:sidharth/src/common/model/version_info.dart';
 import 'package:sidharth/src/common/model/visit_info/ip_info.dart';
 import 'package:sidharth/src/common/model/visit_info/visitor_info.dart';
+import 'package:sidharth/src/core/mixins/logger_mixin.dart';
 
-class VisitorInfoLogger {
+class VisitorInfoLogger with LoggerMixin {
   const VisitorInfoLogger();
 
   Future<void> logInfo() async {
-    if (kDebugMode) return;
-    final config = await _getConfig();
+    // if (!kReleaseMode) return;
+    final config = await EnvConfig.load();
+    final versionInfo = await VersionInfo.load();
     final ipInfo = await _getUserLocation(config);
-    return _log(config.url, VisitersInfo.create(ipInfo: ipInfo));
+    return _log(
+      config.url,
+      VisitersInfo.create(ipInfo: ipInfo, version: versionInfo.version),
+    );
   }
 
   List<IpDetails Function(Object)> get _decoders => [
-        IpDetails.fromIpInfo,
-        IpDetails.fromIpWho,
-        IpDetails.fromIpApi,
-        IpDetails.fromGeojs,
-      ];
+    IpDetails.fromIpInfo,
+    IpDetails.fromIpWho,
+    IpDetails.fromIpApi,
+    IpDetails.fromGeojs,
+  ];
 
-  Future<IpDetails> _getUserLocation(_EnvConfig config) async {
-    final ipInfos = List.generate(
-      _decoders.length,
-      (index) {
-        return _IPDetailsFetchers(
-          decoder: _decoders[index],
-          url: config.ipInfoUrls[index],
-        );
-      },
-    );
-    final ipOnlyInfos = List.generate(
-      config.ipOnlyUrls.length,
-      (index) {
-        return _IPDetailsFetchers(
-          decoder: IpDetails.onlyIP,
-          url: config.ipOnlyUrls[index].url,
-          isPlainTextResponse: config.ipOnlyUrls[index].isPlainTextResponse,
-        );
-      },
-    );
+  Future<IpDetails> _getUserLocation(EnvConfig config) async {
+    final ipInfos = List.generate(_decoders.length, (index) {
+      return _IPDetailsFetchers(
+        decoder: _decoders[index],
+        url: config.ipInfoUrls[index],
+      );
+    });
+    final ipOnlyInfos = List.generate(config.ipOnlyUrls.length, (index) {
+      return _IPDetailsFetchers(
+        decoder: IpDetails.onlyIP,
+        url: config.ipOnlyUrls[index].url,
+        isPlainTextResponse: config.ipOnlyUrls[index].isPlainTextResponse,
+      );
+    });
 
     final services = [...ipInfos, ...ipOnlyInfos];
-    final timeOutDuration = const Duration(seconds: 5);
-    try {
-      IpDetails? error;
-      for (var i = 1; i < services.length; i++) {
+    final timeOutDuration = const Duration(seconds: 10);
+    IpDetails? error;
+    for (var i = 0; i < services.length; i++) {
+      try {
         final service = services[i];
-        final response =
-            await http.get(Uri.parse(service.url)).timeout(timeOutDuration);
-        if (response.statusCode == 200) {
+        final response = await http
+            .get(Uri.parse(service.url))
+            .timeout(timeOutDuration);
+        if (response.statusCode >= 200 && response.statusCode < 300) {
           return service.decoder(
             service.isPlainTextResponse
                 ? response.body
@@ -65,66 +65,28 @@ class VisitorInfoLogger {
           error:
               'Invalid response, status code ${response.statusCode}, data: ${response.body},',
         );
+      } catch (e) {
+        error = IpDetails.error(error: e.toString());
       }
-
-      return error ?? IpDetails.error(error: 'Failed look ip details');
-    } catch (e) {
-      return IpDetails.error(error: e.toString());
     }
+    return IpDetails.error(
+      error:
+          '${error?.error ?? ''} -\n All the ip details fetching service failed',
+    );
   }
 
   Future<void> _log(String url, VisitersInfo info) async {
+    log(info.values(), title: 'info details');
     try {
-      await http.post(Uri.parse(url), body: jsonEncode(info.toJson()));
+      final response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode(info.values()),
+      );
+      log(response.body, title: 'Visit info Log response');
     } catch (e) {
-      log(e.toString());
+      log(e, title: 'Visit info Log error response');
     }
   }
-
-  Future<_EnvConfig> _getConfig() async {
-    final config = await rootBundle.loadString('env.json', cache: false);
-    return _EnvConfig.fromJson(jsonDecode(config));
-  }
-}
-
-class _EnvConfig {
-  const _EnvConfig({
-    required this.url,
-    required this.ipInfoUrls,
-    required this.ipOnlyUrls,
-  });
-
-  factory _EnvConfig.fromJson(Map<String, dynamic> json) {
-    return _EnvConfig(
-      url: json['url'] as String,
-      ipInfoUrls: List<String>.from(
-        (json['ipInfoUrls'] as List)
-            .map((e) => (e as String).replaceAll(' ', '')),
-      ),
-      ipOnlyUrls: List.from(
-        (json['ipOnlyUrls'] as List).map((e) => _IpOnlyUrl.fromJson(e)),
-      ),
-    );
-  }
-  final String url;
-  final List<String> ipInfoUrls;
-  final List<_IpOnlyUrl> ipOnlyUrls;
-}
-
-class _IpOnlyUrl {
-  const _IpOnlyUrl({
-    required this.url,
-    required this.isPlainTextResponse,
-  });
-
-  factory _IpOnlyUrl.fromJson(Map<String, dynamic> json) {
-    return _IpOnlyUrl(
-      url: json['url'],
-      isPlainTextResponse: json['isPlainTextResponse'],
-    );
-  }
-  final String url;
-  final bool isPlainTextResponse;
 }
 
 class _IPDetailsFetchers {

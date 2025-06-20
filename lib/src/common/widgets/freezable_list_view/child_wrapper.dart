@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:sidharth/src/common/extensions/iterable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' show BlocBuilder;
+import 'package:sidharth/src/common/extensions/build_context_extension.dart';
+import 'package:sidharth/src/common/extensions/iterable_extension.dart';
 import 'package:sidharth/src/common/model/delegate/freezed_widget_delegate.dart';
 import 'package:sidharth/src/common/widgets/freezed_child.dart';
-import 'package:sidharth/src/modules/dashboard/presentation/view_model/scroll_observing_view_model.dart';
-import 'package:stacked/stacked.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/blocs/scroll_observer/scroll_observer_bloc.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/blocs/scroll_observer/scroll_observer_state.dart';
 
 class ChildWrapper extends StatefulWidget {
   const ChildWrapper({
     required this.size,
     required this.index,
-    required this.model,
     required this.delegates,
     required this.hasInitialized,
     super.key,
@@ -18,7 +19,6 @@ class ChildWrapper extends StatefulWidget {
   final Size size;
   final int index;
   final bool hasInitialized;
-  final ScrollObservingViewModel model;
   final List<FreezedWidgetDelegate> delegates;
 
   @override
@@ -48,21 +48,20 @@ class _ChildWrapperState extends State<ChildWrapper> {
     return SizedBox(
       width: widget.size.width,
       height: scrollFreezeHeight,
-      child: ViewModelBuilder.reactive(
-        disposeViewModel: false,
-        viewModelBuilder: () => widget.model,
-        builder: (context, model, child) {
+      child: BlocBuilder<ScrollObserverBloc, ScrollObserverState>(
+        buildWhen: (previous, current) => previous != current,
+        builder: (context, state) {
           return FreezedChild(
             key: _key,
             index: widget.index,
             screenSize: widget.size,
             currentDelegate: _delegate,
             delegates: widget.delegates,
-            scrollMetrics: model.metrics,
             hasInitialized: widget.hasInitialized,
             pastScrolledHeight: pastScrolledHeight,
             scrollFreezeHeight: scrollFreezeHeight,
-            setFocusedDelegate: model.setCurrentDelegateState,
+            scrollPosition: state.currentScrollPosition,
+            setFocusedDelegate: context.scrollObsBloc.add,
           );
         },
       ),
