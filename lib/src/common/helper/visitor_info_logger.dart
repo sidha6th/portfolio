@@ -1,6 +1,6 @@
 import 'dart:convert' show jsonDecode, jsonEncode;
 
-import 'package:flutter/foundation.dart' show kReleaseMode;
+// import 'package:flutter/foundation.dart' show kReleaseMode;
 import 'package:http/http.dart' as http show get, post;
 import 'package:sidharth/src/common/model/env_config.dart';
 import 'package:sidharth/src/common/model/version_info.dart';
@@ -12,7 +12,7 @@ class VisitorInfoLogger with LoggerMixin {
   const VisitorInfoLogger();
 
   Future<void> logInfo() async {
-    if (!kReleaseMode) return;
+    // if (!kReleaseMode) return;
     final config = await EnvConfig.load();
     final versionInfo = await VersionInfo.load();
     final ipInfo = await _getUserLocation(config);
@@ -76,11 +76,11 @@ class VisitorInfoLogger with LoggerMixin {
   }
 
   Future<void> _log(String url, VisitersInfo info) async {
-    log(info, title: 'info details');
+    log(info.values(), title: 'info details');
     try {
       final response = await http.post(
         Uri.parse(url),
-        body: jsonEncode(info.toJson()),
+        body: jsonEncode(info.values()),
       );
       log(response.body, title: 'Visit info Log response');
     } catch (e) {

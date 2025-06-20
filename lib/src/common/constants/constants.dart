@@ -8,6 +8,7 @@ class Misc {
   static const kMonthIndicatorWidth = 30.0;
 
   static final maxViewPortWidth = 600.0;
+  
   static final skillCardHeight = 400.0;
 
   static final monthsElapsedInCareer = KPersonal.careerStartDate

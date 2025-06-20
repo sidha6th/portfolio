@@ -100,6 +100,20 @@ class IpDetails {
   final String? timezone;
   final String? error;
 
+  List<String> values() {
+    return [
+      ip ?? '',
+      loc ?? '',
+      org ?? '',
+      city ?? '',
+      postal ?? '',
+      region ?? '',
+      country ?? '',
+      timezone ?? '',
+      error ?? '',
+    ];
+  }
+
   Map<String, dynamic> toJson() {
     return {
       if (ip != null) 'ip': ip,

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:sidharth/src/common/extensions/date_time_extension.dart';
 import 'package:sidharth/src/common/model/visit_info/browser_info.dart';
 import 'package:sidharth/src/common/model/visit_info/ip_info.dart';
@@ -18,22 +17,32 @@ class VisitersInfo {
     return VisitersInfo._(
       ipInfo: ipInfo,
       version: version,
+      browserInfo: BrowserInfo.create(),
       utcTimeStamp: DateTime.now().toUtc(),
-      browserInfo: kIsWeb ? BrowserInfo.create() : null,
     );
   }
 
   final String version;
   final IpDetails ipInfo;
   final DateTime utcTimeStamp;
-  final BrowserInfo? browserInfo;
+  final BrowserInfo browserInfo;
+
+  List<String> values() {
+    return [
+      DateTime.now().formated(),
+      version,
+      ...ipInfo.values(),
+      ...browserInfo.values(),
+      utcTimeStamp.millisecondsSinceEpoch.toString(),
+    ];
+  }
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'formatedTime': DateTime.now().formated(),
       'version': version,
       'ipInfo': ipInfo.toJson(),
-      'browserInfo': browserInfo?.toJson(),
+      'browserInfo': browserInfo.toJson(),
       'utcTimeStamp': utcTimeStamp.millisecondsSinceEpoch,
     };
   }
