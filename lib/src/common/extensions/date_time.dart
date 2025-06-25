@@ -10,7 +10,7 @@ extension ExtensionOnDateTime on DateTime {
   }
 
   String formated() {
-    return '$day/${_month(this)}/$year\n${_format12Hour(this)}:${minute.toString().padLeft(2, '0')} ${hour >= 12 ? 'PM' : 'AM'}';
+    return '$day/${_month(this)}/$year - ${_format12Hour(this)}:${minute.toString().padLeft(2, '0')} ${hour >= 12 ? 'PM' : 'AM'}';
   }
 
   String _format12Hour(DateTime date) {

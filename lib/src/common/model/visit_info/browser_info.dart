@@ -37,6 +37,19 @@ class BrowserInfo {
   final _ScreenInfo _screenInfo;
   final _PerformanceInfo _perfomanceInfo;
 
+  List<String> values() {
+    return [
+      _lang ?? '',
+      _agent ?? '',
+      _vendor ?? '',
+      _product ?? '',
+      _platform ?? '',
+      ..._pageInfo.values(),
+      ..._screenInfo.values(),
+      ..._perfomanceInfo.values(),
+    ];
+  }
+
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       if (_lang.hasData) 'lang': _lang,
@@ -67,6 +80,14 @@ class _ScreenInfo {
   final String? outerSize;
   final num? devicePixelRatio;
 
+  List<String> values() {
+    return [
+      innerSize ?? '',
+      outerSize ?? '',
+      (devicePixelRatio ?? '').toString(),
+    ];
+  }
+
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       if (innerSize.hasData) 'windowSize': innerSize,
@@ -88,6 +109,9 @@ class _PerformanceInfo {
   _PerformanceInfo({required this.loadTimeMS});
 
   final int? loadTimeMS;
+  List<String> values() {
+    return [(loadTimeMS ?? '').toString()];
+  }
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{if (loadTimeMS != null) 'loadTimeMS': loadTimeMS};
@@ -104,12 +128,17 @@ class _PageInfo {
 
   factory _PageInfo.create() {
     return _PageInfo(
-      referrer: web.document.referrer,
+      referrer: web.document.referrer.hasData
+          ? web.document.referrer
+          : 'Unknown',
       path: web.window.location.pathname,
       currentUrl: web.window.location.href,
       from: web.window.location.pathname
           .split('/')
-          .firstWhere((element) => element.trim().isNotEmpty, orElse: () => ''),
+          .firstWhere(
+            (element) => element.trim().isNotEmpty,
+            orElse: () => 'Unknown',
+          ),
     );
   }
 
@@ -117,6 +146,10 @@ class _PageInfo {
   final String? path;
   final String referrer;
   final String currentUrl;
+
+  List<String> values() {
+    return [from, path ?? '', referrer, currentUrl];
+  }
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
