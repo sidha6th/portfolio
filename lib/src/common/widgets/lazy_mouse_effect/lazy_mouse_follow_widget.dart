@@ -26,34 +26,34 @@ class _MouseFollowEffectState extends State<MouseFollowEffect>
   late final Ticker _ticker = Ticker(_tick);
   late final halfOuterCircleDiameter = diameter / 2;
   late final halfInnerDotDiameter = innerDotDiameter / 2;
-  late final _mouseEventNotifer = ValueNotifier(const MouseLazyEffectState());
+  late final _mouseEventNotifier = ValueNotifier(const MouseLazyEffectState());
 
   Future<void> _tick(_) async {
     if (mousePosition == null) return _ticker.stop();
 
-    final outerCirlceOffset = _mouseEventNotifer.value.outerCircleOffset;
+    final outerCircleOffset = _mouseEventNotifier.value.outerCircleOffset;
     final outerDx = lerpDouble(
-      outerCirlceOffset.dx,
+      outerCircleOffset.dx,
       mousePosition!.dx,
       outerCircleSpeed,
     )!;
     final outerDy = lerpDouble(
-      outerCirlceOffset.dy,
+      outerCircleOffset.dy,
       mousePosition!.dy,
       outerCircleSpeed,
     )!;
     final innerDx = lerpDouble(
-      outerCirlceOffset.dx,
+      outerCircleOffset.dx,
       mousePosition!.dx,
       innerDotSpeed,
     )!;
     final innerDy = lerpDouble(
-      outerCirlceOffset.dy,
+      outerCircleOffset.dy,
       mousePosition!.dy,
       innerDotSpeed,
     )!;
 
-    _mouseEventNotifer.value = _mouseEventNotifer.value.onMove(
+    _mouseEventNotifier.value = _mouseEventNotifier.value.onMove(
       outerOffset: Offset(outerDx, outerDy),
       innerOffset: Offset(innerDx, innerDy),
     );
@@ -63,20 +63,24 @@ class _MouseFollowEffectState extends State<MouseFollowEffect>
   void dispose() {
     _ticker.stop();
     _ticker.dispose();
-    _mouseEventNotifer.dispose();
+    _mouseEventNotifier.dispose();
     super.dispose();
   }
 
   Future<void> _startTicker(Offset offset) async {
     mousePosition = offset;
     if (!_ticker.isActive) unawaited(_ticker.start());
-    if (!_mouseEventNotifer.value.visible) {
-      _mouseEventNotifer.value = _mouseEventNotifer.value.toggleVisiblity(true);
+    if (!_mouseEventNotifier.value.visible) {
+      _mouseEventNotifier.value = _mouseEventNotifier.value.toggleVisibility(
+        true,
+      );
     }
   }
 
   void _hideCurser() {
-    _mouseEventNotifer.value = _mouseEventNotifer.value.toggleVisiblity(false);
+    _mouseEventNotifier.value = _mouseEventNotifier.value.toggleVisibility(
+      false,
+    );
   }
 
   @override
@@ -93,7 +97,7 @@ class _MouseFollowEffectState extends State<MouseFollowEffect>
         children: [
           widget.child,
           ValueListenableBuilder(
-            valueListenable: _mouseEventNotifer,
+            valueListenable: _mouseEventNotifier,
             child: Container(
               width: diameter,
               height: diameter,

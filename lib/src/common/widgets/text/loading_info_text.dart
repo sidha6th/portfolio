@@ -2,33 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:sidharth/gen/fonts.gen.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
 import 'package:sidharth/src/common/constants/string.dart';
+import 'package:sidharth/src/common/state_management/notifier_builder.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
-import 'package:sidharth/src/modules/dashboard/presentation/view_model/loading_handler_view_model.dart';
-import 'package:stacked/stacked.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/view_model/loading_notifier.dart';
 
 class LoadingInfoTextWidget extends StatelessWidget {
-  const LoadingInfoTextWidget({
-    required this.model,
-    super.key,
-  });
-
-  final LoadingHandlerViewModel model;
+  const LoadingInfoTextWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder.reactive(
-      viewModelBuilder: () => model,
-      disposeViewModel: false,
-      builder: (context, model, child) {
-        if (!model.isLoading) return const SizedBox.shrink();
+    return NotifierBuilder<LoadingNotifier, LoadingState>(
+      builder: (context, state) {
+        if (!state.isLoading) return const SizedBox.shrink();
         return Positioned(
           bottom: 20,
           right: 20,
           child: IgnorePointer(
             child: Opacity(
-              opacity: model.progress,
+              opacity: state.progress ?? 0,
               child: TextWidget(
-                KString.loadingInfoTexts[model.loadingStepCount],
+                KString.loadingInfoTexts[state.loadingStepCount ?? 0],
                 style: const TextStyle(
                   fontSize: 5,
                   fontFamily: FontFamily.cindieMonoD,

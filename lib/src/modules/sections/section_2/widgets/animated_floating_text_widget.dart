@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:sidharth/src/common/model/freezed_metrics.dart';
+import 'package:sidharth/src/common/extensions/build_context.dart';
 import 'package:sidharth/src/modules/sections/section_2/widgets/blue_gradient_text_box_widget.dart';
 
 class AnimatedFloatingTextWidget extends StatefulWidget {
@@ -10,7 +10,6 @@ class AnimatedFloatingTextWidget extends StatefulWidget {
     required this.dx,
     required this.text,
     required this.angle,
-    required this.metrics,
     this.initialDy = 0,
     this.initialDx = 0,
     this.initialAngle = 0,
@@ -26,7 +25,6 @@ class AnimatedFloatingTextWidget extends StatefulWidget {
   final double initialDx;
   final double initialAngle;
   final Alignment alignment;
-  final FreezeMetrics metrics;
 
   @override
   State<AnimatedFloatingTextWidget> createState() =>
@@ -35,12 +33,12 @@ class AnimatedFloatingTextWidget extends StatefulWidget {
 
 class _AnimatedFloatingTextWidgetState
     extends State<AnimatedFloatingTextWidget> {
-  late var _size = widget.metrics.windowSize;
+  late var _size = context.screenSize;
   late var _child = BlueGradientTextBoxWidget(widget.text, screenSize: _size);
 
   @override
   void didUpdateWidget(covariant AnimatedFloatingTextWidget oldWidget) {
-    widget.metrics.whenWindowResized(_size, _whenResized);
+    _whenResized(context.screenSize);
     super.didUpdateWidget(oldWidget);
   }
 
@@ -67,10 +65,8 @@ class _AnimatedFloatingTextWidgetState
   }
 
   void _whenResized(Size windowsSize) {
+    if (_size == windowsSize) return;
     _size = windowsSize;
-    _child = BlueGradientTextBoxWidget(
-      widget.text,
-      screenSize: _size,
-    );
+    _child = BlueGradientTextBoxWidget(widget.text, screenSize: _size);
   }
 }

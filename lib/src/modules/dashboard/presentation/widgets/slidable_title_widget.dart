@@ -3,50 +3,26 @@ import 'package:sidharth/gen/fonts.gen.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
 import 'package:sidharth/src/common/constants/durations.dart';
 import 'package:sidharth/src/common/constants/string.dart';
+import 'package:sidharth/src/common/extensions/build_context.dart';
 import 'package:sidharth/src/common/extensions/size.dart';
+import 'package:sidharth/src/common/state_management/notifier_consumer.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
-import 'package:sidharth/src/modules/dashboard/presentation/view_model/scroll_observing_view_model.dart';
-import 'package:stacked/stacked.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/view_model/screen_size_notifier.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/view_model/sticky_metrics_notifier.dart';
 
 class SlidableTitleWidget extends StatefulWidget {
-  const SlidableTitleWidget({
-    required this.windowSize,
-    required this.model,
-    super.key,
-  });
-
-  final Size windowSize;
-  final ScrollObservingViewModel model;
+  const SlidableTitleWidget({super.key});
 
   @override
   State<SlidableTitleWidget> createState() => _SlidableTitleWidgetState();
 }
 
 class _SlidableTitleWidgetState extends State<SlidableTitleWidget> {
-  TextStyle get _textStyle => TextStyle(
-        fontSize: widget.windowSize.min * 0.07,
-        color: AppColors.offWhite,
-        fontFamily: FontFamily.elgocThin,
-      );
-
-  final _controller = ScrollController();
-  late var _titleHeight = widget.windowSize.height * 0.1;
-  late var textStyle = _textStyle;
-
   int currentIndex = 0;
-
-  @override
-  void initState() {
-    widget.model.addListener(_listenModel);
-    super.initState();
-  }
-
-  @override
-  void didUpdateWidget(covariant SlidableTitleWidget oldWidget) {
-    _titleHeight = widget.windowSize.height * 0.1;
-    textStyle = _textStyle;
-    super.didUpdateWidget(oldWidget);
-  }
+  late var textStyle = _textStyle;
+  late var _size = context.screenSize;
+  final _controller = ScrollController();
+  late var _titleHeight = _size.height * 0.1;
 
   @override
   Widget build(BuildContext context) {
@@ -54,28 +30,33 @@ class _SlidableTitleWidgetState extends State<SlidableTitleWidget> {
       top: 20,
       left: 20,
       child: IgnorePointer(
-        child: ViewModelBuilder.reactive(
-          viewModelBuilder: () => widget.model,
-          disposeViewModel: false,
-          builder: (context, model, child) {
-            final width = widget.windowSize.width;
-            return SizedBox(
-              width: width < 600 ? width * 0.5 : width * 0.4,
-              height: _titleHeight,
-              child: ListView.builder(
-                primary: false,
-                controller: _controller,
-                itemExtent: _titleHeight,
-                itemCount: KString.titles.length,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return TextWidget(
-                    KString.titles[index],
-                    style: textStyle,
-                    softWrap: false,
-                  );
-                },
-              ),
+        child: NotifierConsumer<ScreenSizeNotifier, Size>(
+          listener: _whenResize,
+          builder: (context, state) {
+            return NotifierConsumer<StickyMetricsNotifier, StickyMetricsState>(
+              listener: _listenModel,
+              builder: (context, state) {
+                return SizedBox(
+                  width: _size.width < 600
+                      ? _size.width * 0.5
+                      : _size.width * 0.4,
+                  height: _titleHeight,
+                  child: ListView.builder(
+                    primary: false,
+                    controller: _controller,
+                    itemExtent: _titleHeight,
+                    itemCount: KString.titles.length,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return TextWidget(
+                        KString.titles[index],
+                        style: textStyle,
+                        softWrap: false,
+                      );
+                    },
+                  ),
+                );
+              },
             );
           },
         ),
@@ -83,25 +64,31 @@ class _SlidableTitleWidgetState extends State<SlidableTitleWidget> {
     );
   }
 
-  void _listenModel() {
-    if (currentIndex == widget.model.index) return;
-    final newOffset = _titleHeight *
-        (widget.model.normalizedCurrentSectionScrolledOffset +
-                    widget.model.index <
-                currentIndex
+  TextStyle get _textStyle => TextStyle(
+    fontSize: _size.min * 0.07,
+    color: AppColors.offWhite,
+    fontFamily: FontFamily.elgocThin,
+  );
+
+  void _listenModel(StickyMetricsState state) {
+    if (currentIndex == state.currentIndex) return;
+    final newOffset =
+        _titleHeight *
+        (state.currentChildPosition + state.currentIndex < currentIndex
             ? currentIndex - 1
-            : widget.model.index);
+            : state.currentIndex);
 
     _controller
-        .animateTo(
-      newOffset,
-      curve: Curves.linear,
-      duration: KDurations.ms200,
-    )
-        .then(
-      (value) {
-        currentIndex = widget.model.index;
-      },
-    );
+        .animateTo(newOffset, curve: Curves.linear, duration: KDurations.ms200)
+        .then((value) {
+          currentIndex = state.currentIndex;
+        });
+  }
+
+  void _whenResize(Size windowSize) {
+    if (_size == windowSize) return;
+    _size = windowSize;
+    _titleHeight = _size.height * 0.1;
+    textStyle = _textStyle;
   }
 }

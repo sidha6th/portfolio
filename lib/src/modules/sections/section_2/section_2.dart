@@ -4,33 +4,53 @@ import 'package:sidharth/src/common/constants/colors.dart';
 import 'package:sidharth/src/common/constants/constants.dart';
 import 'package:sidharth/src/common/constants/personal.dart';
 import 'package:sidharth/src/common/constants/string.dart';
+import 'package:sidharth/src/common/extensions/build_context.dart';
 import 'package:sidharth/src/common/helper/methods.dart';
+import 'package:sidharth/src/common/model/delegate/base_stickable_widget_delegate.dart';
 import 'package:sidharth/src/common/model/freezed_metrics.dart';
+import 'package:sidharth/src/common/state_management/notifier_consumer.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/view_model/sticky_metrics_notifier.dart';
 import 'package:sidharth/src/modules/sections/section_2/widgets/animated_floating_text_widget.dart';
 
-class SecondSection extends StatefulWidget {
-  const SecondSection(this._metrics, {super.key});
+class SecondSection extends StatefulWidget implements StickableDelegate {
+  const SecondSection(this.index, {super.key});
 
-  final FreezeMetrics _metrics;
+  final int index;
 
-  static double freezedHeight(Size screenSize) => screenSize.height;
+  @override
+  double minStickableHeight(Size windowSize) => windowSize.height;
+
+  @override
+  Widget get child => this;
+
+  @override
+  bool get stick => false;
+
+  @override
+  bool get transformHitTests => false;
 
   @override
   State<SecondSection> createState() => _SecondSectionState();
+
+  @override
+  bool notifyOnlyWhen(_, StickyMetricsState curr) {
+    return curr.currentIndex < 2;
+  }
 }
 
 class _SecondSectionState extends State<SecondSection> {
-  late var _size = widget._metrics.windowSize;
-  late var _maxOffset = widget._metrics.totalHeight + _size.height;
+  late var _size = context.screenSize;
+  late var _maxOffset = stickableHeight + _size.height;
+  late var _metrics = FreezeMetrics.zero(stickableHeight);
+  late var stickableHeight = widget.minStickableHeight(context.screenSize);
   late var _dy = 1.0;
   late var _dx = 1.0;
   late var _angle = 1.0;
 
   @override
   void didUpdateWidget(covariant SecondSection oldWidget) {
-    widget._metrics.whenWindowResized(_size, _whenResize);
-    if (widget._metrics.bottomDy >= _maxOffset) return;
+    _whenResize(context.screenSize);
     _calcTransformMetrics();
     super.didUpdateWidget(oldWidget);
   }
@@ -75,8 +95,7 @@ class _SecondSectionState extends State<SecondSection> {
                     style: TextStyle(
                       fontFamily: FontFamily.cindieMonoD,
                       color: AppColors.white,
-                      fontSize:
-                          (widget._metrics.windowWidth * 0.01).clamp(13, 40),
+                      fontSize: (_size.width * 0.01).clamp(13, 40),
                       height: 2,
                       shadows: [
                         const Shadow(
@@ -88,55 +107,62 @@ class _SecondSectionState extends State<SecondSection> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      AnimatedFloatingTextWidget(
-                        text: 'Why can’t you just make an app overnight?',
-                        metrics: widget._metrics,
-                        initialDy: 1.5,
-                        initialDx: -0.4,
-                        angle: -_angle,
-                        dx: -_dx,
-                        dy: -_dy,
-                      ),
-                      AnimatedFloatingTextWidget(
-                        text: 'My computer is slow, can you fix it?',
-                        metrics: widget._metrics,
-                        initialDx: 0.3,
-                        initialDy: -0.2,
-                        angle: -_angle,
-                        dx: _dx,
-                        dy: -_dy,
-                      ),
-                      AnimatedFloatingTextWidget(
-                        metrics: widget._metrics,
-                        text: 'Why do apps need updates? Just make it perfect!',
-                        initialDx: -0.3,
-                        initialDy: 0.8,
-                        angle: _angle,
-                        dx: -_dx,
-                        dy: _dy,
-                      ),
-                      AnimatedFloatingTextWidget(
-                        metrics: widget._metrics,
-                        text: 'So, coding is just copying from Google, right?',
-                        angle: _angle,
-                        initialDy: -0.5,
-                        initialDx: 0.4,
-                        dx: _dx,
-                        dy: -_dy,
-                      ),
-                      AnimatedFloatingTextWidget(
-                        metrics: widget._metrics,
-                        text: 'Can you add a feature that reads my mind?',
-                        initialDx: 0.4,
-                        initialDy: -1,
-                        angle: -_angle,
-                        dx: _dx,
-                        dy: _dy,
-                      ),
-                    ],
+                  NotifierConsumer<StickyMetricsNotifier, StickyMetricsState>(
+                    listenWhen: widget.notifyOnlyWhen,
+                    buildWhen: widget.notifyOnlyWhen,
+                    listener: (state) {
+                      _metrics = state.metricsAt(widget.index);
+                      _calcTransformMetrics();
+                    },
+                    builder: (context, state) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          AnimatedFloatingTextWidget(
+                            text: 'Why can’t you just make an app overnight?',
+                            initialDy: 1.5,
+                            initialDx: -0.4,
+                            angle: -_angle,
+                            dx: -_dx,
+                            dy: -_dy,
+                          ),
+                          AnimatedFloatingTextWidget(
+                            text: 'My computer is slow, can you fix it?',
+                            initialDx: 0.3,
+                            initialDy: -0.2,
+                            angle: -_angle,
+                            dx: _dx,
+                            dy: -_dy,
+                          ),
+                          AnimatedFloatingTextWidget(
+                            text:
+                                'Why do apps need updates? Just make it perfect!',
+                            initialDx: -0.3,
+                            initialDy: 0.8,
+                            angle: _angle,
+                            dx: -_dx,
+                            dy: _dy,
+                          ),
+                          AnimatedFloatingTextWidget(
+                            text:
+                                'So, coding is just copying from Google, right?',
+                            angle: _angle,
+                            initialDy: -0.5,
+                            initialDx: 0.4,
+                            dx: _dx,
+                            dy: -_dy,
+                          ),
+                          AnimatedFloatingTextWidget(
+                            text: 'Can you add a feature that reads my mind?',
+                            initialDx: 0.4,
+                            initialDy: -1,
+                            angle: -_angle,
+                            dx: _dx,
+                            dy: _dy,
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ],
               ),
@@ -149,12 +175,12 @@ class _SecondSectionState extends State<SecondSection> {
 
   void _whenResize(Size windowsSize) {
     _size = windowsSize;
-    _maxOffset = widget._metrics.totalHeight + _size.height;
+    _maxOffset = _metrics.totalHeight + _size.height;
   }
 
-  Future<void> _calcTransformMetrics() async {
+  void _calcTransformMetrics() {
     final offset = normalize(
-      value: widget._metrics.bottomDy - (_size.height * 0.1),
+      value: _metrics.bottomDy - (_size.height * 0.1),
       end: _maxOffset,
     );
 

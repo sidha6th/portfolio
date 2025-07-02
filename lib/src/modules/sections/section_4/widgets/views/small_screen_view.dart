@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sidharth/src/common/constants/durations.dart';
 import 'package:sidharth/src/common/constants/personal.dart';
+import 'package:sidharth/src/common/extensions/build_context.dart';
 import 'package:sidharth/src/common/helper/methods.dart';
 import 'package:sidharth/src/common/model/freezed_metrics.dart';
 import 'package:sidharth/src/modules/sections/section_4/widgets/skills_description_widget.dart';
@@ -23,20 +24,22 @@ class SkillsSmallScreenView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final origin = metrics.topDy.clamp(0.0, metrics.totalHeight);
-    final double descriptionOffset =
-        normalize(value: origin, end: metrics.totalHeight);
+    final double descriptionOffset = normalize(
+      value: origin,
+      end: metrics.totalHeight,
+    );
 
     return Stack(
       children: [
         SizedBox(
-          width: metrics.windowWidth,
-          height: metrics.windowHeight,
+          width: context.screenSize.width,
+          height: context.screenSize.height,
           child: Stack(
             clipBehavior: Clip.none,
             alignment: Alignment.bottomRight,
             children: [
               Padding(
-                padding: EdgeInsets.only(top: metrics.windowHeight * 0.1),
+                padding: EdgeInsets.only(top: context.screenSize.height * 0.1),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -67,7 +70,7 @@ class SkillsSmallScreenView extends StatelessWidget {
                   duration: KDurations.ms100,
                   child: SkillsDescriptionTextWidget(
                     fontSize: descriptionFontSize,
-                    maxWidth: metrics.windowWidth.clamp(0, 300),
+                    maxWidth: context.screenSize.width.clamp(0, 300),
                   ),
                 ),
               ),

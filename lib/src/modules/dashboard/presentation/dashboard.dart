@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
-import 'package:sidharth/src/common/model/delegate/freezed_widget_delegate.dart';
 import 'package:sidharth/src/common/widgets/freezable_list_view/notifiable_list_view_builder.dart';
 import 'package:sidharth/src/common/widgets/lazy_mouse_effect/lazy_mouse_follow_widget.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/widgets/scroll_progress_indicator_widget.dart';
@@ -21,38 +20,18 @@ class Dashboard extends StatelessWidget {
       backgroundColor: AppColors.black,
       body: MouseFollowEffect(
         NotifiableLisViewBuilder(
-          isUnderDevelopment: true,
           delegates: [
-            const FreezedWidgetDelegate(
-              shouldFreeze: false,
-              freezedScrollHeight: FirstSection.viewPortSize,
-              childBuilder: FirstSection.new,
-            ),
-            const FreezedWidgetDelegate(
-              shouldFreeze: false,
-              freezedScrollHeight: SecondSection.freezedHeight,
-              childBuilder: SecondSection.new,
-            ),
-            const FreezedWidgetDelegate(
-              freezedScrollHeight: ThirdSection.freezedHeight,
-              childBuilder: ThirdSection.new,
-            ),
-            const FreezedWidgetDelegate(
-              transformHitTests: true,
-              freezedScrollHeight: FourthSection.freezedHeight,
-              childBuilder: FourthSection.new,
-            ),
-            const FreezedWidgetDelegate(
-              transformHitTests: true,
-              freezedScrollHeight: FifthSection.freezedHeight,
-              childBuilder: FifthSection.new,
-            ),
+            FirstSection.new,
+            SecondSection.new,
+            ThirdSection.new,
+            FourthSection.new,
+            FifthSection.new,
           ],
-          foregroundWidgetBuilder: (windowSize, model) {
+          foregroundWidgetBuilder: () {
             return [
               const VersionIndicator(),
-              SlidableTitleWidget(model: model, windowSize: windowSize),
-              ScrollProgressIndicatorWidget(model: model),
+              const SlidableTitleWidget(),
+              const ScrollProgressIndicatorWidget(),
             ];
           },
         ),

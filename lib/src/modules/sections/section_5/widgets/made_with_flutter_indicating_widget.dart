@@ -38,7 +38,8 @@ class _MadeWithFlutterIndicatingWidgetState
 
   @override
   void didUpdateWidget(covariant MadeWithFlutterIndicatingWidget oldWidget) {
-    opacity = widget.offsetToScroll >=
+    opacity =
+        widget.offsetToScroll >=
             widget.scrollController.position.maxScrollExtent
         ? 1
         : 0;
@@ -98,10 +99,7 @@ class _MadeWithFlutterIndicatingWidgetState
 
   void _onHover(PointerHoverEvent event) {
     setState(() {
-      position = Offset(
-        event.localPosition.dx + 6,
-        event.localPosition.dy + 7,
-      );
+      position = Offset(event.localPosition.dx + 6, event.localPosition.dy + 7);
     });
   }
 

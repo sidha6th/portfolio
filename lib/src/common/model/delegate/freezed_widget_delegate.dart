@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sidharth/src/common/model/freezed_metrics.dart';
 
 @immutable
 final class FreezedWidgetDelegate {
@@ -10,13 +9,13 @@ final class FreezedWidgetDelegate {
     this.transformHitTests = false,
   });
 
-  final Widget Function(FreezeMetrics metrics) childBuilder;
-  final double Function(Size screenSize) freezedScrollHeight;
   final bool shouldFreeze;
   final bool transformHitTests;
+  final Widget Function(int index) childBuilder;
+  final double Function(Size screenSize) freezedScrollHeight;
 
   FreezedWidgetDelegate copyWith({
-    Widget Function(FreezeMetrics metrics)? childBuilder,
+    Widget Function(int index)? childBuilder,
     double Function(Size screenSize)? freezedScrollHeight,
     bool? shouldFreeze,
     bool? transformHitTests,

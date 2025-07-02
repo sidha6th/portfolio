@@ -4,6 +4,7 @@ import 'package:sidharth/src/common/constants/colors.dart';
 import 'package:sidharth/src/common/constants/durations.dart';
 import 'package:sidharth/src/common/constants/personal.dart';
 import 'package:sidharth/src/common/constants/string.dart';
+import 'package:sidharth/src/common/extensions/build_context.dart';
 import 'package:sidharth/src/common/helper/methods.dart';
 import 'package:sidharth/src/common/model/freezed_metrics.dart';
 import 'package:sidharth/src/common/widgets/animated/fade_slide_in.dart';
@@ -21,7 +22,7 @@ class NameAndDesignation extends StatefulWidget {
 class _NameAndDesignationState extends State<NameAndDesignation> {
   double _normalizedOffset = 0;
   late var fontSize = _size.width * 0.05;
-  late var _size = widget.metrics.windowSize;
+  late var _size = context.screenSize;
   late var designationFontSize = _size.width * 0.03;
   late var _maxHeightNeedForAnimate = widget.metrics.totalHeight * 0.9;
   bool get _isNotVisible => widget.metrics.topDy >= _maxHeightNeedForAnimate;
@@ -29,7 +30,7 @@ class _NameAndDesignationState extends State<NameAndDesignation> {
   @override
   void didUpdateWidget(covariant NameAndDesignation oldWidget) {
     super.didUpdateWidget(oldWidget);
-    widget.metrics.whenWindowResized(_size, _whenResize);
+    _whenResize(context.screenSize);
     if (_isNotVisible) return;
     _calcNormalizedOffset();
   }
@@ -103,6 +104,7 @@ class _NameAndDesignationState extends State<NameAndDesignation> {
   }
 
   void _whenResize(Size windowsSize) {
+    if (_size == windowsSize) return;
     _size = windowsSize;
     fontSize = _size.width * 0.05;
     designationFontSize = _size.width * 0.03;

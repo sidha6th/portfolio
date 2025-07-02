@@ -7,9 +7,7 @@ import 'package:sidharth/src/common/widgets/custom_mouse_region.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
 
 class UnderDevelopmentIndicator extends StatefulWidget {
-  const UnderDevelopmentIndicator({required this.size, super.key});
-
-  final Size size;
+  const UnderDevelopmentIndicator({super.key});
 
   @override
   State<UnderDevelopmentIndicator> createState() =>

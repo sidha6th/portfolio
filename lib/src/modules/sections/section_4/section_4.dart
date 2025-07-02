@@ -1,44 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:sidharth/src/common/constants/personal.dart';
-import 'package:sidharth/src/common/model/freezed_metrics.dart';
+import 'package:sidharth/src/common/extensions/build_context.dart';
+import 'package:sidharth/src/common/extensions/size.dart';
+import 'package:sidharth/src/common/model/delegate/base_stickable_widget_delegate.dart';
+import 'package:sidharth/src/common/state_management/notifier_builder.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/view_model/sticky_metrics_notifier.dart';
 import 'package:sidharth/src/modules/sections/section_4/widgets/views/large_screen_view.dart';
 import 'package:sidharth/src/modules/sections/section_4/widgets/views/small_screen_view.dart';
 
-class FourthSection extends StatefulWidget {
-  const FourthSection(
-    this._metrics, {
-    super.key,
-  });
+class FourthSection extends StatefulWidget implements StickableDelegate {
+  const FourthSection(this.index, {super.key});
 
-  final FreezeMetrics _metrics;
-  static const maxCardWidth = 250.0;
+  final int index;
+  final maxCardWidth = 250.0;
 
   @override
-  State<FourthSection> createState() => _FourthSectionState();
+  Widget get child => this;
 
-  static double freezedHeight(Size screenSize) {
-    final lessThanTabViewPort = _isLessThanTabView(screenSize.width);
-    final delay = _slideStartDelay(screenSize.height);
-    final minWidth = _cardMinWidth(
-      screenSize.width,
-      isLessThanTabView: lessThanTabViewPort,
-      maxCardWidth: FourthSection.maxCardWidth,
-    );
-
-    late final singleCardHeight =
-        _singleCardWidth(screenSize.width, minWidth) + 30;
-    final cardsCount = KPersonal.skillsSets.first.length;
-
-    final separatorsHeight = (cardsCount - 1) * 20;
-    final cardsHeight = (cardsCount * singleCardHeight);
-    return (cardsHeight + delay + separatorsHeight) - (screenSize.width * 0.5);
-  }
-
-  static bool _isLessThanTabView(double width) => width < 740;
-  static double _slideStartDelay(double height) => height * 0.4;
-  static double _singleCardWidth(double width, double minWidth) =>
-      (width * 0.2).clamp(minWidth, FourthSection.maxCardWidth);
-  static double _cardMinWidth(
+  bool _isLessThanTabView(double width) => width < 740;
+  double _slideStartDelay(double height) => height * 0.4;
+  double _singleCardWidth(double width, double minWidth) =>
+      (width * 0.2).clamp(minWidth, maxCardWidth);
+  double _cardMinWidth(
     double windowWidth, {
     required bool isLessThanTabView,
     required double maxCardWidth,
@@ -46,60 +29,99 @@ class FourthSection extends StatefulWidget {
     if (!isLessThanTabView) return 150.0;
     return (windowWidth * 0.35).clamp(0.0, maxCardWidth);
   }
-}
-
-class _FourthSectionState extends State<FourthSection> {
-  late var _size = widget._metrics.windowSize;
-  late var _slideStartDelay = FourthSection._slideStartDelay(_size.height);
-  late var _lessThanTabViewPort = FourthSection._isLessThanTabView(_size.width);
-  late var _fontSize = fontSize;
-  late var _skillCardWidth =
-      FourthSection._singleCardWidth(_size.width, _skillCardMinWidth);
-  late var _skillCardMinWidth = FourthSection._cardMinWidth(
-    _size.width,
-    maxCardWidth: FourthSection.maxCardWidth,
-    isLessThanTabView: _lessThanTabViewPort,
-  );
-
-  double get fontSize =>
-      (widget._metrics.minWindowSide * 0.05).clamp(8.0, 20.0);
 
   @override
-  void didUpdateWidget(covariant FourthSection oldWidget) {
-    widget._metrics.whenWindowResized(_size, _whenResize);
-    super.didUpdateWidget(oldWidget);
+  double minStickableHeight(Size windowSize) {
+    final lessThanTabViewPort = _isLessThanTabView(windowSize.width);
+    final delay = _slideStartDelay(windowSize.height);
+    final minWidth = _cardMinWidth(
+      windowSize.width,
+      isLessThanTabView: lessThanTabViewPort,
+      maxCardWidth: maxCardWidth,
+    );
+
+    late final singleCardHeight =
+        _singleCardWidth(windowSize.width, minWidth) + 30;
+    final cardsCount = KPersonal.skillsSets.first.length;
+
+    final separatorsHeight = (cardsCount - 1) * 20;
+    final cardsHeight = (cardsCount * singleCardHeight);
+    return (cardsHeight + delay + separatorsHeight) - (windowSize.width * 0.5);
   }
 
   @override
+  bool get stick => true;
+
+  @override
+  bool get transformHitTests => true;
+
+  @override
+  bool notifyOnlyWhen(StickyMetricsState prev, StickyMetricsState curr) {
+    return prev.currentIndex < 5 && curr.currentIndex >= 2;
+  }
+
+  @override
+  State<FourthSection> createState() => _FourthSectionState();
+}
+
+class _FourthSectionState extends State<FourthSection> {
+  late var _size = context.screenSize;
+  late var _slideStartDelay = widget._slideStartDelay(_size.height);
+  late var _lessThanTabViewPort = widget._isLessThanTabView(_size.width);
+  late var _fontSize = fontSize;
+  late var _skillCardWidth = widget._singleCardWidth(
+    _size.width,
+    _skillCardMinWidth,
+  );
+  late var _skillCardMinWidth = widget._cardMinWidth(
+    _size.width,
+    maxCardWidth: widget.maxCardWidth,
+    isLessThanTabView: _lessThanTabViewPort,
+  );
+
+  double get fontSize => (_size.min * 0.05).clamp(8.0, 20.0);
+
+  @override
   Widget build(BuildContext context) {
+    _whenResize(context.screenSize);
     if (_lessThanTabViewPort) {
-      return SkillsSmallScreenView(
-        metrics: widget._metrics,
-        cardWidth: _skillCardWidth,
-        descriptionFontSize: _fontSize,
-        slideStartDelay: _slideStartDelay,
+      return NotifierBuilder<StickyMetricsNotifier, StickyMetricsState>(
+        buildWhen: widget.notifyOnlyWhen,
+        builder: (context, state) {
+          return SkillsSmallScreenView(
+            cardWidth: _skillCardWidth,
+            descriptionFontSize: _fontSize,
+            slideStartDelay: _slideStartDelay,
+            metrics: state.metricsAt(widget.index),
+          );
+        },
       );
     }
 
-    return SkillsLargeScreenViewWidget(
-      metrics: widget._metrics,
-      cardWidth: _skillCardWidth,
-      descriptionFontSize: _fontSize,
-      slideStartDelay: _slideStartDelay,
+    return NotifierBuilder<StickyMetricsNotifier, StickyMetricsState>(
+      buildWhen: widget.notifyOnlyWhen,
+      builder: (context, state) {
+        return SkillsLargeScreenViewWidget(
+          cardWidth: _skillCardWidth,
+          descriptionFontSize: _fontSize,
+          slideStartDelay: _slideStartDelay,
+          metrics: state.metricsAt(widget.index),
+        );
+      },
     );
   }
 
   void _whenResize(Size windowsSize) {
+    if (_size == windowsSize) return;
     _size = windowsSize;
-    _lessThanTabViewPort = FourthSection._isLessThanTabView(_size.width);
-    _skillCardMinWidth = FourthSection._cardMinWidth(
+    _lessThanTabViewPort = widget._isLessThanTabView(_size.width);
+    _skillCardMinWidth = widget._cardMinWidth(
       _size.width,
-      maxCardWidth: FourthSection.maxCardWidth,
+      maxCardWidth: widget.maxCardWidth,
       isLessThanTabView: _lessThanTabViewPort,
     );
-    _slideStartDelay = FourthSection._slideStartDelay(_size.height);
-    _skillCardWidth =
-        FourthSection._singleCardWidth(_size.width, _skillCardMinWidth);
+    _slideStartDelay = widget._slideStartDelay(_size.height);
+    _skillCardWidth = widget._singleCardWidth(_size.width, _skillCardMinWidth);
     _fontSize = fontSize;
   }
 }

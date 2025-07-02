@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:sidharth/src/common/extensions/build_context.dart';
 import 'package:sidharth/src/common/extensions/iterable.dart';
-import 'package:sidharth/src/common/model/delegate/freezed_widget_delegate.dart';
+import 'package:sidharth/src/common/model/delegate/base_stickable_widget_delegate.dart';
+import 'package:sidharth/src/common/state_management/notifier_consumer.dart';
 import 'package:sidharth/src/common/widgets/freezed_child.dart';
-import 'package:sidharth/src/modules/dashboard/presentation/view_model/scroll_observing_view_model.dart';
-import 'package:stacked/stacked.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/view_model/screen_size_notifier.dart';
 
 class ChildWrapper extends StatefulWidget {
   const ChildWrapper({
-    required this.size,
     required this.index,
-    required this.model,
     required this.delegates,
-    required this.hasInitialized,
+    required this.scrollController,
     super.key,
   });
 
-  final Size size;
   final int index;
-  final bool hasInitialized;
-  final ScrollObservingViewModel model;
-  final List<FreezedWidgetDelegate> delegates;
+  final List<StickableDelegate> delegates;
+  final ScrollController scrollController;
 
   @override
   State<ChildWrapper> createState() => _ChildWrapperState();
@@ -27,51 +24,49 @@ class ChildWrapper extends StatefulWidget {
 
 class _ChildWrapperState extends State<ChildWrapper> {
   late final _key = Key('${widget.index}-Freezed#Child');
-  FreezedWidgetDelegate get _delegate => widget.delegates[widget.index];
-  late var scrollFreezeHeight = _delegate.freezedScrollHeight(widget.size);
+  StickableDelegate get _delegate => widget.delegates[widget.index];
+  late var scrollFreezeHeight = _delegate.minStickableHeight(
+    context.screenSize,
+  );
   late var pastScrolledHeight = _calcPastViewPortHeight();
 
-  late Widget child = createChildWidget();
+  late var _child = _createChildWidget();
 
-  @override
-  void didUpdateWidget(covariant ChildWrapper oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    scrollFreezeHeight = _delegate.freezedScrollHeight(widget.size);
+  void _whenResize(_) {
+    scrollFreezeHeight = _delegate.minStickableHeight(context.screenSize);
     pastScrolledHeight = _calcPastViewPortHeight();
-    child = createChildWidget();
+    _child = _createChildWidget();
   }
 
   @override
-  Widget build(BuildContext context) => child;
+  Widget build(BuildContext context) =>
+      NotifierConsumer<ScreenSizeNotifier, Size>(
+        listener: _whenResize,
+        builder: (context, _) => _child,
+      );
 
-  Widget createChildWidget() {
+  Widget _createChildWidget() {
     return SizedBox(
-      width: widget.size.width,
       height: scrollFreezeHeight,
-      child: ViewModelBuilder.reactive(
-        disposeViewModel: false,
-        viewModelBuilder: () => widget.model,
-        builder: (context, model, child) {
-          return FreezedChild(
-            key: _key,
-            index: widget.index,
-            screenSize: widget.size,
-            currentDelegate: _delegate,
-            delegates: widget.delegates,
-            scrollMetrics: model.metrics,
-            hasInitialized: widget.hasInitialized,
-            pastScrolledHeight: pastScrolledHeight,
-            scrollFreezeHeight: scrollFreezeHeight,
-            setFocusedDelegate: model.setCurrentDelegateState,
-          );
-        },
+      width: context.screenSize.width,
+      child: StickableChild(
+        key: _key,
+        index: widget.index,
+        currentDelegate: _delegate,
+        delegates: widget.delegates,
+        screenSize: context.screenSize,
+        pastScrolledHeight: pastScrolledHeight,
+        scrollFreezeHeight: scrollFreezeHeight,
+        scrollController: widget.scrollController,
+        child: _delegate.child,
       ),
     );
   }
 
   double _calcPastViewPortHeight() {
+    final windowSize = context.screenSize;
     return widget.delegates.transform<double>(
-          (e, result) => e.freezedScrollHeight(widget.size) + (result ?? 0),
+          (e, result) => e.minStickableHeight(windowSize) + (result ?? 0),
           end: widget.index + 1,
         ) ??
         0;

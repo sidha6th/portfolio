@@ -9,7 +9,9 @@ import 'package:sidharth/src/common/model/visit_info/visitor_info.dart';
 import 'package:sidharth/src/core/mixins/logger_mixin.dart';
 
 class VisitorInfoLogger with LoggerMixin {
-  const VisitorInfoLogger();
+  const VisitorInfoLogger._();
+
+  static const instance = VisitorInfoLogger._();
 
   Future<void> logInfo() async {
     if (!kReleaseMode) return;

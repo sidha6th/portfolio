@@ -3,23 +3,40 @@ import 'package:sidharth/gen/fonts.gen.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
 import 'package:sidharth/src/common/constants/durations.dart';
 import 'package:sidharth/src/common/constants/string.dart';
-import 'package:sidharth/src/common/model/freezed_metrics.dart';
+import 'package:sidharth/src/common/extensions/build_context.dart';
+import 'package:sidharth/src/common/model/delegate/base_stickable_widget_delegate.dart';
+import 'package:sidharth/src/common/state_management/notifier_builder.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/view_model/loading_notifier.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/view_model/sticky_metrics_notifier.dart';
 import 'package:sidharth/src/modules/sections/section_1/widgets/animated_hovering_image.dart';
 import 'package:sidharth/src/modules/sections/section_1/widgets/main_image.dart';
 import 'package:sidharth/src/modules/sections/section_1/widgets/name_and_designation.dart';
 
-class FirstSection extends StatefulWidget {
-  const FirstSection(this._metrics, {super.key});
+class FirstSection extends StatefulWidget implements StickableDelegate {
+  const FirstSection(this.index, {super.key});
 
-  final FreezeMetrics _metrics;
+  final int index;
+
+  @override
+  Widget get child => this;
+
+  @override
+  bool get stick => false;
+
+  @override
+  bool get transformHitTests => false;
+
+  @override
+  double minStickableHeight(Size windowSize) {
+    return windowSize.height.clamp(400, double.infinity);
+  }
+
+  @override
+  bool notifyOnlyWhen(_, StickyMetricsState curr) => curr.currentIndex < 1;
 
   @override
   State<FirstSection> createState() => _FirstSectionState();
-
-  static double viewPortSize(Size screenSize) {
-    return screenSize.height.clamp(400, double.infinity);
-  }
 }
 
 class _FirstSectionState extends State<FirstSection> {
@@ -30,65 +47,75 @@ class _FirstSectionState extends State<FirstSection> {
   late var _imageWidth = _calcImageWidth;
   final _scaleDuration = KDurations.ms300;
   late final _portFolioTextWidget = _title;
-  late var _size = widget._metrics.windowSize;
-
-  @override
-  void didUpdateWidget(covariant FirstSection oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    widget._metrics.whenWindowResized(_size, _whenWindowResized);
-  }
+  late var _size = context.screenSize;
 
   @override
   Widget build(BuildContext context) {
-    return TweenAnimationBuilder(
-      duration: _scaleDuration,
-      curve: Curves.fastOutSlowIn,
-      tween: Tween<double>(begin: _maxScale, end: _minScale),
-      builder: (context, value, child) {
-        return Stack(
-          alignment: Alignment.center,
-          children: [
-            MainImageWidget(
-              scale: value,
-              imageWidth: _imageWidth,
-              imageSlideInFrom: _imageSlideInFrom,
-              whenSlideAnimationEnd: _whenSlideAnimationDone,
-            ),
-            NameAndDesignation(metrics: widget._metrics),
-            TransparentBackgroundImageWidget(
-              scale: value,
-              imageWidth: _imageWidth,
-              imageSlideInFrom: _imageSlideInFrom,
-              opacityAnimationDuration: KDurations.ms400,
-            ),
-            _portFolioTextWidget,
-          ],
+    _whenWindowResized(context.screenSize);
+    return NotifierBuilder<LoadingNotifier, LoadingState>(
+      buildWhen: (previous, current) => !current.isLoading,
+      builder: (context, state) {
+        return TweenAnimationBuilder(
+          duration: state.isLoading ? Duration.zero : _scaleDuration,
+          curve: Curves.fastOutSlowIn,
+          tween: Tween<double>(begin: _maxScale, end: _minScale),
+          builder: (context, value, child) {
+            return Stack(
+              alignment: Alignment.center,
+              children: [
+                MainImageWidget(
+                  scale: value,
+                  imageWidth: _imageWidth,
+                  imageSlideInFrom: _imageSlideInFrom,
+                  whenSlideAnimationEnd: _whenSlideAnimationDone,
+                ),
+                NotifierBuilder<StickyMetricsNotifier, StickyMetricsState>(
+                  buildWhen: widget.notifyOnlyWhen,
+                  builder: (context, state) {
+                    return NameAndDesignation(
+                      metrics: state.metricsAt(widget.index),
+                    );
+                  },
+                ),
+                TransparentBackgroundImageWidget(
+                  scale: value,
+                  imageWidth: _imageWidth,
+                  imageSlideInFrom: _imageSlideInFrom,
+                  opacityAnimationDuration: KDurations.ms400,
+                ),
+                _portFolioTextWidget,
+              ],
+            );
+          },
         );
       },
     );
   }
 
   double get _calcImageWidth {
-    return (widget._metrics.windowWidth / 2)
-        .clamp(50.0, (widget._metrics.windowHeight * 0.6).clamp(0.0, 500.0));
+    return (_size.width / 2).clamp(
+      50.0,
+      (_size.height * 0.6).clamp(0.0, 500.0),
+    );
   }
 
   Widget get _title => Positioned(
-        top: 20,
-        left: 20,
-        child: TextWidget(
-          KString.portfolio,
-          style: const TextStyle(
-            fontFamily: FontFamily.cindieMonoD,
-            color: AppColors.white,
-            fontSize: 7,
-          ),
-        ),
-      );
+    top: 20,
+    left: 20,
+    child: TextWidget(
+      KString.portfolio,
+      style: const TextStyle(
+        fontFamily: FontFamily.cindieMonoD,
+        color: AppColors.white,
+        fontSize: 7,
+      ),
+    ),
+  );
 
   void _whenWindowResized(Size windowsSize) {
-    _imageWidth = _calcImageWidth;
+    if (_size == windowsSize) return;
     _size = windowsSize;
+    _imageWidth = _calcImageWidth;
   }
 
   void _whenSlideAnimationDone(_) {

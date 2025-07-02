@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sidharth/gen/assets.gen.dart';
+import 'package:sidharth/src/common/extensions/build_context.dart';
 import 'package:sidharth/src/common/model/freezed_metrics.dart';
 import 'package:sidharth/src/modules/sections/section_4/widgets/shadow_gradient.dart';
 import 'package:sidharth/src/modules/sections/section_4/widgets/skills_card.dart';
@@ -49,7 +50,7 @@ class _VerticalSkillSlidesState extends State<VerticalSkillSlides> {
         _controller.position.maxScrollExtent,
       ),
     );
-    
+
     super.didUpdateWidget(oldWidget);
   }
 
@@ -61,14 +62,16 @@ class _VerticalSkillSlidesState extends State<VerticalSkillSlides> {
 
   @override
   Widget build(BuildContext context) {
-    final visibleHeight = widget.metrics.availableViewPortHeight;
+    final visibleHeight = widget.metrics.availableViewPortHeight(
+      context.screenSize.height,
+    );
     final isVertical = widget.slideDirection == Axis.vertical;
-    final maskHeight = widget.metrics.windowHeight * 0.4;
+    final maskHeight = context.screenSize.height * 0.4;
     final endMaskHeight = visibleHeight * 0.4;
     final cardHeight = widget.cardWidth + 30;
 
     return SizedBox(
-      width: isVertical ? widget.cardWidth : widget.metrics.windowWidth,
+      width: isVertical ? widget.cardWidth : context.screenSize.width,
       height: isVertical ? visibleHeight : cardHeight,
       child: Stack(
         children: [
@@ -89,8 +92,9 @@ class _VerticalSkillSlidesState extends State<VerticalSkillSlides> {
                 return SlidingSkillCard(
                   height: cardHeight,
                   metrics: widget.metrics,
-                  iconPadding:
-                      isVertical ? EdgeInsets.zero : const EdgeInsets.all(20),
+                  iconPadding: isVertical
+                      ? EdgeInsets.zero
+                      : const EdgeInsets.all(20),
                   width: isVertical ? widget.cardWidth * 0.5 : widget.cardWidth,
                   asset: widget.icons[index],
                 );
@@ -101,8 +105,9 @@ class _VerticalSkillSlidesState extends State<VerticalSkillSlides> {
           ),
           if (isVertical) ...{
             Align(
-              alignment:
-                  isVertical ? Alignment.topCenter : Alignment.centerLeft,
+              alignment: isVertical
+                  ? Alignment.topCenter
+                  : Alignment.centerLeft,
               child: IgnorePointer(
                 child: ShadowGradient.start(
                   height: endMaskHeight,

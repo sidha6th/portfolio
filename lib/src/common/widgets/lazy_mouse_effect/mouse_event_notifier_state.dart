@@ -21,7 +21,7 @@ class MouseLazyEffectState {
     );
   }
 
-  MouseLazyEffectState toggleVisiblity(bool visible) {
+  MouseLazyEffectState toggleVisibility(bool visible) {
     return copyWith(visible: visible);
   }
 

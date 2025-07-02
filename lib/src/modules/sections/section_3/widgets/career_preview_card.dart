@@ -1,17 +1,15 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
-import 'package:sidharth/src/common/model/freezed_metrics.dart';
+import 'package:sidharth/src/common/extensions/build_context.dart';
 
 class CareerPreviewCard extends StatefulWidget {
   const CareerPreviewCard({
-    required this.metrics,
     required this.child,
     required this.height,
     super.key,
   });
 
-  final FreezeMetrics metrics;
   final Widget child;
   final double height;
 
@@ -33,8 +31,8 @@ class _CareerPreviewCardState extends State<CareerPreviewCard> {
       child: DottedBorder(
         options: _options,
         child: SizedBox(
-          width: (widget.metrics.windowWidth * 0.3).clamp(200, 300),
           height: widget.height,
+          width: (context.screenSize.width * 0.3).clamp(200, 300),
           child: widget.child,
         ),
       ),

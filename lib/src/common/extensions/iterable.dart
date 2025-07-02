@@ -9,4 +9,9 @@ extension ExtensionOnIterable<T> on Iterable<T> {
     }
     return finalResult;
   }
+
+  T? safeAt(int index) {
+    if (index > length - 1 || index < 0) return null;
+    return elementAt(index);
+  }
 }

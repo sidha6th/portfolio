@@ -87,46 +87,45 @@ class $AssetsImagesPngGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [
-        css,
-        dart,
-        flutter,
-        git,
-        html,
-        image,
-        jetpackCompose,
-        js,
-        kotlin,
-        nodejs,
-        react,
-        scss,
-        swift,
-        ts,
-        unity
-      ];
+    css,
+    dart,
+    flutter,
+    git,
+    html,
+    image,
+    jetpackCompose,
+    js,
+    kotlin,
+    nodejs,
+    react,
+    scss,
+    swift,
+    ts,
+    unity,
+  ];
 }
 
 class $AssetsImagesSvgGen {
   const $AssetsImagesSvgGen();
 
+  /// File path: assets/images/svg/arrow_down.svg
+  String get arrowDown => 'assets/images/svg/arrow_down.svg';
+
   /// File path: assets/images/svg/flutter.svg
-  String get flutter => 'assets/images/svg/flutter_gray.svg';
+  String get flutter => 'assets/images/svg/flutter.svg';
 
   /// List of all assets
-  List<String> get values => [flutter];
+  List<String> get values => [arrowDown, flutter];
 }
 
 class Assets {
-  Assets._();
+  const Assets._();
 
   static const $AssetsImagesGen images = $AssetsImagesGen();
 }
 
 class AssetGenImage {
-  const AssetGenImage(
-    this._assetName, {
-    this.size,
-    this.flavors = const {},
-  });
+  const AssetGenImage(this._assetName, {this.size, this.flavors = const {}});
 
   final String _assetName;
 
@@ -154,7 +153,7 @@ class AssetGenImage {
     bool gaplessPlayback = true,
     bool isAntiAlias = false,
     String? package,
-    FilterQuality filterQuality = FilterQuality.low,
+    FilterQuality filterQuality = FilterQuality.medium,
     int? cacheWidth,
     int? cacheHeight,
   }) {
@@ -186,15 +185,8 @@ class AssetGenImage {
     );
   }
 
-  ImageProvider provider({
-    AssetBundle? bundle,
-    String? package,
-  }) {
-    return AssetImage(
-      _assetName,
-      bundle: bundle,
-      package: package,
-    );
+  ImageProvider provider({AssetBundle? bundle, String? package}) {
+    return AssetImage(_assetName, bundle: bundle, package: package);
   }
 
   String get path => _assetName;

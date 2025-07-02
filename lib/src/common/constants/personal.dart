@@ -12,18 +12,13 @@ class KPersonal {
   static const skillsDescription =
       'Every project, every challenge, and every solution—these are the tools that have shaped my journey as a developer.';
   static final careerStartDate = DateTime(2021, 11);
-  static final milestoneStartDates = {
-    DateTime(2021, 11),
-    DateTime(2022, 8),
-    DateTime(2023, 8),
-    DateTime(2024, 10),
-  };
+  static final milestoneStartDates = careerJourney.map((e) => e.begin).toSet();
   static final careerJourney = <ExperienceDetails>[
     ExperienceDetails(
       org: 'Brototype',
       designation: 'Flutter Intern',
       begin: DateTime(2021, 11),
-      end: DateTime(2022, 6),
+      end: DateTime(2022, 8),
     ),
     ExperienceDetails(
       org: 'White Rabbit',
@@ -49,10 +44,7 @@ class KPersonal {
       label: 'Instagram',
       urlAsString: 'https://www.instagram.com/sidha6th_r/',
     ),
-    const Social(
-      label: 'Github',
-      urlAsString: 'https://github.com/sidha6th',
-    ),
+    const Social(label: 'Github', urlAsString: 'https://github.com/sidha6th'),
     const Social(
       label: 'LinkedIn',
       urlAsString: 'https://www.linkedin.com/in/sidharth-r-9889a3219/',
@@ -81,15 +73,12 @@ class KPersonal {
       Assets.images.png.nodejs,
       Assets.images.png.unity,
       Assets.images.png.swift,
-    ]
+    ],
   ];
 }
 
 class Social {
-  const Social({
-    required this.label,
-    required this.urlAsString,
-  });
+  const Social({required this.label, required this.urlAsString});
 
   final String label;
   final String urlAsString;

@@ -1,35 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
+import 'package:sidharth/src/common/extensions/build_context.dart';
+import 'package:sidharth/src/common/state_management/notifier_builder.dart';
 import 'package:sidharth/src/common/widgets/box/colored_sided_box.dart';
-import 'package:sidharth/src/modules/dashboard/presentation/view_model/loading_handler_view_model.dart';
-import 'package:stacked/stacked.dart';
+import 'package:sidharth/src/modules/dashboard/presentation/view_model/loading_notifier.dart';
 
 class FullScreenLoadingIndicator extends StatelessWidget {
-  const FullScreenLoadingIndicator({
-    required this.size,
-    required this.loadingController,
-    super.key,
-  });
-
-  final Size size;
-  final LoadingHandlerViewModel loadingController;
+  const FullScreenLoadingIndicator({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder.reactive(
-      disposeViewModel: false,
-      viewModelBuilder: () => loadingController,
-      builder: (context, loadingHandler, child) {
-        if (!loadingHandler.isLoading) return const SizedBox.shrink();
+    return NotifierBuilder<LoadingNotifier, LoadingState>(
+      builder: (context, state) {
+        if (!state.isLoading) return const SizedBox.shrink();
 
         return ColoredSizedBox(
           color: AppColors.black,
-          width: size.width,
-          height: size.height,
+          width: context.screenSize.width,
+          height: context.screenSize.height,
           child: Center(
             child: CircularProgressIndicator(
+              value: state.progress,
               color: AppColors.offWhite,
-              value: loadingHandler.progress,
             ),
           ),
         );

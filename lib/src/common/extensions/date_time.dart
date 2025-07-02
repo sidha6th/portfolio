@@ -20,5 +20,13 @@ extension ExtensionOnDateTime on DateTime {
     return hour.toString();
   }
 
+  bool sameOrAfter(DateTime other) {
+    return isAtSameMomentAs(other) || isAfter(other);
+  }
+
+  bool sameOrBefore(DateTime other) {
+    return isAtSameMomentAs(other) || isBefore(other);
+  }
+
   String _month(DateTime date) => KString.months[date.month - 1];
 }
