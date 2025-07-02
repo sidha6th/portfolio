@@ -61,11 +61,13 @@ class _StickableChildState extends State<StickableChild> {
           ? widget.child
           : NotifierBuilder<StickyMetricsNotifier, StickyMetricsState>(
               builder: (context, state) {
-                return Transform.translate(
-                  key: _key,
-                  transformHitTests: _delegate.transformHitTests,
-                  offset: Offset(0, state.metricsAt(widget.index).freezedDy),
-                  child: widget.child,
+                return RepaintBoundary(
+                  child: Transform.translate(
+                    key: _key,
+                    transformHitTests: _delegate.transformHitTests,
+                    offset: Offset(0, state.metricsAt(widget.index).freezedDy),
+                    child: widget.child,
+                  ),
                 );
               },
             ),

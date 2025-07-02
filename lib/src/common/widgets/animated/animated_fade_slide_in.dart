@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sidharth/src/common/constants/durations.dart';
 
-class FadeSlideIn extends StatefulWidget {
-  const FadeSlideIn({
+class AnimatedFadeSlideIn extends StatefulWidget {
+  const AnimatedFadeSlideIn({
     required this.child,
     required this.offset,
     required this.opacity,
@@ -24,17 +24,17 @@ class FadeSlideIn extends StatefulWidget {
   final Duration? opacityDuration;
 
   @override
-  State<FadeSlideIn> createState() => _FadeSlideInState();
+  State<AnimatedFadeSlideIn> createState() => _AnimatedFadeSlideInState();
 }
 
-class _FadeSlideInState extends State<FadeSlideIn> {
+class _AnimatedFadeSlideInState extends State<AnimatedFadeSlideIn> {
   late var child = widget.child;
 
   @override
-  void didUpdateWidget(covariant FadeSlideIn oldWidget) {
+  void didUpdateWidget(covariant AnimatedFadeSlideIn oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget == oldWidget) return;
-    
+
     child = widget.child;
   }
 

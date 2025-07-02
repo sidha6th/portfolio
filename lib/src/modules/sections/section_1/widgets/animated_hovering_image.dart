@@ -1,7 +1,7 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:sidharth/gen/assets.gen.dart';
 import 'package:sidharth/src/common/constants/durations.dart';
+import 'package:sidharth/src/common/widgets/animated/tween_slide_in_down.dart';
 import 'package:sidharth/src/common/widgets/custom_mouse_region.dart';
 
 class TransparentBackgroundImageWidget extends StatefulWidget {
@@ -33,7 +33,7 @@ class _TransparentBackgroundImageWidgetState
   void didUpdateWidget(covariant TransparentBackgroundImageWidget oldWidget) {
     if (widget.scale > 1) {
       child = ClipRect(
-        child: SlideInDown(
+        child: TweenSlideInDown(
           from: widget.imageSlideInFrom,
           onFinish: _whenSlideAnimationFinished,
           child: Transform.scale(
@@ -68,12 +68,12 @@ class _TransparentBackgroundImageWidgetState
   }
 
   SizedBox image() => SizedBox(
-        width: widget.imageWidth,
-        child: Assets.images.png.image.image(
-          fit: BoxFit.cover,
-          colorBlendMode: BlendMode.darken,
-        ),
-      );
+    width: widget.imageWidth,
+    child: Assets.images.png.image.image(
+      fit: BoxFit.cover,
+      colorBlendMode: BlendMode.darken,
+    ),
+  );
 
   void _onEnter(_) {
     if (visible) return;
@@ -89,15 +89,12 @@ class _TransparentBackgroundImageWidgetState
     });
   }
 
-  void _whenSlideAnimationFinished(_) {
-    Future.delayed(
-      KDurations.ms100,
-      () {
-        setState(() {
-          visible = false;
-        });
-      },
-    );
+  void _whenSlideAnimationFinished() {
+    Future.delayed(KDurations.ms100, () {
+      setState(() {
+        visible = false;
+      });
+    });
   }
 
   @override

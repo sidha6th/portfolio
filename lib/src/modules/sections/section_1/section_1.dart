@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:sidharth/gen/fonts.gen.dart';
-import 'package:sidharth/src/common/constants/colors.dart';
 import 'package:sidharth/src/common/constants/durations.dart';
-import 'package:sidharth/src/common/constants/string.dart';
 import 'package:sidharth/src/common/extensions/build_context.dart';
 import 'package:sidharth/src/common/model/delegate/base_stickable_widget_delegate.dart';
 import 'package:sidharth/src/common/state_management/notifier_builder.dart';
-import 'package:sidharth/src/common/widgets/text/text_widget.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/view_model/loading_notifier.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/view_model/sticky_metrics_notifier.dart';
 import 'package:sidharth/src/modules/sections/section_1/widgets/animated_hovering_image.dart';
 import 'package:sidharth/src/modules/sections/section_1/widgets/main_image.dart';
 import 'package:sidharth/src/modules/sections/section_1/widgets/name_and_designation.dart';
+import 'package:sidharth/src/modules/sections/section_1/widgets/portfolio_year_indicator.dart';
 
 class FirstSection extends StatefulWidget implements StickableDelegate {
   const FirstSection(this.index, {super.key});
@@ -46,7 +43,6 @@ class _FirstSectionState extends State<FirstSection> {
   final curve = Curves.fastOutSlowIn;
   late var _imageWidth = _calcImageWidth;
   final _scaleDuration = KDurations.ms300;
-  late final _portFolioTextWidget = _title;
   late var _size = context.screenSize;
 
   @override
@@ -54,9 +50,9 @@ class _FirstSectionState extends State<FirstSection> {
     _whenWindowResized(context.screenSize);
     return NotifierBuilder<LoadingNotifier, LoadingState>(
       buildWhen: (previous, current) => !current.isLoading,
-      builder: (context, state) {
+      builder: (context, loadingState) {
         return TweenAnimationBuilder(
-          duration: state.isLoading ? Duration.zero : _scaleDuration,
+          duration: loadingState.isLoading ? Duration.zero : _scaleDuration,
           curve: Curves.fastOutSlowIn,
           tween: Tween<double>(begin: _maxScale, end: _minScale),
           builder: (context, value, child) {
@@ -71,11 +67,9 @@ class _FirstSectionState extends State<FirstSection> {
                 ),
                 NotifierBuilder<StickyMetricsNotifier, StickyMetricsState>(
                   buildWhen: widget.notifyOnlyWhen,
-                  builder: (context, state) {
-                    return NameAndDesignation(
-                      metrics: state.metricsAt(widget.index),
-                    );
-                  },
+                  builder: (context, state) => NameAndDesignation(
+                    metrics: state.metricsAt(widget.index),
+                  ),
                 ),
                 TransparentBackgroundImageWidget(
                   scale: value,
@@ -83,7 +77,7 @@ class _FirstSectionState extends State<FirstSection> {
                   imageSlideInFrom: _imageSlideInFrom,
                   opacityAnimationDuration: KDurations.ms400,
                 ),
-                _portFolioTextWidget,
+                PortfolioYearIndicator(loading: loadingState.isLoading),
               ],
             );
           },
@@ -99,26 +93,13 @@ class _FirstSectionState extends State<FirstSection> {
     );
   }
 
-  Widget get _title => Positioned(
-    top: 20,
-    left: 20,
-    child: TextWidget(
-      KString.portfolio,
-      style: const TextStyle(
-        fontFamily: FontFamily.cindieMonoD,
-        color: AppColors.white,
-        fontSize: 7,
-      ),
-    ),
-  );
-
   void _whenWindowResized(Size windowsSize) {
     if (_size == windowsSize) return;
     _size = windowsSize;
     _imageWidth = _calcImageWidth;
   }
 
-  void _whenSlideAnimationDone(_) {
+  void _whenSlideAnimationDone() {
     setState(() => _minScale = 1);
   }
 }

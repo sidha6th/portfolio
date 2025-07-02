@@ -1,6 +1,6 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:sidharth/gen/assets.gen.dart';
+import 'package:sidharth/src/common/widgets/animated/tween_slide_in_down.dart';
 
 class MainImageWidget extends StatefulWidget {
   const MainImageWidget({
@@ -14,7 +14,7 @@ class MainImageWidget extends StatefulWidget {
   final double scale;
   final double imageWidth;
   final double imageSlideInFrom;
-  final void Function(AnimateDoDirection)? whenSlideAnimationEnd;
+  final VoidCallback? whenSlideAnimationEnd;
 
   @override
   State<MainImageWidget> createState() => _MainImageWidgetState();
@@ -27,8 +27,7 @@ class _MainImageWidgetState extends State<MainImageWidget> {
   void didUpdateWidget(covariant MainImageWidget oldWidget) {
     if (widget.scale > 1) {
       child = ClipRect(
-        child: SlideInDown(
-          animate: widget.scale > 1,
+        child: TweenSlideInDown(
           from: widget.imageSlideInFrom,
           onFinish: widget.whenSlideAnimationEnd,
           child: Transform.scale(
@@ -51,10 +50,10 @@ class _MainImageWidgetState extends State<MainImageWidget> {
   Widget build(BuildContext context) => IgnorePointer(child: child);
 
   SizedBox image() => SizedBox(
-        width: widget.imageWidth,
-        child: Assets.images.jpeg.image.image(
-          fit: BoxFit.cover,
-          colorBlendMode: BlendMode.darken,
-        ),
-      );
+    width: widget.imageWidth,
+    child: Assets.images.jpeg.image.image(
+      fit: BoxFit.cover,
+      colorBlendMode: BlendMode.darken,
+    ),
+  );
 }
