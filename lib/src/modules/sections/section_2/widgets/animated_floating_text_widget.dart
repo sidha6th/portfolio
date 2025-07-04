@@ -33,8 +33,10 @@ class AnimatedFloatingTextWidget extends StatefulWidget {
 
 class _AnimatedFloatingTextWidgetState
     extends State<AnimatedFloatingTextWidget> {
-  late var _size = context.screenSize;
-  late var _child = BlueGradientTextBoxWidget(widget.text, screenSize: _size);
+  late var _child = BlueGradientTextBoxWidget(
+    widget.text,
+    screenSize: context.screenSize,
+  );
 
   @override
   void didUpdateWidget(covariant AnimatedFloatingTextWidget oldWidget) {
@@ -44,15 +46,13 @@ class _AnimatedFloatingTextWidgetState
 
   @override
   Widget build(BuildContext context) {
-    final offset = Offset(
-      (widget.initialDx + widget.dx),
-      (widget.initialDy + widget.dy),
-    );
-
     final turns = (widget.initialAngle + widget.angle);
 
     return FractionalTranslation(
-      translation: offset,
+      translation: Offset(
+        (widget.initialDx + widget.dx),
+        (widget.initialDy + widget.dy),
+      ),
       transformHitTests: false,
       child: Transform.rotate(
         angle: turns * pi,
@@ -65,8 +65,7 @@ class _AnimatedFloatingTextWidgetState
   }
 
   void _whenResized(Size windowsSize) {
-    if (_size == windowsSize) return;
-    _size = windowsSize;
-    _child = BlueGradientTextBoxWidget(widget.text, screenSize: _size);
+    if (_child.screenSize == windowsSize) return;
+    _child = BlueGradientTextBoxWidget(widget.text, screenSize: windowsSize);
   }
 }

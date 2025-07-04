@@ -8,7 +8,7 @@ import 'package:sidharth/src/common/extensions/build_context.dart';
 import 'package:sidharth/src/common/helper/methods.dart';
 import 'package:sidharth/src/common/model/delegate/base_stickable_widget_delegate.dart';
 import 'package:sidharth/src/common/model/freezed_metrics.dart';
-import 'package:sidharth/src/common/state_management/notifier_consumer.dart';
+import 'package:sidharth/src/common/state_management/notifier_listener.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/view_model/sticky_metrics_notifier.dart';
 import 'package:sidharth/src/modules/sections/section_2/widgets/animated_floating_text_widget.dart';
@@ -19,7 +19,7 @@ class SecondSection extends StatefulWidget implements StickableDelegate {
   final int index;
 
   @override
-  double minStickableHeight(Size windowSize) => windowSize.height;
+  double height(Size windowSize) => windowSize.height;
 
   @override
   Widget get child => this;
@@ -43,7 +43,7 @@ class _SecondSectionState extends State<SecondSection> {
   late var _size = context.screenSize;
   late var _maxOffset = stickableHeight + _size.height;
   late var _metrics = FreezeMetrics.zero(stickableHeight);
-  late var stickableHeight = widget.minStickableHeight(context.screenSize);
+  late var stickableHeight = widget.height(context.screenSize);
   late var _dy = 1.0;
   late var _dx = 1.0;
   late var _angle = 1.0;
@@ -51,7 +51,6 @@ class _SecondSectionState extends State<SecondSection> {
   @override
   void didUpdateWidget(covariant SecondSection oldWidget) {
     _whenResize(context.screenSize);
-    _calcTransformMetrics();
     super.didUpdateWidget(oldWidget);
   }
 
@@ -107,62 +106,67 @@ class _SecondSectionState extends State<SecondSection> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  NotifierConsumer<StickyMetricsNotifier, StickyMetricsState>(
-                    listenWhen: widget.notifyOnlyWhen,
-                    buildWhen: widget.notifyOnlyWhen,
-                    listener: (state) {
-                      _metrics = state.metricsAt(widget.index);
-                      _calcTransformMetrics();
-                    },
-                    builder: (context, state) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          AnimatedFloatingTextWidget(
-                            text: 'Why can’t you just make an app overnight?',
-                            initialDy: 1.5,
-                            initialDx: -0.4,
-                            angle: -_angle,
-                            dx: -_dx,
-                            dy: -_dy,
+                  StatefulBuilder(
+                    builder: (context, setState) =>
+                        NotifierListener<
+                          StickyMetricsNotifier,
+                          StickyMetricsState
+                        >(
+                          listenWhen: widget.notifyOnlyWhen,
+                          listener: (state) {
+                            _metrics = state.metricsAt(widget.index);
+                            setState(_calcTransformMetrics);
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              AnimatedFloatingTextWidget(
+                                text:
+                                    'Why can’t you just make an app overnight?',
+                                initialDy: 1.8,
+                                initialDx: -0.4,
+                                angle: -_angle,
+                                dx: -_dx,
+                                dy: -_dy,
+                              ),
+                              AnimatedFloatingTextWidget(
+                                text: 'My computer is slow, can you fix it?',
+                                initialDx: 0.3,
+                                initialDy: -0.2,
+                                angle: -_angle,
+                                dx: _dx,
+                                dy: -_dy,
+                              ),
+                              AnimatedFloatingTextWidget(
+                                text:
+                                    'Why do apps need updates? Just make it perfect!',
+                                initialDx: -0.3,
+                                initialDy: 0.8,
+                                angle: _angle,
+                                dx: -_dx,
+                                dy: _dy,
+                              ),
+                              AnimatedFloatingTextWidget(
+                                text:
+                                    'So, coding is just copying from Google, right?',
+                                angle: _angle,
+                                initialDy: -0.5,
+                                initialDx: 0.4,
+                                dx: _dx,
+                                dy: -_dy,
+                              ),
+                              AnimatedFloatingTextWidget(
+                                text:
+                                    'Can you add a feature that reads my mind?',
+                                initialDx: 0.4,
+                                initialDy: -1,
+                                angle: -_angle,
+                                dx: _dx,
+                                dy: _dy,
+                              ),
+                            ],
                           ),
-                          AnimatedFloatingTextWidget(
-                            text: 'My computer is slow, can you fix it?',
-                            initialDx: 0.3,
-                            initialDy: -0.2,
-                            angle: -_angle,
-                            dx: _dx,
-                            dy: -_dy,
-                          ),
-                          AnimatedFloatingTextWidget(
-                            text:
-                                'Why do apps need updates? Just make it perfect!',
-                            initialDx: -0.3,
-                            initialDy: 0.8,
-                            angle: _angle,
-                            dx: -_dx,
-                            dy: _dy,
-                          ),
-                          AnimatedFloatingTextWidget(
-                            text:
-                                'So, coding is just copying from Google, right?',
-                            angle: _angle,
-                            initialDy: -0.5,
-                            initialDx: 0.4,
-                            dx: _dx,
-                            dy: -_dy,
-                          ),
-                          AnimatedFloatingTextWidget(
-                            text: 'Can you add a feature that reads my mind?',
-                            initialDx: 0.4,
-                            initialDy: -1,
-                            angle: -_angle,
-                            dx: _dx,
-                            dy: _dy,
-                          ),
-                        ],
-                      );
-                    },
+                        ),
                   ),
                 ],
               ),
@@ -176,11 +180,12 @@ class _SecondSectionState extends State<SecondSection> {
   void _whenResize(Size windowsSize) {
     _size = windowsSize;
     _maxOffset = _metrics.totalHeight + _size.height;
+    _calcTransformMetrics();
   }
 
   void _calcTransformMetrics() {
     final offset = normalize(
-      value: _metrics.bottomDy - (_size.height * 0.1),
+      value: _metrics.bottomDy - (_size.height * 0.01),
       end: _maxOffset,
     );
 

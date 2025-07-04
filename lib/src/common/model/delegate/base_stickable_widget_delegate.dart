@@ -11,7 +11,7 @@ abstract interface class StickableDelegate {
   final bool stick;
   final Widget child;
   final bool transformHitTests;
-  double minStickableHeight(Size windowSize);
+  double height(Size windowSize);
 
   bool notifyOnlyWhen(StickyMetricsState prev, StickyMetricsState curr) {
     return prev != curr;

@@ -24,7 +24,7 @@ class ThirdSection extends StatefulWidget implements StickableDelegate {
   Widget get child => this;
 
   @override
-  double minStickableHeight(Size windowSize) {
+  double height(Size windowSize) {
     return (Misc.careerTimeLineStickHeight +
         (windowSize.height / 2) +
         (windowSize.width.clamp(0, Misc.maxViewPortWidth) / 2));

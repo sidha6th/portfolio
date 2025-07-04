@@ -28,7 +28,7 @@ class _MouseFollowEffectState extends State<MouseFollowEffect>
   late final halfInnerDotDiameter = innerDotDiameter / 2;
   late final _mouseEventNotifier = ValueNotifier(const MouseLazyEffectState());
 
-  Future<void> _tick(_) async {
+  void _tick(_) {
     if (mousePosition == null) return _ticker.stop();
 
     final outerCircleOffset = _mouseEventNotifier.value.outerCircleOffset;
@@ -67,7 +67,7 @@ class _MouseFollowEffectState extends State<MouseFollowEffect>
     super.dispose();
   }
 
-  Future<void> _startTicker(Offset offset) async {
+  void _startTicker(Offset offset) {
     mousePosition = offset;
     if (!_ticker.isActive) unawaited(_ticker.start());
     if (!_mouseEventNotifier.value.visible) {

@@ -25,15 +25,13 @@ class ChildWrapper extends StatefulWidget {
 class _ChildWrapperState extends State<ChildWrapper> {
   late final _key = Key('${widget.index}-Freezed#Child');
   StickableDelegate get _delegate => widget.delegates[widget.index];
-  late var scrollFreezeHeight = _delegate.minStickableHeight(
-    context.screenSize,
-  );
+  late var scrollFreezeHeight = _delegate.height(context.screenSize);
   late var pastScrolledHeight = _calcPastViewPortHeight();
 
   late var _child = _createChildWidget();
 
   void _whenResize(_) {
-    scrollFreezeHeight = _delegate.minStickableHeight(context.screenSize);
+    scrollFreezeHeight = _delegate.height(context.screenSize);
     pastScrolledHeight = _calcPastViewPortHeight();
     _child = _createChildWidget();
   }
@@ -66,7 +64,7 @@ class _ChildWrapperState extends State<ChildWrapper> {
   double _calcPastViewPortHeight() {
     final windowSize = context.screenSize;
     return widget.delegates.transform<double>(
-          (e, result) => e.minStickableHeight(windowSize) + (result ?? 0),
+          (e, result) => e.height(windowSize) + (result ?? 0),
           end: widget.index + 1,
         ) ??
         0;

@@ -25,7 +25,7 @@ class FifthSection extends StatefulWidget implements StickableDelegate {
   Widget get child => this;
 
   @override
-  double minStickableHeight(Size windowSize) {
+  double height(Size windowSize) {
     return max(windowSize.width, windowSize.height) + (windowSize.height / 2);
   }
 
@@ -48,7 +48,7 @@ class _FifthSectionState extends State<FifthSection> {
   double _offsetToScroll = 0;
   late var _size = context.screenSize;
   final _scrollController = ScrollController();
-  late var _metrics = FreezeMetrics.zero(widget.minStickableHeight(_size));
+  late var _metrics = FreezeMetrics.zero(widget.height(_size));
   late var socialMediaTextWidgets = _getSocialMediaTextWidgets();
 
   List _getSocialMediaTextWidgets() {
@@ -178,7 +178,7 @@ class _FifthSectionState extends State<FifthSection> {
     _scroll();
   }
 
-  Future<void> _scroll() async {
+  void _scroll() {
     _offsetToScroll = (_metrics.bottomDy - _size.height).clamp(
       0.0,
       _scrollController.position.maxScrollExtent,

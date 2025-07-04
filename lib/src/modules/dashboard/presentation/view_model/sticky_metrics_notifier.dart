@@ -40,8 +40,7 @@ class StickyMetricsState {
       currentChildPosition: 0,
       metrics: List.generate(
         delegates.length,
-        (index) =>
-            FreezeMetrics.zero(delegates[index].minStickableHeight(windowSize)),
+        (index) => FreezeMetrics.zero(delegates[index].height(windowSize)),
         growable: false,
       ),
     );

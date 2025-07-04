@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show PointerHoverEvent;
 import 'package:flutter_svg/svg.dart' show SvgPicture;
 import 'package:sidharth/gen/assets.gen.dart';
 import 'package:sidharth/gen/fonts.gen.dart';
@@ -32,84 +31,50 @@ class _MadeWithFlutterIndicatingWidgetState
     width: 12,
   );
 
-  bool visible = false;
-  double opacity = 0;
-  Offset? position;
+  bool _visible = false;
+  double _opacity = 0;
 
   @override
   void didUpdateWidget(covariant MadeWithFlutterIndicatingWidget oldWidget) {
-    opacity =
+    _opacity =
         widget.offsetToScroll >=
             widget.scrollController.position.maxScrollExtent
         ? 1
         : 0;
-    visible = opacity > 0;
+    _visible = _opacity > 0;
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!visible) return const SizedBox.shrink();
-    return Stack(
-      children: [
-        AnimatedOpacity(
-          opacity: opacity,
-          onEnd: _onAnimationEnd,
-          duration: KDurations.ms200,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                MouseRegion(
-                  cursor: SystemMouseCursors.none,
-                  onExit: _onHoverEnd,
-                  onHover: _onHover,
-                  opaque: false,
-                  child: TextWidget(
-                    margin: EdgeInsets.only(
-                      top: 10,
-                      bottom: 10,
-                      left: 10,
-                      right: position == null ? 5 : 10,
-                    ),
-                    KString.madeWithFlutter,
-                    style: TextStyle(
-                      fontSize: (widget.width * 0.013).clamp(1, 5),
-                      fontFamily: FontFamily.cindieMonoD,
-                      color: AppColors.black45,
-                    ),
-                    softWrap: false,
-                  ),
-                ),
-                if (position == null) flutterSvgWidget,
-              ],
+    if (!_visible) return const SizedBox.shrink();
+    return AnimatedOpacity(
+      opacity: _opacity,
+      duration: KDurations.ms200,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextWidget(
+              margin: const EdgeInsets.only(
+                top: 10,
+                bottom: 10,
+                left: 10,
+                right: 5,
+              ),
+              KString.madeWithFlutter,
+              style: TextStyle(
+                fontSize: (widget.width * 0.013).clamp(1, 5),
+                fontFamily: FontFamily.cindieMonoD,
+                color: AppColors.black45,
+              ),
+              softWrap: false,
             ),
-          ),
+            flutterSvgWidget,
+          ],
         ),
-        if (position != null)
-          Positioned(
-            left: position!.dx,
-            top: position!.dy,
-            child: flutterSvgWidget,
-          ),
-      ],
+      ),
     );
-  }
-
-  void _onHover(PointerHoverEvent event) {
-    setState(() {
-      position = Offset(event.localPosition.dx + 6, event.localPosition.dy + 7);
-    });
-  }
-
-  void _onHoverEnd(_) {
-    setState(() {
-      position = null;
-    });
-  }
-
-  void _onAnimationEnd() {
-    visible = opacity > 0;
   }
 }

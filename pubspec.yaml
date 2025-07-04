@@ -2,7 +2,7 @@ name: sidharth
 description: "Personal Portfolio built with Flutter Web"
 publish_to: "none"
 
-version: 0.5.3
+version: 0.5.4
 
 environment:
   sdk: ^3.8.1

@@ -31,7 +31,7 @@ class FourthSection extends StatefulWidget implements StickableDelegate {
   }
 
   @override
-  double minStickableHeight(Size windowSize) {
+  double height(Size windowSize) {
     final lessThanTabViewPort = _isLessThanTabView(windowSize.width);
     final delay = _slideStartDelay(windowSize.height);
     final minWidth = _cardMinWidth(

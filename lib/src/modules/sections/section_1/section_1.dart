@@ -25,7 +25,7 @@ class FirstSection extends StatefulWidget implements StickableDelegate {
   bool get transformHitTests => false;
 
   @override
-  double minStickableHeight(Size windowSize) {
+  double height(Size windowSize) {
     return windowSize.height.clamp(400, double.infinity);
   }
 
