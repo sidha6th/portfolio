@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:sidharth/gen/fonts.gen.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
 import 'package:sidharth/src/common/constants/string.dart';
-import 'package:sidharth/src/common/state_management/notifier_builder.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/view_model/loading_notifier.dart';
+import 'package:syncx/syncx.dart';
 
 class LoadingInfoTextWidget extends StatelessWidget {
   const LoadingInfoTextWidget({super.key});

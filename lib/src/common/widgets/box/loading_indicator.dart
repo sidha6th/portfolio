@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sidharth/src/common/constants/colors.dart';
 import 'package:sidharth/src/common/extensions/build_context.dart';
-import 'package:sidharth/src/common/state_management/notifier_builder.dart';
 import 'package:sidharth/src/common/widgets/box/colored_sided_box.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/view_model/loading_notifier.dart';
+import 'package:syncx/syncx.dart';
 
 class FullScreenLoadingIndicator extends StatelessWidget {
   const FullScreenLoadingIndicator({super.key});

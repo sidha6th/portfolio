@@ -10,11 +10,11 @@ import 'package:sidharth/src/common/extensions/build_context.dart';
 import 'package:sidharth/src/common/extensions/size.dart';
 import 'package:sidharth/src/common/model/delegate/base_stickable_widget_delegate.dart';
 import 'package:sidharth/src/common/model/freezed_metrics.dart';
-import 'package:sidharth/src/common/state_management/notifier_consumer.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/view_model/sticky_metrics_notifier.dart';
 import 'package:sidharth/src/modules/sections/section_5/widgets/launchable_text_widget.dart';
 import 'package:sidharth/src/modules/sections/section_5/widgets/made_with_flutter_indicating_widget.dart';
+import 'package:syncx/syncx.dart';
 
 class FifthSection extends StatefulWidget implements StickableDelegate {
   const FifthSection(this.index, {super.key});

@@ -8,12 +8,11 @@ import 'package:sidharth/src/common/extensions/build_context.dart';
 import 'package:sidharth/src/common/extensions/date_time.dart';
 import 'package:sidharth/src/common/model/delegate/base_stickable_widget_delegate.dart';
 import 'package:sidharth/src/common/model/freezed_metrics.dart';
-import 'package:sidharth/src/common/state_management/notifier_builder.dart';
-import 'package:sidharth/src/common/state_management/notifier_listener.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/view_model/sticky_metrics_notifier.dart';
 import 'package:sidharth/src/modules/sections/section_3/widgets/experience_wheel_card_widget.dart';
 import 'package:sidharth/src/modules/sections/section_3/widgets/time_line_widget.dart';
 import 'package:sidharth/src/modules/sections/section_3/widgets/year_indicator_text_widget.dart';
+import 'package:syncx/syncx.dart';
 
 class ThirdSection extends StatefulWidget implements StickableDelegate {
   const ThirdSection(this.index, {super.key});

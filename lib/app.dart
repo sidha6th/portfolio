@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart'
     show MaterialApp, StatelessWidget, Widget, BuildContext;
 import 'package:sidharth/src/common/extensions/build_context.dart';
-import 'package:sidharth/src/common/state_management/notifier_register.dart';
 import 'package:sidharth/src/core/theme/theme.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/dashboard.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/view_model/loading_notifier.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/view_model/screen_size_notifier.dart';
+import 'package:syncx/syncx.dart';
 
 class App extends StatelessWidget {
   const App({super.key});

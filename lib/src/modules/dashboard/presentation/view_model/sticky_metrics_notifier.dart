@@ -3,9 +3,9 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:sidharth/src/common/model/delegate/base_stickable_widget_delegate.dart';
 import 'package:sidharth/src/common/model/freezed_metrics.dart';
-import 'package:sidharth/src/common/state_management/base_notifier.dart';
+import 'package:syncx/syncx.dart';
 
-class StickyMetricsNotifier extends BaseNotifier<StickyMetricsState> {
+class StickyMetricsNotifier extends Notifier<StickyMetricsState> {
   StickyMetricsNotifier(super.state);
 
   void onChangeScrollPosition(double position) {

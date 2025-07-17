@@ -3,10 +3,10 @@ import 'package:sidharth/src/common/constants/personal.dart';
 import 'package:sidharth/src/common/extensions/build_context.dart';
 import 'package:sidharth/src/common/extensions/size.dart';
 import 'package:sidharth/src/common/model/delegate/base_stickable_widget_delegate.dart';
-import 'package:sidharth/src/common/state_management/notifier_builder.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/view_model/sticky_metrics_notifier.dart';
 import 'package:sidharth/src/modules/sections/section_4/widgets/views/large_screen_view.dart';
 import 'package:sidharth/src/modules/sections/section_4/widgets/views/small_screen_view.dart';
+import 'package:syncx/syncx.dart';
 
 class FourthSection extends StatefulWidget implements StickableDelegate {
   const FourthSection(this.index, {super.key});

@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:sidharth/src/common/state_management/base_notifier.dart';
+import 'package:flutter/material.dart' show Size;
+import 'package:syncx/syncx.dart';
 
-class ScreenSizeNotifier extends BaseNotifier<Size> {
+class ScreenSizeNotifier extends Notifier<Size> {
   ScreenSizeNotifier(super.state);
 
   void onChangeSize(Size newSize) => setState(newSize);

@@ -8,10 +8,10 @@ import 'package:sidharth/src/common/extensions/build_context.dart';
 import 'package:sidharth/src/common/helper/methods.dart';
 import 'package:sidharth/src/common/model/delegate/base_stickable_widget_delegate.dart';
 import 'package:sidharth/src/common/model/freezed_metrics.dart';
-import 'package:sidharth/src/common/state_management/notifier_listener.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/view_model/sticky_metrics_notifier.dart';
 import 'package:sidharth/src/modules/sections/section_2/widgets/animated_floating_text_widget.dart';
+import 'package:syncx/syncx.dart';
 
 class SecondSection extends StatefulWidget implements StickableDelegate {
   const SecondSection(this.index, {super.key});

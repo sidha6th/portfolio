@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:sidharth/src/common/constants/durations.dart';
 import 'package:sidharth/src/common/extensions/build_context.dart';
 import 'package:sidharth/src/common/model/delegate/base_stickable_widget_delegate.dart';
-import 'package:sidharth/src/common/state_management/notifier_builder.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/view_model/loading_notifier.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/view_model/sticky_metrics_notifier.dart';
 import 'package:sidharth/src/modules/sections/section_1/widgets/animated_hovering_image.dart';
 import 'package:sidharth/src/modules/sections/section_1/widgets/main_image.dart';
 import 'package:sidharth/src/modules/sections/section_1/widgets/name_and_designation.dart';
 import 'package:sidharth/src/modules/sections/section_1/widgets/portfolio_year_indicator.dart';
+import 'package:syncx/syncx.dart' as syncx;
 
 class FirstSection extends StatefulWidget implements StickableDelegate {
   const FirstSection(this.index, {super.key});
@@ -48,7 +48,7 @@ class _FirstSectionState extends State<FirstSection> {
   @override
   Widget build(BuildContext context) {
     _whenWindowResized(context.screenSize);
-    return NotifierBuilder<LoadingNotifier, LoadingState>(
+    return syncx.NotifierBuilder<LoadingNotifier, LoadingState>(
       buildWhen: (previous, current) => !current.isLoading,
       builder: (context, loadingState) {
         return TweenAnimationBuilder(
@@ -65,7 +65,10 @@ class _FirstSectionState extends State<FirstSection> {
                   imageSlideInFrom: _imageSlideInFrom,
                   whenSlideAnimationEnd: _whenSlideAnimationDone,
                 ),
-                NotifierBuilder<StickyMetricsNotifier, StickyMetricsState>(
+                syncx.NotifierBuilder<
+                  StickyMetricsNotifier,
+                  StickyMetricsState
+                >(
                   buildWhen: widget.notifyOnlyWhen,
                   builder: (context, state) => NameAndDesignation(
                     metrics: state.metricsAt(widget.index),

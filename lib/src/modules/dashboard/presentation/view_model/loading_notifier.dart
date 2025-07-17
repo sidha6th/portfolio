@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sidharth/src/common/constants/durations.dart';
 import 'package:sidharth/src/common/helper/methods.dart';
-import 'package:sidharth/src/common/state_management/base_notifier.dart';
+import 'package:syncx/syncx.dart';
 
 class LoadingState {
   LoadingState();
@@ -16,7 +16,7 @@ class LoadingState {
   }
 }
 
-class LoadingNotifier extends BaseNotifier<LoadingState> {
+class LoadingNotifier extends Notifier<LoadingState> {
   LoadingNotifier() : super(LoadingState());
   Future<void> startLoading(
     ScrollController controller, {

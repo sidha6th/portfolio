@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:sidharth/src/common/extensions/build_context.dart';
 import 'package:sidharth/src/common/extensions/iterable.dart';
 import 'package:sidharth/src/common/model/delegate/base_stickable_widget_delegate.dart';
-import 'package:sidharth/src/common/state_management/notifier_consumer.dart';
 import 'package:sidharth/src/common/widgets/freezed_child.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/view_model/screen_size_notifier.dart';
+import 'package:syncx/syncx.dart';
 
 class ChildWrapper extends StatefulWidget {
   const ChildWrapper({

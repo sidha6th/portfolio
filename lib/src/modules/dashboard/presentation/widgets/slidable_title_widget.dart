@@ -5,10 +5,10 @@ import 'package:sidharth/src/common/constants/durations.dart';
 import 'package:sidharth/src/common/constants/string.dart';
 import 'package:sidharth/src/common/extensions/build_context.dart';
 import 'package:sidharth/src/common/extensions/size.dart';
-import 'package:sidharth/src/common/state_management/notifier_consumer.dart';
 import 'package:sidharth/src/common/widgets/text/text_widget.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/view_model/screen_size_notifier.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/view_model/sticky_metrics_notifier.dart';
+import 'package:syncx/syncx.dart';
 
 class SlidableTitleWidget extends StatefulWidget {
   const SlidableTitleWidget({super.key});

@@ -1,12 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:sidharth/gen/assets.gen.dart';
 import 'package:sidharth/src/common/extensions/build_context.dart';
 import 'package:sidharth/src/common/helper/visitor_info_logger.dart';
 import 'package:sidharth/src/common/model/delegate/base_stickable_widget_delegate.dart';
-import 'package:sidharth/src/common/state_management/notifier_register.dart';
 import 'package:sidharth/src/common/widgets/box/loading_indicator.dart';
 import 'package:sidharth/src/common/widgets/box/under_development_indicator.dart';
 import 'package:sidharth/src/common/widgets/freezable_list_view/child_wrapper.dart';
@@ -14,6 +12,7 @@ import 'package:sidharth/src/common/widgets/text/loading_info_text.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/view_model/loading_notifier.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/view_model/screen_size_notifier.dart';
 import 'package:sidharth/src/modules/dashboard/presentation/view_model/sticky_metrics_notifier.dart';
+import 'package:syncx/syncx.dart';
 
 class NotifiableLisViewBuilder extends StatefulWidget {
   const NotifiableLisViewBuilder({

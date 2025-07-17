@@ -14,12 +14,11 @@ dependencies:
   dotted_border: ^3.0.1
   http: ^1.4.0
   web: ^1.1.1
-  provider: ^6.1.5
   animated_flip_counter: ^0.3.4
+  syncx: ^0.0.5
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
+  flutter_test: { sdk: flutter }
   flutter_lints: ^6.0.0
 
 flutter:
